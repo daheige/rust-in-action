@@ -46,8 +46,8 @@
 
 - 第3章 rust json实战
     - 3.1 json基础简介
-        - 3.1.1 json序列化与反序列化
-        - 3.1.2 json基本数据类型
+        - 3.1.1 json基本数据类型
+        - 3.1.2 json序列化与反序列化
     - 3.2 serde和serde_json简介
     - 3.3 serde_json Value类型
     - 3.4 serde_json序列化与反序列化
