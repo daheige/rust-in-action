@@ -13,3 +13,4 @@ documentation = "https://docs.rs/readfile-custom"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# 如果有依赖就添加对应的依赖包，格式：rand = "0.8.5"
