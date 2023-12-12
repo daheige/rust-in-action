@@ -1,0 +1,14 @@
+[package]
+name = "web-server"
+version = "0.1.0"
+edition = "2021"
+
+# 多线程的web-server服务器
+[[bin]]
+name = "web-server-thread"
+path = "src/server.rs"
+
+[dependencies]
+ctrlc = "3.4.1"
+threadpool = "1.8.1"
+
