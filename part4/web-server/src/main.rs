@@ -1,0 +1,54 @@
+// io以及net模块相关的包
+use std::io::prelude::*;
+use std::net::TcpListener;
+use std::net::TcpStream;
+
+fn main() {
+    let address = "localhost:8080";
+    println!("server run on: {}", address);
+    // 通过TcpListener::bind方法，创建一个tcp TcpListener 连接实例，并绑定到对应的本地端口上
+    let listener = TcpListener::bind(address).unwrap();
+    // 监听tcp连接
+    // 下面的for可以循环处理每个连接产生的流
+    for stream in listener.incoming() {
+        // 这里的stream表示客户端和服务端直接打开的连接，称作为流
+        let stream = stream.unwrap(); // 调用unwrap方法获得流信息
+        handler_connection(stream);
+    }
+}
+
+// 处理客户端请求
+fn handler_connection(mut stream: TcpStream) {
+    let mut buffer = [0; 1024];
+
+    // 通过读取stream流到buffer变量中
+    stream.read(&mut buffer).unwrap();
+
+    // 响应的body内容
+    let content = r##"
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>web-server</title>
+          </head>
+          <body>
+            <h1>Hello,web-server</h1>
+            <p>this is a demo</p>
+          </body>
+        </html>
+    "##;
+
+    // 设置http请求行，响应状态码200
+    // 将content加入到将要写入流的成功返回的body中
+    let response = format!(
+        "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
+        content.len(),
+        content,
+    );
+
+    println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
+
+    stream.write(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
+}
