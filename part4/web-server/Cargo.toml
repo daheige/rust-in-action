@@ -8,7 +8,9 @@ edition = "2021"
 name = "web-server-thread"
 path = "src/server.rs"
 
+[[bin]]
+name = "web-server-multiple"
+path = "src/multi_server.rs"
+
 [dependencies]
 ctrlc = "3.4.1"
-threadpool = "1.8.1"
-
