@@ -1,5 +1,5 @@
 [package]
-name = "my_addr"
+name = "my_criterion"
 version = "0.1.0"
 edition = "2021"
 
@@ -13,4 +13,4 @@ criterion = "0.5.1"
 # 新增属性用于第三方基准测试包criterion bench基准测试
 [[bench]]
 name = "my_bench"
-harness = false
+harness = false # 禁用rust内置的标准测试工具
