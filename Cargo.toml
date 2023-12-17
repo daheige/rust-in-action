@@ -1,0 +1,23 @@
+[workspace]
+
+members = [
+    "part1/hello",
+    "part1/my_addr",
+    "part2/colored-hello",
+    "part2/file-read",
+    "part2/file-read2",
+    "part2/hello-project",
+    "part2/module-access",
+    "part2/module-demo",
+    "part2/module-layout",
+    "part2/my-lib",
+    "part2/pub-use-export",
+    "part2/rand-demo",
+    "part2/readfile-custom",
+    "part3/json-config",
+    "part3/serde-custom",
+    "part3/serde-decode",
+    "part3/serde-demo",
+    "part3/serde-encode",
+    "part4/web-server",
+]
