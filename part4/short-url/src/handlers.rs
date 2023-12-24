@@ -79,8 +79,8 @@ pub struct AppState {
 
 // 接收body请求生成对应的短链接地址url
 pub async fn create(
-    state: Arc<AppState>,
     Json(payload): Json<ShortUrlRequest>,
+    state: Arc<AppState>,
 ) -> impl IntoResponse {
     format!("request origin url:{}", payload.url);
     let num = murmurhash32::murmurhash3(payload.url.as_bytes());

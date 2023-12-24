@@ -32,7 +32,7 @@ async fn main() {
             "/create",
             post({
                 let shared_state = shared_state.clone();
-                move |body| handlers::create(shared_state, body)
+                move |body| handlers::create(body,shared_state)
             }),
         ) // 创建短链接url
         .fallback(handlers::not_found_handler);
