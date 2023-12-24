@@ -1,6 +1,5 @@
 use axum::{
     extract::Path,
-    extract::State,
     http::StatusCode,
     response::{IntoResponse, Redirect, Response},
     Json,
@@ -18,7 +17,7 @@ use std::sync::{Arc, RwLock};
 pub struct EmptyObject {}
 
 // 根据短链接url获取原始的长url
-pub async fn short_url(Path(key): Path<String>, State(state): State<SharedState>) -> Response {
+pub async fn short_url(Path(key): Path<String>, state: Arc<AppState>) -> Response {
     println!("request short url:{}", key);
     // 解析base62字符串为murmurhash32值为u128类型
     let res = base62::decode(key);
@@ -36,7 +35,7 @@ pub async fn short_url(Path(key): Path<String>, State(state): State<SharedState>
 
     // 从AppState db中读取key对应的原始地址url
     let key = res.unwrap();
-    let db = &state.read().unwrap().db;
+    let db = &state.db.read().unwrap();
     if let Some(origin_url) = db.get(&key) {
         // 跳转到对应的原始地址
         Redirect::to(origin_url).into_response()
@@ -72,39 +71,24 @@ pub struct ShortUrlReply {
     short_url: String,
 }
 
-// 用于axum state 共享数据修改和读写
-pub type SharedState = Arc<RwLock<AppState>>;
-
 #[derive(Default)]
 pub struct AppState {
     // hash map用于存储短链接对应的murmurhash32值和原始链接的映射关系
-    db: HashMap<u128, String>,
+    db: Arc<RwLock<HashMap<u128, String>>>,
 }
 
 // 接收body请求生成对应的短链接地址url
 pub async fn create(
+    state: Arc<AppState>,
     Json(payload): Json<ShortUrlRequest>,
-    // State(state): State<SharedState>,
 ) -> impl IntoResponse {
     format!("request origin url:{}", payload.url);
     let num = murmurhash32::murmurhash3(payload.url.as_bytes());
     let key = num as u128;
-    println!("key:{}",key);
-    // let db = &state.read().unwrap().db;
-    // if db.contains_key(&key) {
-    //     // 判断当前短链接是否存在
-    //     return (
-    //         StatusCode::OK,
-    //         Json(Reply {
-    //             code: 1001,
-    //             message: "The short link address for the current url already exists".to_string(),
-    //             data: None,
-    //         }),
-    //     );
-    // }
+    println!("key:{}", key);
+    let mut db = state.db.write().unwrap();
+    db.insert(key, payload.url);
 
-    // 插入记录到到 AppState db hashmap中
-    // state.write().unwrap().db.insert(key, payload.url).unwrap();
     let flag = base62::encode(num);
     let domain = "localhost:8080"; // 根据实际情况改成你的domain地址
     let short_url = format!("{}/{}", domain, flag);

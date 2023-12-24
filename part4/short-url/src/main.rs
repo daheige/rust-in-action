@@ -17,16 +17,24 @@ async fn main() {
     println!("server pid:{}", process::id()); // 服务启动的进程id
 
     // 为了模拟存储，这里采用hash map结构存储短链接字符串和原始地址映射关系
-    let shared_state = Arc::new(handlers::SharedState::default());
+    let shared_state = Arc::new(handlers::AppState::default());
 
     // 创建axum router
     let router = Router::new()
-        .route("/:key", get(handlers::short_url)) // eg:your_domain/43KClC格式的短链请求
+        .route(
+            "/:key",
+            get({
+                let shared_state = shared_state.clone();
+                move |path| handlers::short_url(path, shared_state)
+            }),
+        ) // eg:your_domain/43KClC格式的短链请求
         .route(
             "/create",
-            post(handlers::create),
+            post({
+                let shared_state = shared_state.clone();
+                move |body| handlers::create(shared_state, body)
+            }),
         ) // 创建短链接url
-        .with_state(Arc::clone(&shared_state))
         .fallback(handlers::not_found_handler);
 
     // 创建axum app实例并启动服务
