@@ -1,5 +1,6 @@
 use axum::{
     extract::Path,
+    extract::State,
     http::StatusCode,
     response::{IntoResponse, Redirect, Response},
     Json,
@@ -17,7 +18,8 @@ use std::sync::{Arc, RwLock};
 pub struct EmptyObject {}
 
 // 根据短链接url获取原始的长url
-pub async fn short_url(Path(key): Path<String>, state: Arc<AppState>) -> Response {
+// eg:your_domain/43KClC 格式的短链请求
+pub async fn short_url(Path(key): Path<String>, State(state): State<Arc<AppState>>) -> Response {
     println!("request short url:{}", key);
     // 解析base62字符串为murmurhash32值为u128类型
     let res = base62::decode(key);
@@ -71,13 +73,15 @@ pub struct ShortUrlReply {
     short_url: String,
 }
 
+// 为了模拟存储，这里采用hash map结构存储短链接murmurhash32值和原始地址映射关系
 #[derive(Default)]
 pub struct AppState {
-    // hash map用于存储短链接对应的murmurhash32值和原始链接的映射关系
+    // hash map使用RwLock读写锁，然后使用Arc原子计数包装一下，可以跨线程共享读写数据
     db: Arc<RwLock<HashMap<u128, String>>>,
 }
 
 // 接收body请求生成对应的短链接地址url
+// 创建短链接url
 pub async fn create(
     Json(payload): Json<ShortUrlRequest>,
     state: Arc<AppState>,
@@ -85,7 +89,7 @@ pub async fn create(
     format!("request origin url:{}", payload.url);
     let num = murmurhash32::murmurhash3(payload.url.as_bytes());
     let key = num as u128;
-    println!("key:{}", key);
+    println!("murmurhash32 key:{}", key);
     let mut db = state.db.write().unwrap();
     db.insert(key, payload.url);
 
