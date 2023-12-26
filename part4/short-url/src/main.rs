@@ -21,15 +21,8 @@ async fn main() {
     // 创建axum router
     let router = Router::new()
         .route("/:key", get(handlers::short_url))
-        .with_state(shared_state.clone())
-        .route(
-            "/create",
-            post({
-                // 通过闭包的形式传递shared_state数据
-                let shared_state = shared_state.clone();
-                move |body| handlers::create(body, shared_state)
-            }),
-        )
+        .route("/create-short-url", post(handlers::create_short_url))
+        .with_state(shared_state) // 通过with_state方式传递共享数据shared_state
         .fallback(handlers::not_found_handler);
 
     // 创建axum app实例并启动服务
