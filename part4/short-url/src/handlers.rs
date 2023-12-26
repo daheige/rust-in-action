@@ -36,7 +36,7 @@ pub async fn short_url(Path(key): Path<String>, State(state): State<Arc<AppState
     }
 
     // 从AppState db中读取key对应的原始地址url
-    let key = res.unwrap();
+    let key = res.unwrap().to_string();
     let db = &state.db.read().unwrap();
     if let Some(origin_url) = db.get(&key) {
         // 跳转到对应的原始地址
@@ -73,22 +73,24 @@ pub struct ShortUrlReply {
     short_url: String,
 }
 
-// 为了模拟存储，这里采用hash map结构存储短链接murmurhash32值和原始地址映射关系
+// 为了模拟存储，这里采用hash map结构存储短链接murmurhash32值对应的字符串和原始地址映射关系
 #[derive(Default)]
 pub struct AppState {
     // hash map使用RwLock读写锁，然后使用Arc原子计数包装一下，可以跨线程共享读写数据
-    db: Arc<RwLock<HashMap<u128, String>>>,
+    db: Arc<RwLock<HashMap<String, String>>>,
 }
 
 // 接收body请求生成对应的短链接地址url
 // 创建短链接url
-pub async fn create(
+pub async fn create_short_url(
+    State(state): State<Arc<AppState>>,
     Json(payload): Json<ShortUrlRequest>,
-    state: Arc<AppState>,
 ) -> impl IntoResponse {
     format!("request origin url:{}", payload.url);
+    // murmurhash算法生成出来的数字是u32类型的，重复的概率非常小
+    // 如果有重复在实际业务中,可以在url后面追加随机字符串方式处理或者采用mysql唯一索引的方式处理
     let num = murmurhash32::murmurhash3(payload.url.as_bytes());
-    let key = num as u128;
+    let key = num.to_string();
     println!("murmurhash32 key:{}", key);
     let mut db = state.db.write().unwrap();
     db.insert(key, payload.url);
