@@ -25,8 +25,10 @@ insert into users(openid,name,level,nick,age,score) values
 
 -- 删除数据
 delete from users where openid = "c17bf3ecc31447409436236fcb55b9d5";
+
 -- 更新数据
 update users set score = 130 where openid = "a5a8a2c852db476a84dc51fdbe128dd4";
+
 -- 查询数据
 select * from users where id >=1;
 
@@ -35,3 +37,15 @@ alter table users add UNIQUE `uk_openid` (`openid`);
 
 -- 添加普通索引
 alter table users add index idx_nick (`nick`);
+
+-- 删除索引
+alter table users drop index idx_nick;
+
+-- 查看表信息
+show create table users\G;
+
+-- 删除表
+drop table users;
+
+-- 删除数据库
+drop database membership;
