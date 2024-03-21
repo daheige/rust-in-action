@@ -1,9 +1,8 @@
 use chrono::prelude::*;
 use futures::TryStreamExt;
 // 引入sqlx包
-use sqlx;
 use sqlx::mysql::{MySqlPoolOptions, MySqlRow};
-use sqlx::Row;
+use sqlx::{Acquire, Row};
 
 use std::env;
 use std::time::Duration;
@@ -124,7 +123,7 @@ async fn main() -> Result<(), sqlx::Error> {
         println!("{:?}", user);
     }
 
-    // 6、使用fetch_one获取一条结果集
+    // 6、使用fetch_one获取一条结果集，并将其映射到结构体UserEntity中
     let sql = "select * from users where id = ?";
     let user: UserEntity = sqlx::query_as(sql).bind(1).fetch_one(&pool).await?;
     println!("user: {:?}", user);
