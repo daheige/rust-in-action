@@ -2,9 +2,10 @@ use chrono::prelude::*;
 use futures::TryStreamExt;
 // 引入sqlx包
 use sqlx::mysql::{MySqlPoolOptions, MySqlRow};
-use sqlx::{Acquire, Row};
+use sqlx::Row;
 
 use std::env;
+use std::ops::DerefMut;
 use std::time::Duration;
 use tokio;
 
@@ -38,12 +39,13 @@ async fn main() -> Result<(), sqlx::Error> {
     // ====数据插入操作====
     // 1、使用execute插入数据
     // 通过r#前缀标记这是一个sql原始字符串语句，不需要转义
+    // 默认情况下，SQLx提倡使用绑定参数，这对于防止SQL注入非常重要
     let sql = r#"insert into users (name,age,id_card,last_update) value(?,?,?,?)"#;
     let affect_rows = sqlx::query(sql)
         .bind("zhangsan") // 通过bind方法实现参数绑定
         .bind(33)
         .bind("abc")
-        .bind(chrono::NaiveDate::from_ymd(2022, 04, 13))
+        .bind(chrono::NaiveDate::from_ymd_opt(2022, 04, 13))
         .execute(&pool) // 异步执行sql
         .await?;
     // 获取插入的自增id
@@ -55,7 +57,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("xiaoming")
         .bind(23)
         .bind("efg")
-        .bind(chrono::NaiveDate::from_ymd(2024, 02, 13))
+        .bind(chrono::NaiveDate::from_ymd_opt(2024, 02, 13))
         .execute(&pool)
         .await?;
     let id = affect_rows.last_insert_id();
@@ -75,7 +77,10 @@ async fn main() -> Result<(), sqlx::Error> {
         };
 
         println!("user = {:?}", user);
-        println!("user id = {} name = {}", user.id, user.name);
+        println!(
+            "user id = {} name = {} age = {} id_card = {} last_update = {}",
+            user.id, user.name, user.age, user.id_card, user.last_update
+        );
     }
 
     // ====数据查询操作====
@@ -115,7 +120,7 @@ async fn main() -> Result<(), sqlx::Error> {
     println!("{:?}", affect_rows);
 
     // =====query_as方法使用，将查询结果集转化为struct====
-    // 5、使用fetch获取结果集Vec的流Stream数据
+    // 5、使用fetch获取结果集Vec数据
     // To assist with mapping the row into a domain type,
     let sql = "select * from users where id >= ?";
     let mut stream = sqlx::query_as::<_, UserEntity>(sql).bind(1).fetch(&pool);
@@ -129,12 +134,33 @@ async fn main() -> Result<(), sqlx::Error> {
     println!("user: {:?}", user);
     println!("id = {} name = {}", user.id, user.name);
 
-    // 7、使用fetch_all获取多个记录，将所有的结果集放到Vec
+    // 7、使用fetch_all获取多条记录，将所有的结果集放到Vec
     let sql = "select * from users where id >= ?";
     let records: Vec<UserEntity> = sqlx::query_as(sql).bind(1).fetch_all(&pool).await?;
     for row in records {
         println!("current row = {:?}", row);
         println!("id = {} name = {}", row.id, row.name);
+    }
+
+    // 8、事务操作 begin/commit
+    let sql = r#"insert into users (name,age,id_card,last_update) value(?,?,?,?)"#;
+    let mut tx = pool.begin().await?; // 创建一个事务transaction
+    let affect_rows = sqlx::query(sql)
+        .bind("lisi")
+        .bind(32)
+        .bind("abc")
+        .bind(chrono::NaiveDate::from_ymd_opt(2022, 04, 13))
+        // In 0.7, `Transaction` can no longer implement `Executor` directly,
+        // so it must be dereferenced to the internal connection type.
+        // 这里需要对tx进行解引用并获取内部DB的可变引用connection
+        .execute(tx.deref_mut())
+        .await?;
+    if affect_rows.rows_affected() == 0 {
+        tx.rollback().await?;
+    } else {
+        tx.commit().await?; // 提交事务
+        let id = affect_rows.last_insert_id(); // 获取插入的id
+        println!("id = {}", id);
     }
 
     Ok(())
