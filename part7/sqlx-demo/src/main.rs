@@ -135,6 +135,9 @@ async fn main() -> Result<(), sqlx::Error> {
     println!("id = {} name = {}", user.id, user.name);
 
     // 7、使用fetch_all获取多条记录，将所有的结果集放到Vec
+    // 在使用fetch_all时，你必须从一个迭代器中获取每一行记录
+    // SQLx为我们提供了一个宏Sqlx::FromRow，以便我们能够从SQL行向量中提取数据到结构体中
+    // 您可以使用 query_as 将返回结果绑定到Vec中，前提是你已经在UserEntity上面使用了标记属性：#[derive(Sqlx::FromRow)]
     let sql = "select * from users where id >= ?";
     let records: Vec<UserEntity> = sqlx::query_as(sql).bind(1).fetch_all(&pool).await?;
     for row in records {
