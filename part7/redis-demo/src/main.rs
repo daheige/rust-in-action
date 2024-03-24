@@ -1,5 +1,5 @@
 mod xredis; // 定义xredis模块
-use redis::{AsyncCommands, Commands, RedisResult};
+use redis::{Commands, RedisResult};
 use std::time::Duration;
 // 引入xredis模块中的 RedisService 结构体
 use xredis::RedisService;
