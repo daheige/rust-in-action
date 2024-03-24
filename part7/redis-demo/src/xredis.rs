@@ -8,13 +8,13 @@ use std::time::Duration;
 pub struct RedisService<'a> {
     // dsn格式：redis://:[password]@[host]:[port]/[database]
     // 比如说：redis://:@127.0.0.1:6379/0
-    dsn: &'a str,                 // redis dsn信息，用于连接redis
-    max_size: u32,                // 最大连接个数
-    min_idle: u32,                // 最小空闲数
-    max_lifetime: Duration,       // 过期时间
-    idle_timeout: Duration,       // 连接池最大生存期
-    connection_timeout: Duration, // 连接超时时间
-    cluster_nodes: Vec<&'a str>,  // 可选参数，集群模式节点列表
+    dsn: &'a str,                        // redis dsn信息，用于连接redis
+    max_size: u32,                       // 最大连接个数
+    min_idle: u32,                       // 最小空闲数
+    max_lifetime: Duration,              // 过期时间
+    idle_timeout: Duration,              // 连接池最大生存期
+    connection_timeout: Duration,        // 连接超时时间
+    cluster_nodes: Option<Vec<&'a str>>, // 可选参数，集群模式节点列表
 }
 
 impl<'a> RedisService<'a> {
@@ -36,7 +36,7 @@ impl<'a> RedisService<'a> {
     }
 
     pub fn with_cluster_nodes(mut self, nodes: Vec<&'a str>) -> Self {
-        self.cluster_nodes = nodes;
+        self.cluster_nodes = Some(nodes);
         self
     }
 
@@ -81,15 +81,15 @@ impl<'a> RedisService<'a> {
     // create redis cluster client
     // 这种适合集群模式的redis节点连接redis
     pub fn cluster_client(&self) -> redis::RedisResult<ClusterClient> {
-        if self.cluster_nodes.is_empty() {
+        if self.cluster_nodes.is_none() {
             return Err(redis::RedisError::from((
                 redis::ErrorKind::InvalidClientConfig,
                 "redis cluster nodes is empty",
             )));
         }
 
-        let mut nodes: Vec<&'a str> = Vec::new();
-        nodes.extend(self.cluster_nodes.iter());
+        // 这里需要对cluster_nodes克隆得到一个新的Option<Vec<String>>
+        let nodes = self.cluster_nodes.clone().unwrap();
         let client = ClusterClient::new(nodes);
         client
     }
