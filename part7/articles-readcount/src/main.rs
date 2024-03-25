@@ -25,8 +25,7 @@ async fn main() -> anyhow::Result<()> {
     let router = routers::api_router();
 
     // Create a `TcpListener` using tokio.
-    // let listener = TcpListener::bind(address).await?;
-    let listener = TcpListener::bind(address).await?.into();
+    let listener = TcpListener::bind(address).await?;
 
     // Run the server with graceful shutdown
     axum::serve(listener, router)
