@@ -5,6 +5,13 @@ use r2d2::Pool;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
+// 定义传递给axum handlers的app_state，这里是通过引用计数的方式共享变量
+// Sharing state with handlers
+#[derive(Clone)]
+pub struct AppState {
+    pub mysql_pool: sqlx::MySqlPool,
+}
+
 // AppConfig 项目配置信息
 #[derive(Debug, PartialEq, Serialize, Deserialize, Default)]
 pub struct AppConfig {

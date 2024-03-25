@@ -1,17 +1,25 @@
 // 定义项目相关的模块
 mod config; // 用于mysql和redis config初始化和连接池管理
+mod entity;
 mod handlers; // 用于http handler处理
 mod infras; // 项目中基础设施层封装
-mod routers; // axum http框架路由模块
+mod routers; // axum http框架路由模块 // 实体对象定义
 
 // 引入模块
-use crate::config::APP_CONFIG;
+use crate::config::{mysql, APP_CONFIG};
 use redis::Commands;
 use std::net::SocketAddr;
 use std::process;
+use std::sync::Arc;
 use std::time::Duration;
 use tokio::net::TcpListener;
 use tokio::signal;
+
+// 定义传递给axum handlers的app_state，这里是通过引用计数的方式共享变量
+// Sharing state with handlers
+struct AppState {
+    mysql_pool: sqlx::MySqlPool,
+}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -21,8 +29,16 @@ async fn main() -> anyhow::Result<()> {
     let address: SocketAddr = format!("0.0.0.0:{}", APP_CONFIG.app_port).parse().unwrap();
     println!("app run on:{}", address.to_string());
 
+    // // mysql pool
+    let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf).await?;
+
+    // 通过arc引用计数的方式传递state
+    let app_state = Arc::new(config::AppState {
+        mysql_pool: mysql_pool,
+    });
+
     // create axum router
-    let router = routers::api_router();
+    let router = routers::api_router(app_state);
 
     // Create a `TcpListener` using tokio.
     let listener = TcpListener::bind(address).await?;
@@ -30,8 +46,7 @@ async fn main() -> anyhow::Result<()> {
     // Run the server with graceful shutdown
     axum::serve(listener, router)
         .with_graceful_shutdown(graceful_shutdown())
-        .await
-        .unwrap();
+        .await?;
     Ok(())
 }
 
