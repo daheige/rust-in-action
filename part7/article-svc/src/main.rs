@@ -1,9 +1,9 @@
 // 定义项目相关的模块
 mod config; // 用于mysql和redis config初始化和连接池管理
-mod entity;
+mod entity; // 实体对象定义
 mod handlers; // 用于http handler处理
 mod infras; // 项目中基础设施层封装
-mod routers; // axum http框架路由模块 // 实体对象定义
+mod routers; // axum http框架路由模块
 
 // 引入模块
 use crate::config::{mysql, xredis, APP_CONFIG};
