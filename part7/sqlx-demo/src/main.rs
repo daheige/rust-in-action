@@ -120,22 +120,23 @@ async fn main() -> Result<(), sqlx::Error> {
         .await?;
     println!("{:?}", affect_rows);
 
-    // =====query_as方法使用，将查询结果集转化为struct====
+    // =====query_as方法使用，将查询结果自动映射到rust表达式的左值中，比如具体的结构体类型====
     // 5、使用fetch获取结果集Vec数据
     // To assist with mapping the row into a domain type,
     let sql = "select * from users where id >= ?";
+    // 通过query_as将结果映射到结构体中
     let mut stream = sqlx::query_as::<_, UserEntity>(sql).bind(1).fetch(&pool);
     while let Some(user) = stream.try_next().await? {
         println!("{:?}", user);
     }
 
-    // 6、使用fetch_one获取一条结果集，并将其映射到结构体UserEntity中
+    // 6、使用fetch_one获取一条结果集，并通过query_as将其映射到结构体UserEntity中
     let sql = "select * from users where id = ?";
     let user: UserEntity = sqlx::query_as(sql).bind(1).fetch_one(&pool).await?;
     println!("user: {:?}", user);
     println!("id = {} name = {}", user.id, user.name);
 
-    // 7、使用fetch_all获取多条记录，将所有的结果集放到Vec
+    // 7、使用fetch_all查询多条记录，也就是获取多条记录，然后可通过query_as方法将所有的结果集放到Vec
     // 在使用fetch_all时，你必须从一个迭代器中获取每一行记录
     // SQLx为我们提供了一个宏Sqlx::FromRow，以便我们能够从SQL行向量中提取数据到结构体中
     // 您可以使用 query_as 将返回结果绑定到Vec中
