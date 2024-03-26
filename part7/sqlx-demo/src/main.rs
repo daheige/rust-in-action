@@ -9,15 +9,15 @@ use std::ops::DerefMut;
 use std::time::Duration;
 use tokio;
 
-// 定义users表字段的数据结构信息
-// sqlx::FromRow 标记特征用于行记录读取
+// 定义users表字段的实体信息
+// 在UserEntity上面使用sqlx::FromRow标记属性用于行记录读取
 #[derive(Debug, sqlx::FromRow)]
 struct UserEntity {
     id: i64,
     name: String,
     age: i32,
     id_card: String,
-    last_update: NaiveDate, // 时间格式
+    last_update: NaiveDate,
 }
 
 // main入口函数，通过tokio运行时来执行sqlx异步的相关操作
@@ -37,20 +37,19 @@ async fn main() -> Result<(), sqlx::Error> {
         .connect(&dsn)
         .await?;
 
-    // ====数据插入操作====
-    // 1、使用execute插入数据
+    // ====插入操作====
+    // 1、使用execute方法执行插入操作
     // 通过r#前缀标记这是一个sql原始字符串语句，不需要转义
-    // 默认情况下，SQLx提倡使用绑定参数，这对于防止SQL注入非常重要
+    // 默认情况下，SQLx提倡使用bind进行实现?绑定参数，这对于防止SQL注入非常重要
     let sql = r#"insert into users (name,age,id_card,last_update) value(?,?,?,?)"#;
     let affect_rows = sqlx::query(sql)
         .bind("zhangsan") // 通过bind方法实现参数绑定
         .bind(33)
         .bind("abc")
-        .bind(chrono::NaiveDate::from_ymd_opt(2022, 04, 13))
+        .bind(NaiveDate::from_ymd_opt(2022, 04, 13))
         .execute(&pool) // 异步执行sql
         .await?;
-    // 获取插入的自增id
-    let id = affect_rows.last_insert_id();
+    let id = affect_rows.last_insert_id(); // 获取插入的自增id
     println!("insert user id = {}", id);
 
     let sql = r#"insert into users (name,age,id_card,last_update) value(?,?,?,?)"#;
@@ -58,17 +57,18 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("xiaoming")
         .bind(23)
         .bind("efg")
-        .bind(chrono::NaiveDate::from_ymd_opt(2024, 02, 13))
+        .bind(NaiveDate::from_ymd_opt(2024, 02, 13))
         .execute(&pool)
         .await?;
     let id = affect_rows.last_insert_id();
     println!("current insert user id = {}", id);
 
-    // ====数据查询操作====
-    // 2、使用fetch获取多行数据并通过try_next方法遍历数据
+    // ====查询操作====
+    // 2、使用fetch执行查询并将生成的结果作为流BoxStream返回
     let sql = "select * from users where id >= ?";
-    let mut rows = sqlx::query(sql).bind(1).fetch(&pool);
-    while let Some(row) = rows.try_next().await? {
+    let mut stream = sqlx::query(sql).bind(1).fetch(&pool);
+    // 通过while let模式匹配和try_next从流中迭代数据方法遍历数据
+    while let Some(row) = stream.try_next().await? {
         let user = UserEntity {
             id: row.get("id"), // 在row上面通过get方法获取字段对应的值
             name: row.get("name"),
@@ -85,13 +85,12 @@ async fn main() -> Result<(), sqlx::Error> {
     }
 
     // ====数据查询操作====
-    // 3、使用fetch加map方法传入闭包的形式读取数据
-    // The fetch query finalizer returns a stream-like type
-    // that iterates through the rows in the result sets.
+    // 3、使用fetch执行查询并将生成的结果作为流BoxStream返回
     let sql = "select * from users where id >= ?";
     let records = sqlx::query(sql)
         .bind(1)
         .map(|row: MySqlRow| UserEntity {
+            // map方法将每一行结果集映射到结构体中
             // 这个闭包的参数需要指定row数据为MySqlRow
             id: row.get("id"),
             name: row.get("name"),
@@ -100,18 +99,15 @@ async fn main() -> Result<(), sqlx::Error> {
             last_update: row.get("last_update"),
         })
         .fetch(&pool);
-    // 将异步执行的结果通过pin的方式放入records集合中
+    // 将流BoxStream中的结果通过pin的方式固定到records集合中
     tokio::pin!(records);
-    // 遍历数据
+    // 通过while let模式匹配和try_next从流中迭代数据方法遍历数据
     while let Some(s) = records.try_next().await? {
         println!("s = {:?}", s);
     }
 
     // ====数据更新操作====
-    // 4、使用execute，执行更新操作，返回 affect_rows 影响的行数
-    // the executor query finalizer returns the number of affected rows,
-    // if any, and drops all received results. In addition, there are fetch,
-    // fetch_one, fetch_optional, and fetch_all to receive results.
+    // 4、使用execute，执行更新操作，并返回 affect_rows 影响的行数
     let sql = r#"update users set name = ? where id = ?"#;
     let affect_rows = sqlx::query(sql)
         .bind("zhangsan2")
@@ -120,27 +116,26 @@ async fn main() -> Result<(), sqlx::Error> {
         .await?;
     println!("{:?}", affect_rows);
 
-    // =====query_as方法使用，将查询结果自动映射到rust表达式的左值中，比如具体的结构体类型====
-    // 5、使用fetch获取结果集Vec数据
-    // To assist with mapping the row into a domain type,
+    // =====query_as方法使用，将查询结果自动映射到rust表达式的左值中，比如下面将结果集映射到结构体中
     let sql = "select * from users where id >= ?";
-    // 通过query_as将结果映射到结构体中
+    // fetch方法执行查询并将生成的结果作为流BoxStream返回
+    // query_as方法将每一行结果集映射到结构体UserEntity中
+    // 通过while let模式匹配和try_next从流中迭代数据方法遍历数据
     let mut stream = sqlx::query_as::<_, UserEntity>(sql).bind(1).fetch(&pool);
     while let Some(user) = stream.try_next().await? {
         println!("{:?}", user);
     }
 
-    // 6、使用fetch_one获取一条结果集，并通过query_as将其映射到结构体UserEntity中
+    // 6、使用fetch_one获取单条记录
+    // 该方法执行查询返回第一行，如果数据不存在返回Error::RowNotFound
     let sql = "select * from users where id = ?";
+    // query_as将其映射到结构体UserEntity中
     let user: UserEntity = sqlx::query_as(sql).bind(1).fetch_one(&pool).await?;
     println!("user: {:?}", user);
     println!("id = {} name = {}", user.id, user.name);
 
-    // 7、使用fetch_all查询多条记录，也就是获取多条记录，然后可通过query_as方法将所有的结果集放到Vec
-    // 在使用fetch_all时，你必须从一个迭代器中获取每一行记录
-    // SQLx为我们提供了一个宏Sqlx::FromRow，以便我们能够从SQL行向量中提取数据到结构体中
-    // 您可以使用 query_as 将返回结果绑定到Vec中
-    // 前提是你已经在UserEntity上面使用了标记属性：#[derive(Sqlx::FromRow)]
+    // 7、使用fetch_all查询多条记录
+    // SQLx为我们提供了一个宏Sqlx::FromRow标记，以便我们能够从SQL行向量中提取数据到结构体中
     let sql = "select * from users where id >= ?";
     let records: Vec<UserEntity> = sqlx::query_as(sql).bind(1).fetch_all(&pool).await?;
     for row in records {
@@ -149,6 +144,7 @@ async fn main() -> Result<(), sqlx::Error> {
     }
 
     // 8、事务操作 begin/commit
+    // 对于事务操作，需要从连接池中获取一个mysql connection，并执行begin/commit操作
     let sql = r#"insert into users (name,age,id_card,last_update) value(?,?,?,?)"#;
     let mut tx = pool.begin().await?; // 创建一个事务transaction
     let affect_rows = sqlx::query(sql)
@@ -161,6 +157,7 @@ async fn main() -> Result<(), sqlx::Error> {
         // 这里需要对tx进行解引用并获取内部DB的可变引用connection
         .execute(tx.deref_mut())
         .await?;
+    // 如果执行失败，调用rollback方法回滚
     if affect_rows.rows_affected() == 0 {
         tx.rollback().await?;
     } else {

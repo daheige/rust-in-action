@@ -33,7 +33,7 @@ pub async fn show(Path(id): Path<i64>, State(state): State<Arc<config::AppState>
         .expect("query article failed");
 
     // redis hash 的field是文章id，value是阅读数
-    // 对文章阅读数加1操作，后续可以通过job 定期处理，将阅读数同步到db即可 todo
+    // 对文章阅读数加1操作，后续可以通过job定期处理，将阅读数同步到db即可 todo
     let hash_key = "article_sys:read_count:hash";
     let mut conn = config::REDIS_POOL
         .get()
