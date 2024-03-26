@@ -10,6 +10,7 @@ use std::time::Duration;
 #[derive(Clone)]
 pub struct AppState {
     pub mysql_pool: sqlx::MySqlPool,
+    pub redis_pool: Pool<redis::Client>,
 }
 
 // AppConfig 项目配置信息

@@ -6,7 +6,7 @@ mod infras; // 项目中基础设施层封装
 mod routers; // axum http框架路由模块 // 实体对象定义
 
 // 引入模块
-use crate::config::{mysql, APP_CONFIG};
+use crate::config::{mysql, xredis, APP_CONFIG};
 use redis::Commands;
 use std::net::SocketAddr;
 use std::process;
@@ -29,12 +29,15 @@ async fn main() -> anyhow::Result<()> {
     let address: SocketAddr = format!("0.0.0.0:{}", APP_CONFIG.app_port).parse().unwrap();
     println!("app run on:{}", address.to_string());
 
-    // // mysql pool
+    // mysql pool
     let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf).await?;
 
+    // redis pool
+    let redis_pool = xredis::pool(&APP_CONFIG.redis_conf);
     // 通过arc引用计数的方式传递state
     let app_state = Arc::new(config::AppState {
         mysql_pool: mysql_pool,
+        redis_pool: redis_pool,
     });
 
     // create axum router
