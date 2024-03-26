@@ -39,15 +39,9 @@ pub static APP_CONFIG: Lazy<AppConfig> = Lazy::new(|| {
 });
 
 // redis pool 初始化
+// 对于不需要在handlers中进行redis操作的话，使用这个pool即可
 pub static REDIS_POOL: Lazy<Pool<redis::Client>> = Lazy::new(|| {
     let redis_conf = &APP_CONFIG.redis_conf;
-    let pool = RedisService::builder()
-        .with_dsn(redis_conf.dsn.as_str())
-        .with_max_size(redis_conf.max_size)
-        .with_max_lifetime(Duration::from_secs(redis_conf.max_lifetime))
-        .with_idle_timeout(Duration::from_secs(redis_conf.idle_timeout))
-        .with_min_idle(redis_conf.min_idle)
-        .with_connect_timeout(Duration::from_secs(redis_conf.connection_timeout))
-        .pool();
+    let pool = xredis::pool(redis_conf);
     pool
 });
