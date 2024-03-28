@@ -1,9 +1,8 @@
 use crate::config::{mysql, xredis};
-use crate::infras::{Config, ConfigTrait, MysqlService, RedisService};
+use crate::infras::{Config, ConfigTrait};
 use once_cell::sync::Lazy;
 use r2d2::Pool;
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
 
 // 定义传递给axum handlers的app_state，这里是通过引用计数的方式共享变量
 // Sharing state with handlers

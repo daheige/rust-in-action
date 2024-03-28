@@ -7,7 +7,6 @@ mod routers; // axum http框架路由模块
 
 // 引入模块
 use crate::config::{mysql, xredis, APP_CONFIG};
-use redis::Commands;
 use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
