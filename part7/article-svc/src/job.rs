@@ -2,7 +2,6 @@ use crate::config::{mysql, xredis, APP_CONFIG};
 use chrono::Local;
 use std::io::Write;
 
-use r2d2::Pool;
 use redis::Commands;
 use std::process;
 use std::sync::Arc;
@@ -46,7 +45,9 @@ async fn main() -> anyhow::Result<()> {
         redis_pool: redis_pool,
     });
 
-    handler_read_count(state.clone()).await;
+    // 处理文章阅读数
+    handler_read_count(state).await;
+
     Ok(())
 }
 
@@ -68,35 +69,24 @@ async fn handler_read_count(state: Arc<config::AppState>) {
             continue;
         }
 
-        update_read_count(
-            state.mysql_pool.clone(),
-            state.redis_pool.clone(),
-            id,
-            read_count,
-        )
-        .await;
+        update_read_count(state.clone(), id, read_count).await;
     }
 }
 
 // 将redis hash中文章增量计数器对应的数量，更新到数据表articles中，并对应减少对应的数量
-async fn update_read_count(
-    mysql_pool: sqlx::MySqlPool,
-    redis_pool: Pool<redis::Client>,
-    id: i64,
-    read_count: i64,
-) {
+async fn update_read_count(state: Arc<config::AppState>, id: i64, read_count: i64) {
     let sql = "update articles set read_count = read_count + ? where id = ?";
     let res = sqlx::query(sql)
         .bind(read_count)
         .bind(id)
-        .execute(&mysql_pool)
+        .execute(&state.mysql_pool)
         .await;
     println!("{:?}", res);
     if res.is_ok() {
         // 更新redis hash 文章阅读数对应的计数器
         // redis hash 的field是文章id，value是阅读数
         let hash_key = "article_sys:read_count:hash";
-        let mut conn = redis_pool.get().expect("get redis connection failed");
+        let mut conn = state.redis_pool.get().expect("get redis connection failed");
         let remain: i64 = conn
             .hincr(hash_key, id.to_string(), -read_count)
             .expect("redis hincr failed");

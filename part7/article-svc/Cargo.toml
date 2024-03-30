@@ -36,3 +36,5 @@ axum = "0.7.5"
 # 操作日志
 log = "0.4.21"
 env_logger = "0.11.3"
+
+tokio-cron-scheduler = "0.10.0"
