@@ -1,7 +1,5 @@
 use crate::config::{mysql, xredis, APP_CONFIG};
-use chrono::{DateTime, Local};
-use env_logger::{Builder, Target};
-use std::env;
+use chrono::Local;
 use std::io::Write;
 
 use r2d2::Pool;
@@ -17,9 +15,9 @@ mod infras;
 // 在终端中运行方式：RUST_LOG=debug cargo run --bin article-job
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    // 初始化日志
+    // 初始化日志,这里采用自定义日志输出
     env_logger::builder()
-        .target(Target::Stdout)
+        .target(env_logger::Target::Stdout)
         .format(|buf, record| {
             let file = record.file().unwrap_or("??"); // 文件名
             let line = record.line().unwrap_or(0); // 行号
@@ -35,23 +33,20 @@ async fn main() -> anyhow::Result<()> {
         })
         .init();
     println!("article job...");
-    println!("app_debug:{:?}", APP_CONFIG.app_debug);
     println!("current process pid:{}", process::id());
 
     // mysql pool
-    let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf)
-        .await
-        .expect("create mysql pool failed");
+    let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf).await?;
 
     // redis pool
     let redis_pool = xredis::pool(&APP_CONFIG.redis_conf);
     // 通过arc引用计数的方式传递state
-    let app_state = Arc::new(config::AppState {
+    let state = Arc::new(config::AppState {
         mysql_pool: mysql_pool,
         redis_pool: redis_pool,
     });
 
-    handler_read_count(app_state).await;
+    handler_read_count(state.clone()).await;
     Ok(())
 }
 
@@ -73,32 +68,38 @@ async fn handler_read_count(state: Arc<config::AppState>) {
             continue;
         }
 
-        let state = state.clone();
-        update_read_count(state, id, read_count).await;
+        update_read_count(
+            state.mysql_pool.clone(),
+            state.redis_pool.clone(),
+            id,
+            read_count,
+        )
+        .await;
     }
 }
 
 // 将redis hash中文章增量计数器对应的数量，更新到数据表articles中，并对应减少对应的数量
-async fn update_read_count(state: Arc<config::AppState>, id: i64, read_count: i64) {
+async fn update_read_count(
+    mysql_pool: sqlx::MySqlPool,
+    redis_pool: Pool<redis::Client>,
+    id: i64,
+    read_count: i64,
+) {
     let sql = "update articles set read_count = read_count + ? where id = ?";
-    let affect_rows = sqlx::query(sql)
+    let res = sqlx::query(sql)
         .bind(read_count)
         .bind(id)
-        .execute(&state.mysql_pool)
+        .execute(&mysql_pool)
         .await;
-    println!("{:?}", affect_rows);
-    if affect_rows.is_ok() {
-        decrease_read_count(state.redis_pool.clone(), id, read_count);
+    println!("{:?}", res);
+    if res.is_ok() {
+        // 更新redis hash 文章阅读数对应的计数器
+        // redis hash 的field是文章id，value是阅读数
+        let hash_key = "article_sys:read_count:hash";
+        let mut conn = redis_pool.get().expect("get redis connection failed");
+        let remain: i64 = conn
+            .hincr(hash_key, id.to_string(), -read_count)
+            .expect("redis hincr failed");
+        println!("current article id:{} hincry result:{}", id, remain);
     }
-}
-
-// 更新redis hash 文章阅读数对应的计数器
-fn decrease_read_count(pool: Pool<redis::Client>, id: i64, read_count: i64) {
-    // redis hash 的field是文章id，value是阅读数
-    let hash_key = "article_sys:read_count:hash";
-    let mut conn = pool.get().expect("get redis connection failed");
-    let remain: i64 = conn
-        .hincr(hash_key, id.to_string(), -read_count)
-        .expect("redis hincr failed");
-    println!("current article id:{} hincry result:{}", id, remain);
 }
