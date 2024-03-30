@@ -12,7 +12,7 @@ fn main() {
 
     // 启动job scheduler
     loop {
-        // tick方法为JobScheduler增加时间并执行待处理的任务
+        // tick方法为JobScheduler增加时间中断并执行待处理的任务
         // 建议至少停顿500毫秒
         sched.tick();
         thread::sleep(Duration::from_millis(500));
