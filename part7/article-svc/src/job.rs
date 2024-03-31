@@ -78,17 +78,17 @@ async fn handler_read_count() {
     // 返回对应的key val key val...格式，对应的是id read_count增量计数器的字符串格式
     let res: redis::Iter<String> = conn.hscan_match(hash_key, "*").unwrap();
     let records: Vec<String> = res.collect();
-    let len = records.len() / 2;
+    let len = records.len();
     if len == 0 {
         return;
     }
 
     // 执行文章阅读数增量更新操作
-    let mut key: usize = 0;
-    while key < len {
-        let id: i64 = records[key].parse().unwrap(); // 当前文章id
-        let increment: i64 = records[key + 1].parse().unwrap(); // 当前文章增量计数器
-        key += 1;
+    let mut i: usize = 0;
+    while i < len {
+        let id: i64 = records.get(i).unwrap().parse().unwrap(); // 当前文章id
+        let increment: i64 = records.get(i + 1).unwrap().parse().unwrap(); // 当前文章增量计数器
+        i += 2; // 这里i的值第一次迭代时 i = 0，第二次迭代 i = 2,依次类推
         if increment == 0 || id <= 0 {
             continue;
         }
