@@ -1,10 +1,11 @@
 use crate::config::{mysql, xredis, APP_CONFIG};
 use chrono::Local;
-use std::io::Write;
-
+use rcron::{Job, JobScheduler};
 use redis::Commands;
-use std::process;
+use std::io::Write;
 use std::sync::Arc;
+use std::time::Duration;
+use std::{process, thread};
 
 // 定义项目相关的模块
 mod config;
@@ -13,7 +14,7 @@ mod infras;
 
 // 在终端中运行方式：RUST_LOG=debug cargo run --bin article-job
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() {
     // 初始化日志,这里采用自定义日志输出
     env_logger::builder()
         .target(env_logger::Target::Stdout)
@@ -34,8 +35,32 @@ async fn main() -> anyhow::Result<()> {
     println!("article job...");
     println!("current process pid:{}", process::id());
 
+    // 处理文章阅读数
+    // handler_read_count().await; // 这种方式适合linux crontab执行
+
+    // 通过rcron库执行
+    let mut sched = JobScheduler::new();
+    sched.add(Job::new("1/10 * * * * *".parse().unwrap(), || {
+        println!("exec task every 5 seconds!");
+        // 通过tokio异步执行
+        tokio::spawn(async { handler_read_count().await });
+    }));
+
+    // 启动job scheduler
+    loop {
+        // tick方法为JobScheduler增加时间中断并执行待处理的任务
+        sched.tick();
+        // 建议至少停顿500毫秒
+        thread::sleep(Duration::from_millis(500));
+    }
+}
+
+// 获取当前时间并输出到终端
+async fn handler_read_count() {
     // mysql pool
-    let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf).await?;
+    let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf)
+        .await
+        .expect("create mysql pool failed");
 
     // redis pool
     let redis_pool = xredis::pool(&APP_CONFIG.redis_conf);
@@ -45,14 +70,6 @@ async fn main() -> anyhow::Result<()> {
         redis_pool: redis_pool,
     });
 
-    // 处理文章阅读数
-    handler_read_count(state).await;
-
-    Ok(())
-}
-
-// 获取当前时间并输出到终端
-async fn handler_read_count(state: Arc<config::AppState>) {
     // 读取redis hash记录
     let hash_key = "article_sys:read_count:hash";
     let redis_pool = state.redis_pool.clone();
@@ -72,7 +89,7 @@ async fn handler_read_count(state: Arc<config::AppState>) {
         let id: i64 = records[key].parse().unwrap(); // 当前文章id
         let increment: i64 = records[key + 1].parse().unwrap(); // 当前文章增量计数器
         key += 1;
-        if increment == 0 || id == 0 {
+        if increment == 0 || id <= 0 {
             continue;
         }
 
@@ -90,7 +107,7 @@ async fn update_read_count(state: Arc<config::AppState>, id: i64, increment: i64
         .bind(id)
         .execute(&state.mysql_pool)
         .await;
-    println!("{:?}", res);
+    println!("execute result:{:?}", res);
     if res.is_ok() {
         // 更新redis hash 文章阅读数对应的计数器
         // redis hash 的field是文章id，value是阅读数
