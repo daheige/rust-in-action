@@ -43,13 +43,12 @@ pub async fn show(Path(id): Path<i64>, State(state): State<Arc<config::AppState>
             .into_response();
     }
 
-    let article = record.unwrap();
-    // 异步执行redis计数器加1
-    tokio::spawn(async move {
-        let redis_pool = state.redis_pool.clone();
-        incr_read_count(redis_pool, id).await;
-    });
+    let mut article = record.unwrap();
+    let redis_pool = state.redis_pool.clone();
+    let increment = incr_read_count(redis_pool, id);
 
+    // 当前文章阅读数 = 数据库中的文章阅读数 + increment（增量数）
+    article.read_count = (article.read_count as i64 + increment) as u64;
     // 返回文章实体信息
     (
         StatusCode::OK,
@@ -62,13 +61,14 @@ pub async fn show(Path(id): Path<i64>, State(state): State<Arc<config::AppState>
         .into_response()
 }
 
-async fn incr_read_count(pool: Pool<redis::Client>, id: i64) {
-    // redis hash 的field是文章id，value是阅读数
-    // 对文章阅读数加1操作，后续可以通过job定期处理，将阅读数同步到db即可
+fn incr_read_count(pool: Pool<redis::Client>, id: i64) -> i64 {
+    // redis hash 的field是文章id，value是阅读数增量计数器
+    // 对文章阅读数增量计数器加1操作，后续可以通过job定期处理，将阅读数同步到db即可
     let hash_key = "article_sys:read_count:hash";
     let mut conn = pool.get().expect("get redis connection failed");
-    let num: i64 = conn
+    let increment: i64 = conn
         .hincr(hash_key, id.to_string(), 1)
         .expect("redis hincr failed");
-    println!("current article id:{} hincry result:{}", id, num);
+    println!("current article id:{} hincry result:{}", id, increment);
+    increment
 }

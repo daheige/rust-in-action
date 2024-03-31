@@ -58,26 +58,35 @@ async fn handler_read_count(state: Arc<config::AppState>) {
     let redis_pool = state.redis_pool.clone();
     let mut conn = redis_pool.get().expect("get redis connection failed");
 
-    // 返回对应的key val key val...格式，对应的是id read_count字符串格式
+    // 返回对应的key val key val...格式，对应的是id read_count增量计数器的字符串格式
     let res: redis::Iter<String> = conn.hscan_match(hash_key, "*").unwrap();
-    let mut iterator = res.into_iter();
-    while let Some(key) = iterator.next() {
-        let id: i64 = key.parse().unwrap();
-        let read_count: i64 = iterator.next().unwrap().parse().unwrap();
-        log::info!("id:{} read_count:{}", id, read_count);
-        if read_count == 0 {
+    let records: Vec<String> = res.collect();
+    let len = records.len() / 2;
+    if len == 0 {
+        return;
+    }
+
+    // 执行文章阅读数增量更新操作
+    let mut key: usize = 0;
+    while key < len {
+        let id: i64 = records[key].parse().unwrap(); // 当前文章id
+        let increment: i64 = records[key + 1].parse().unwrap(); // 当前文章增量计数器
+        key += 1;
+        if increment == 0 || id == 0 {
             continue;
         }
 
-        update_read_count(state.clone(), id, read_count).await;
+        println!("id:{} read_count increment:{}", id, increment);
+        update_read_count(state.clone(), id, increment).await;
     }
 }
 
 // 将redis hash中文章增量计数器对应的数量，更新到数据表articles中，并对应减少对应的数量
-async fn update_read_count(state: Arc<config::AppState>, id: i64, read_count: i64) {
+async fn update_read_count(state: Arc<config::AppState>, id: i64, increment: i64) {
+    log::info!("update id:{} read_count increment:{} begin", id, increment);
     let sql = "update articles set read_count = read_count + ? where id = ?";
     let res = sqlx::query(sql)
-        .bind(read_count)
+        .bind(increment)
         .bind(id)
         .execute(&state.mysql_pool)
         .await;
@@ -88,8 +97,10 @@ async fn update_read_count(state: Arc<config::AppState>, id: i64, read_count: i6
         let hash_key = "article_sys:read_count:hash";
         let mut conn = state.redis_pool.get().expect("get redis connection failed");
         let remain: i64 = conn
-            .hincr(hash_key, id.to_string(), -read_count)
+            .hincr(hash_key, id.to_string(), -increment)
             .expect("redis hincr failed");
-        println!("current article id:{} hincry result:{}", id, remain);
+        log::info!("current article id:{} hincry result:{}", id, remain);
     }
+
+    log::info!("update id:{} read_count increment:{} end", id, increment);
 }
