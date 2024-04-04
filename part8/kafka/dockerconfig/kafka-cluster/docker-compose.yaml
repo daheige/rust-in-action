@@ -1,0 +1,64 @@
+# kafka cluster in docker
+version: '2'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    restart: always
+    container_name: my-kafka-zk
+    ports:
+      - 2181:2181
+  # kafka1-kafkaN broker节点配置
+  kafka1:
+    image: wurstmeister/kafka
+    restart: always
+    # 容器名字
+    container_name: kafka1
+    depends_on:
+      - zookeeper
+    ports:
+      - 9093:9093
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181/kafka
+      KAFKA_LISTENERS: PLAINTEXT://:9093
+      # 请修改为自己本机IP地址
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.31.136:9093
+      KAFKA_BROKER_ID: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  kafka2:
+    image: wurstmeister/kafka
+    restart: always
+    # 容器名字
+    container_name: kafka2
+    depends_on:
+      - zookeeper
+    ports:
+      - 9094:9094
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181/kafka
+      KAFKA_LISTENERS: PLAINTEXT://:9094
+      # 请修改为自己本机IP地址
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.31.136:9094
+      KAFKA_BROKER_ID: 2
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  kafka3:
+    image: wurstmeister/kafka
+    restart: always
+    # 容器名字
+    container_name: kafka3
+    depends_on:
+      - zookeeper
+    ports:
+      - 9095:9095
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181/kafka
+      KAFKA_LISTENERS: PLAINTEXT://:9095
+      # 请修改为自己本机IP地址
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.31.136:9095
+      KAFKA_BROKER_ID: 3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
