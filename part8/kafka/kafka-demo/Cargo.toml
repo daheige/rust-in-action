@@ -1,0 +1,16 @@
+[package]
+name = "kafka-demo"
+version = "0.1.0"
+edition = "2021"
+
+# 消息消费二进制定义
+[[bin]]
+name = "kafka-demo-consumer"
+path = "src/consumer.rs"
+
+[dependencies]
+# kafka client库
+kafka = "0.10.0"
+# 操作日志库
+log = "0.4.21"
+env_logger = "0.11.3"
