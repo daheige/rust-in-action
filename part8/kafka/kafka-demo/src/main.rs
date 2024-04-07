@@ -6,7 +6,7 @@ use log::{error, info};
 use std::time::Duration;
 // use std::{env, thread};
 
-// 命令终端运行方式：RUST_LOG=debug cargo run
+// 命令终端运行方式：RUST_LOG=debug cargo run kafka-demo
 // 这种运行方式，就会把对应的操作日志输出到终端
 fn main() {
     // 初始化logger配置
@@ -56,7 +56,7 @@ fn publish_message(data: &[u8], topic: &str, brokers: Vec<String>) -> Result<(),
     })?;
 
     // 你也可以通过下面的方式发送消息
-    producer.send(&Record::from_value(topic, data))?;
+    // producer.send(&Record::from_value(topic, data))?;
 
     Ok(())
 }

@@ -6,6 +6,7 @@ use kafka::error::Error as KafkaError;
 use log::{error, info};
 use std::thread;
 use std::time::Duration;
+// 命令终端运行方式：RUST_LOG=debug cargo run --bin kafka-demo-consumer
 fn main() {
     // 初始化logger配置
     // 日志level 优先级  error > warn > info > debug > trace
@@ -28,14 +29,14 @@ fn main() {
 // 函数返回Result<(), KafkaError>
 fn consumer_message(group: &str, topic: &str, brokers: Vec<String>) -> Result<(), KafkaError> {
     // 创建consumer connection
-    let mut con = Consumer::from_hosts(brokers)
+    let mut conn = Consumer::from_hosts(brokers)
         .with_topic(topic.to_string()) // 消息主题
         .with_group(group.to_string()) // 设置分组
         .with_fallback_offset(FetchOffset::Earliest) // 设置offset
         .with_offset_storage(Some(GroupOffsetStorage::Kafka))
         .create()?;
     loop {
-        let message_sets = con.poll()?;
+        let message_sets = conn.poll()?;
         if message_sets.is_empty() {
             info!("no message available right now");
             thread::sleep(Duration::from_secs(2)); // 当没有消息的时候停顿2s
@@ -44,21 +45,30 @@ fn consumer_message(group: &str, topic: &str, brokers: Vec<String>) -> Result<()
 
         // 为了方便查看value，我这里将value转换为String格式
         for ms in message_sets.iter() {
+            let topic = ms.topic(); // 消息topic
+            let partition = ms.partition(); // 消息topic对应的partition
             for m in ms.messages() {
                 info!(
-                    "received message topic:{} group:{} partition:{}@offset:{}: value:{:?}",
-                    ms.topic(),
+                    "received message topic:{} group:{} partition:{}@offset:{}: value:{}",
+                    topic,
                     group,
-                    ms.partition(),
+                    partition,
                     m.offset,
                     String::from_utf8(m.value.to_vec()).unwrap_or("".to_string()),
                 );
             }
 
-            let _ = con.consume_messageset(ms);
+            if let Err(err) = conn.consume_messageset(ms) {
+                error!(
+                    "consume message topic:{} group:{} error:{}",
+                    topic, group, err
+                );
+            } else {
+                info!("consume message topic:{} group:{} success", topic, group)
+            }
         }
 
         // commit consumed
-        con.commit_consumed()?;
+        conn.commit_consumed()?;
     }
 }
