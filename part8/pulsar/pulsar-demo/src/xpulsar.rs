@@ -47,6 +47,7 @@ pub struct Message {
     pub payload: String,
 }
 
+// 实现Message序列化
 impl SerializeMessage for Message {
     // 实现消息序列化处理，返回producer::Message和PulsarError
     fn serialize_message(input: Self) -> Result<producer::Message, PulsarError> {
@@ -59,7 +60,7 @@ impl SerializeMessage for Message {
     }
 }
 
-// 实现反序列化
+// 实现Message反序列化
 impl DeserializeMessage for Message {
     type Output = Result<Message, serde_json::Error>;
     // 实现message反序列化处理，也就是从pulsar Payload中解析出消息为Message
