@@ -12,13 +12,8 @@ use xpulsar::Message;
 async fn main() -> Result<(), PulsarError> {
     println!("consumer pulsar message...");
     env::set_var("RUST_LOG", "debug");
-    env_logger::init();
-
-    // 消息消费
-    message_consumer().await
-}
-
-async fn message_consumer() -> Result<(), PulsarError> {
+    env_logger::init(); // 操作日志初始化
+    
     // pulsar连接地址
     let addr = env::var("PULSAR_ADDRESS").unwrap_or("pulsar://127.0.0.1:6650".to_string());
     let pulsar_client = xpulsar::PulsarConf::new(&addr)
