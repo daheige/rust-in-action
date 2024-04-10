@@ -12,11 +12,6 @@ async fn main() -> Result<(), PulsarError> {
     println!("publish pulsar message");
     env::set_var("RUST_LOG", "debug");
     env_logger::init();
-    // 消息发送
-    message_publish().await
-}
-
-async fn message_publish() -> Result<(), PulsarError> {
     // pulsar连接地址
     let addr = env::var("PULSAR_ADDRESS").unwrap_or("pulsar://127.0.0.1:6650".to_string());
     let pulsar_client = xpulsar::PulsarConf::new(&addr)
@@ -43,6 +38,7 @@ async fn message_publish() -> Result<(), PulsarError> {
     // 验证producer connection是否生效
     producer.check_connection().await?;
 
+    // 消息发送
     let mut counter: usize = 0;
     loop {
         let msg = Message {
