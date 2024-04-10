@@ -37,6 +37,8 @@ impl<'a> PulsarConf<'a> {
             builder = builder.with_auth(authentication);
         }
 
+        // 更多pulsar初始化参数配置
+        // 可以看pulsar crate源码 impl<Exe: Executor> PulsarBuilder<Exe> 的with_开头的方法
         builder.build().await
     }
 }

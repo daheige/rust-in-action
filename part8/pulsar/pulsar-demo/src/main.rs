@@ -14,6 +14,7 @@ async fn main() -> Result<(), PulsarError> {
     env_logger::init();
     // pulsar连接地址
     let addr = env::var("PULSAR_ADDRESS").unwrap_or("pulsar://127.0.0.1:6650".to_string());
+    // 初始化pulsar client客户端
     let pulsar_client = xpulsar::PulsarConf::new(&addr)
         .client()
         .await
