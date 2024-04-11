@@ -12,6 +12,7 @@ pub struct PulsarConf<'a> {
     token: Option<&'a str>, // token optional param
 }
 
+// 为PulsarConf实现pulsar客户端的创建
 impl<'a> PulsarConf<'a> {
     pub fn new(addr: &'a str) -> Self {
         Self {
