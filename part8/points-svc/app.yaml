@@ -1,17 +1,14 @@
 app_debug: true # 是否开启调试模式
-app_port: 8080 # http service运行端口
+app_port: 3000 # http service运行端口
 graceful_wait_time: 3 # http service平滑退出等待时间
 mysql_conf:
-  dsn: "mysql://root:root123456@localhost/article_sys" # dsn连接句柄信息
+  dsn: "mysql://root:root123456@localhost/points_sys" # dsn连接句柄信息
   max_connections: 100 # 最大连接数，默认为500
   min_connections: 10  # 最小连接数，默认为10
   max_lifetime: 1800  # 连接池默认生命周期，默认为1800s
   idle_timeout: 300   # 空闲连接生命周期超时，默认为300s
   connect_timeout: 10 # 连接超时时间，默认为10s
-redis_conf:
-  dsn: "redis://:@127.0.0.1:6379/0"   # redis dsn信息，用于连接redis
-  max_size: 300                       # 最大连接个数，默认为300
-  min_idle: 3                         # 最小空闲数，默认为3
-  max_lifetime: 1800                  # 过期时间，默认为1800s
-  idle_timeout: 300                   # 连接池最大生存期，默认为300s
-  connection_timeout: 10              # 连接超时时间，默认为10s
+
+pulsar_conf:
+  addr: pulsar://127.0.0.1:6650
+  token: "" # pulsar auth token

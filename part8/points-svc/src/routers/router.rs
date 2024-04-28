@@ -5,8 +5,8 @@ use std::sync::Arc;
 // api路由设置
 pub fn api_router(state: Arc<config::AppState>) -> Router {
     let router = Router::new()
-        .route("/", get(handlers::article::root))
-        .route("/api/article/:id", get(handlers::article::show))
+        .route("/", get(handlers::index::root))
+        .route("/api/points/:openid", get(handlers::index::user_points))
         .with_state(state);
     router
 }

@@ -6,7 +6,7 @@ mod infras; // 项目中基础设施层封装
 mod routers; // axum http框架路由模块
 
 // 引入模块
-use crate::config::{mysql, xredis, APP_CONFIG};
+use crate::config::{mysql, xpulsar, APP_CONFIG};
 use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
@@ -16,6 +16,9 @@ use tokio::signal;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // env::set_var("RUST_LOG", "debug");
+    env_logger::init(); // 初始化操作日志配置
+
     println!("app_debug:{:?}", APP_CONFIG.app_debug);
     println!("current process pid:{}", process::id());
 
@@ -23,14 +26,17 @@ async fn main() -> anyhow::Result<()> {
     println!("app run on:{}", address.to_string());
 
     // mysql pool
-    let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf).await?;
+    let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf)
+        .await
+        .expect("mysql pool init failed");
+    let pulsar_client = xpulsar::client(&APP_CONFIG.pulsar_conf)
+        .await
+        .expect("pulsar client init failed");
 
-    // redis pool
-    let redis_pool = xredis::pool(&APP_CONFIG.redis_conf);
     // 通过arc引用计数的方式传递state
     let app_state = Arc::new(config::AppState {
         mysql_pool: mysql_pool,
-        redis_pool: redis_pool,
+        pulsar_client: pulsar_client,
     });
 
     // create axum router

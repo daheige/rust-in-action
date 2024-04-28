@@ -1,4 +1,4 @@
-pub mod article;
+pub mod index;
 
 use serde::{Deserialize, Serialize};
 
@@ -14,3 +14,6 @@ pub struct Reply<T> {
 // empty object,like {}
 #[derive(Deserialize, Serialize, Debug)]
 pub struct EmptyObject {}
+
+// empty array,like:[]
+type EmptyArray = Vec<EmptyObject>;
