@@ -17,3 +17,10 @@ pub struct EmptyObject {}
 
 // empty array,like:[]
 type EmptyArray = Vec<EmptyObject>;
+
+// 定义分页请求参数
+#[derive(Debug, PartialEq, Deserialize)]
+pub struct Pagination {
+    pub limit: Option<u64>,
+    pub page: Option<u64>,
+}
