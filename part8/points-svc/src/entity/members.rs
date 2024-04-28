@@ -20,7 +20,7 @@ pub struct MembersEntity {
 
 // impl table_name method for MembersEntity
 impl MembersEntity {
-    pub fn table_name(&self) -> String {
+    pub fn table_name() -> String {
         MEMBERS_TABLE.to_string()
     }
 }

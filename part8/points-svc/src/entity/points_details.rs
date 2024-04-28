@@ -1,5 +1,5 @@
 // points_details table.
-use chrono::prelude::*;
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
 // POINTS_DETAILS_TABLE for points_details table
@@ -18,7 +18,7 @@ pub struct PointsDetailsEntity {
 
 // impl table_name method for PointsDetailsEntity
 impl PointsDetailsEntity {
-    pub fn table_name(&self) -> String {
+    pub fn table_name() -> String {
         POINTS_DETAILS_TABLE.to_string()
     }
 }
