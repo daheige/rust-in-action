@@ -1,6 +1,5 @@
-// points_details table.
-use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+use sqlx::types::chrono::NaiveDateTime;
 
 // POINTS_DETAILS_TABLE for points_details table
 const POINTS_DETAILS_TABLE: &str = "points_details";

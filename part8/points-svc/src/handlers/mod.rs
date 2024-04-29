@@ -10,12 +10,11 @@ pub struct Reply<T> {
     pub data: Option<T>,
 }
 
-// 空结构体定义
-// empty object,like {}
+// 空结构体定义 empty object,like {}
 #[derive(Deserialize, Serialize, Debug)]
 pub struct EmptyObject {}
 
-// empty array,like:[]
+// 空数组定义 empty array,like:[]
 type EmptyArray = Vec<EmptyObject>;
 
 // 定义分页请求参数

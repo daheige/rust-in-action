@@ -8,5 +8,5 @@ version = "0.1.0"
 [dependencies]
 chrono = "0.4.35"
 futures = "0.3.30"
-sqlx = {version = "0.7.4", features = ["runtime-tokio-rustls", "mysql", "chrono"]}
-tokio = {version = "1", features = ["full"]}
+sqlx = { version = "0.7.4", features = ["runtime-tokio-rustls", "mysql", "chrono", "time"] }
+tokio = { version = "1", features = ["full"] }

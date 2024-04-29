@@ -19,7 +19,7 @@ anyhow = "1.0.82"
 
 # chrono用于时间处理
 chrono = "0.4.38"
-sqlx = { version = "0.7.4", features = ["runtime-tokio-rustls", "mysql", "chrono"] }
+sqlx = { version = "0.7.4", features = ["runtime-tokio-rustls", "mysql", "chrono", "time"] }
 
 # 配置文件读取以及用于消息序列化和反序列化处理
 serde_yaml = "0.9.33"

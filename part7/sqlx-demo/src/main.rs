@@ -1,9 +1,9 @@
-use chrono::prelude::*;
 use futures::TryStreamExt;
 // 引入sqlx包
 use sqlx::mysql::{MySqlPoolOptions, MySqlRow};
 use sqlx::Row;
 
+use sqlx::types::chrono::NaiveDate;
 use std::env;
 use std::ops::DerefMut;
 use std::time::Duration;
@@ -151,7 +151,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("lisi")
         .bind(32)
         .bind("abc")
-        .bind(chrono::NaiveDate::from_ymd_opt(2022, 04, 13))
+        .bind(NaiveDate::from_ymd_opt(2022, 04, 13))
         // In 0.7, `Transaction` can no longer implement `Executor` directly,
         // so it must be dereferenced to the internal connection type.
         // 这里需要对tx进行解引用并获取内部DB的可变引用connection

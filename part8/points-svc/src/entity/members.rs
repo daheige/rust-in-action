@@ -1,21 +1,22 @@
-// members table.
-use std::time::Duration;
+use serde::{Deserialize, Serialize};
+use sqlx::types::chrono::NaiveDateTime;
+
 // MEMBERS_TABLE for members table
 const MEMBERS_TABLE: &str = "members";
 
 // MembersEntity for members table
-#[derive(Debug, Default)]
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct MembersEntity {
-    pub id: i64,
+    pub id: u64,
     pub openid: String,
     pub phone: String,
     pub nick: String,
-    pub level: i64,
-    pub points: i64,
-    pub used_points: i64,
-    pub expired_at: Duration,
-    pub created_at: Duration,
-    pub updated_at: Option<Duration>,
+    pub level: u8,
+    pub points: u64,
+    pub used_points: u64,
+    pub expired_at: NaiveDateTime,
+    pub created_at: NaiveDateTime,
+    pub updated_at: Option<NaiveDateTime>,
 }
 
 // impl table_name method for MembersEntity

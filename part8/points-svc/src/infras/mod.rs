@@ -6,4 +6,4 @@ mod xpulsar;
 // 使用use对模块重新导出
 pub use config::{Config, ConfigTrait};
 pub use xmysql::MysqlService;
-pub use xpulsar::{Message, PulsarService};
+pub use xpulsar::PulsarService;
