@@ -130,6 +130,8 @@ pub async fn add(
         }
     }
 
+    println!("request message:{:?}", message);
+
     // 发送积分操作的消息
     let reply = publish_message(message, &state.pulsar_client).await;
     if let Err(err) = reply {
@@ -143,6 +145,8 @@ pub async fn add(
         )
             .into_response();
     }
+
+    println!("publish message success");
 
     // 发送消息成功后，返回结果
     (
@@ -162,7 +166,7 @@ async fn publish_message(
     pulsar_client: &Pulsar<TokioExecutor>,
 ) -> Result<(), PulsarError> {
     // 消息主题topic
-    let topic = "my-topic";
+    let topic = "points-topic";
     // 创建producer
     let mut producer = pulsar_client
         .producer()
