@@ -8,7 +8,7 @@ pub struct PointsMessage {
     pub points: u64,
     pub action: String,
     pub reason: String,
-    pub created_at: String,
+    pub created_at: Option<String>,
 }
 
 // 为PointsMessage实现pulsar SerializeMessage序列化

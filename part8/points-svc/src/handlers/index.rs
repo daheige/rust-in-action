@@ -185,7 +185,7 @@ async fn publish_message(
     let created_at = local.format("%Y-%m-%d %H:%M:%S").to_string();
     // 将消息推送到Pulsar mq队列对应的topic主题中
     let message = PointsMessage {
-        created_at,
+        created_at: Some(created_at),
         ..message // 其他字段通过message结构体字段进行填充
     };
     producer.send(message).await?;
