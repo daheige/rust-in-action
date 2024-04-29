@@ -104,30 +104,26 @@ pub async fn add(
     // 判断用户是否存在
     let res = check_user(&message.openid, &state.mysql_pool).await;
     if let Err(err) = res {
-        match err {
-            sqlx::Error::RowNotFound => {
-                return (
-                    StatusCode::OK,
-                    Json(super::Reply {
-                        code: 1001,
-                        message: "openid not found".to_string(),
-                        data: Some(super::EmptyObject {}),
-                    }),
-                )
-                    .into_response();
-            }
-            other => {
-                return (
-                    StatusCode::OK,
-                    Json(super::Reply {
-                        code: 404,
-                        message: format!("openid invalid,err:{}", other),
-                        data: Some(super::EmptyObject {}),
-                    }),
-                )
-                    .into_response();
-            }
-        }
+        return match err {
+            sqlx::Error::RowNotFound => (
+                StatusCode::OK,
+                Json(super::Reply {
+                    code: 1001,
+                    message: "openid not found".to_string(),
+                    data: Some(super::EmptyObject {}),
+                }),
+            )
+                .into_response(),
+            other => (
+                StatusCode::OK,
+                Json(super::Reply {
+                    code: 404,
+                    message: format!("openid invalid,err:{}", other),
+                    data: Some(super::EmptyObject {}),
+                }),
+            )
+                .into_response(),
+        };
     }
 
     println!("request message:{:?}", message);
