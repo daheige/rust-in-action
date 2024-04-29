@@ -23,7 +23,7 @@ impl<'a> MysqlService<'a> {
         }
 
         Self {
-            dsn: dsn,
+            dsn,
             max_connections: 500,
             min_connections: 10,
             max_lifetime: Duration::from_secs(1800),
