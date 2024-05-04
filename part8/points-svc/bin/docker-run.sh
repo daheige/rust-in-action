@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# 启动之前删除原有单机版的pulsar服务
+# 启动之前，先删除原有单机版的pulsar服务
 docker rm -f `docker ps -a | grep pulsar-server | awk '{print $1}'`
 
 # pulsar in docker for macOS, Linux, and Windows:

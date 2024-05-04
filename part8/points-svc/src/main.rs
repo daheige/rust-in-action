@@ -1,5 +1,5 @@
 // 定义项目相关的模块
-mod config; // 用于mysql和redis config初始化和连接池管理
+mod config; // 用于配置文件读取以及mysql和pulsar初始化
 mod entity; // 实体对象定义
 mod handlers; // 用于http handler处理
 mod infras; // 项目中基础设施层封装
@@ -39,7 +39,7 @@ async fn main() -> anyhow::Result<()> {
         pulsar_client, // 这里等价于pulsar_client: pulsar_client
     });
 
-    // create axum router
+    // Create axum router
     let router = routers::api_router(app_state);
 
     // Create a `TcpListener` using tokio.
