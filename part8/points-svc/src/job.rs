@@ -46,13 +46,9 @@ async fn main() -> anyhow::Result<()> {
     });
 
     // 当接收到退出信号量时候，更新stop为true
-    tokio::spawn(async move {
-        println!("recv data:{:?}", recv.recv().unwrap());
-        *stop.write().await = true;
-    })
-    .await
-    .unwrap();
-
+    println!("recv data:{:?}", recv.recv().unwrap());
+    let mut stop = stop.write().await;
+    *stop = true;
     println!("shutdown success");
     Ok(())
 }
