@@ -248,7 +248,7 @@ async fn sub_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
     Ok(())
 }
 
-// graceful shutdown
+// 平滑退出信号量处理
 async fn graceful_shutdown(sender: mpsc::Sender<&str>) {
     let ctrl_c = async {
         signal::ctrl_c()

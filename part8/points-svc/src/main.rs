@@ -35,8 +35,10 @@ async fn main() -> anyhow::Result<()> {
 
     // 通过arc引用计数的方式传递state
     let app_state = Arc::new(config::AppState {
-        mysql_pool, // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
-        pulsar_client, // 这里等价于pulsar_client: pulsar_client
+        // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
+        mysql_pool,
+        // 这里等价于pulsar_client: pulsar_client
+        pulsar_client,
     });
 
     // Create axum router
@@ -52,7 +54,7 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-// graceful shutdown
+// 平滑退出信号量处理
 async fn graceful_shutdown() {
     let ctrl_c = async {
         signal::ctrl_c()
