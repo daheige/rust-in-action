@@ -85,7 +85,7 @@ pub async fn points(
         println!("id = {} points = {}", row.id, row.points);
     }
 
-    // 返回文章实体信息
+    // 返回积分明细列表信息
     (
         StatusCode::OK,
         Json(super::Reply {
@@ -129,7 +129,7 @@ pub async fn publish(
 
     println!("request message:{:?}", message);
 
-    // 发送积分操作的消息
+    // 发送积分操作的消息通知
     let reply = publish_message(message, &state.pulsar_client).await;
     if let Err(err) = reply {
         return (
@@ -219,7 +219,7 @@ pub async fn query_points(
         PointsDetailsEntity::table_name()
     );
     // 通过sqlx提供的query_as方法将查询结果集映射到Vec中
-    // Vec的每个元素是PointsDetailsEntity类型
+    // records的每个元素是PointsDetailsEntity类型
     let records: Vec<PointsDetailsEntity> = sqlx::query_as(&sql)
         .bind(openid)
         .bind(limit)
