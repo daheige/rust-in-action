@@ -1,3 +1,4 @@
+// 导入infras模块的PulsarService结构体
 use crate::infras::PulsarService;
 use serde::{Deserialize, Serialize};
 // 导入pulsar包
@@ -9,6 +10,7 @@ pub struct PulsarConf {
     pub token: String, // auth token信息
 }
 
+// 创建pulsar client
 pub async fn client(conf: &PulsarConf) -> Result<Pulsar<TokioExecutor>, PulsarError> {
     let mut p = PulsarService::new(&conf.addr);
     if !conf.token.is_empty() {

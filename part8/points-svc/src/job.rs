@@ -53,6 +53,7 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
+// 消费积分增加/扣减在pulsar topic中的消息
 async fn consumer_message(exit: Arc<RwLock<bool>>) -> anyhow::Result<()> {
     // mysql pool
     let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf)
@@ -143,6 +144,7 @@ async fn add_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
         PointsDetailsEntity::table_name(),
     );
 
+    println!("insert sql:{}", sql);
     // 创建一个事务transaction
     let mut tx = mysql_pool.begin().await?;
 
@@ -166,6 +168,7 @@ async fn add_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
         r#"update {} set points = points + ?,updated_at = ? where openid = ?"#,
         MembersEntity::table_name(),
     );
+    println!("insert sql:{}", sql);
     let affect_res = sqlx::query(&sql)
         .bind(msg.points)
         .bind(NaiveDateTime::parse_from_str(&created_at, fmt).unwrap())
@@ -213,6 +216,8 @@ async fn sub_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
         PointsDetailsEntity::table_name()
     );
 
+    println!("insert sql:{}", sql);
+
     // 创建一个事务transaction
     let mut tx = mysql_pool.begin().await?;
     // 插入积分明细记录
@@ -234,6 +239,7 @@ async fn sub_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
         r#"update {} set points = points - ?,used_points = used_points + ?,updated_at = ? where openid = ?;"#,
         MembersEntity::table_name(),
     );
+    println!("update sql:{}", sql);
     let affect_res = sqlx::query(&sql)
         .bind(points)
         .bind(points)
@@ -264,19 +270,21 @@ async fn graceful_shutdown(sender: mpsc::Sender<&str>) {
             .await;
     };
 
+    let graceful_wait_time = Duration::from_secs(APP_CONFIG.graceful_wait_time);
     #[cfg(not(unix))]
     let terminate = std::future::pending::<()>();
     tokio::select! {
         _ = ctrl_c =>{
             println!("received ctrl_c signal,server will exist...");
-            tokio::time::sleep(Duration::from_secs(APP_CONFIG.graceful_wait_time)).await;
+            tokio::time::sleep(graceful_wait_time).await;
         },
         _ = terminate => {
             println!("received terminate signal,server will exist...");
-            tokio::time::sleep(Duration::from_secs(APP_CONFIG.graceful_wait_time)).await;
+            tokio::time::sleep(graceful_wait_time).await;
         },
     }
 
     println!("signal received,starting graceful shutdown");
+    // 发送平滑退出消息通知
     sender.send("shutdown").unwrap();
 }

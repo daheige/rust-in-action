@@ -97,7 +97,8 @@ pub async fn points(
         .into_response()
 }
 
-pub async fn add(
+// 积分增加和扣减发送消息通知
+pub async fn publish(
     State(state): State<Arc<config::AppState>>,
     Json(message): Json<PointsMessage>,
 ) -> Response {
@@ -217,6 +218,8 @@ pub async fn query_points(
         "select * from {} where openid = ? order by id desc limit ? offset ?",
         PointsDetailsEntity::table_name()
     );
+    // 通过sqlx提供的query_as方法将查询结果集映射到Vec中
+    // Vec的每个元素是PointsDetailsEntity类型
     let records: Vec<PointsDetailsEntity> = sqlx::query_as(&sql)
         .bind(openid)
         .bind(limit)

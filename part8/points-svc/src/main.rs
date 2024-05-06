@@ -70,16 +70,17 @@ async fn graceful_shutdown() {
             .await;
     };
 
+    let graceful_wait_time = Duration::from_secs(APP_CONFIG.graceful_wait_time);
     #[cfg(not(unix))]
     let terminate = std::future::pending::<()>();
     tokio::select! {
         _ = ctrl_c =>{
             println!("received ctrl_c signal,server will exist...");
-            tokio::time::sleep(Duration::from_secs(APP_CONFIG.graceful_wait_time)).await;
+            tokio::time::sleep(graceful_wait_time).await;
         },
         _ = terminate => {
             println!("received terminate signal,server will exist...");
-            tokio::time::sleep(Duration::from_secs(APP_CONFIG.graceful_wait_time)).await;
+            tokio::time::sleep(graceful_wait_time).await;
         },
     }
 

@@ -1,16 +1,18 @@
+// 导入infras模块的MysqlService结构体
 use crate::infras::MysqlService;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
+// mysql配置信息
 #[derive(Debug, PartialEq, Serialize, Deserialize, Default)]
 pub struct MysqlConf {
     pub dsn: String,          // dsn连接句柄信息
-    pub max_connections: u32, // 最大连接数，默认为500
-    pub min_connections: u32, // 最小连接数，默认为10
-    pub max_lifetime: u64,    // 连接池默认生命周期，默认为1800s
-    // 空闲连接生命周期超时，默认为600s
+    pub max_connections: u32, // 最大连接数
+    pub min_connections: u32, // 最小连接数
+    pub max_lifetime: u64,    // 连接池默认生命周期，单位s
+    // 空闲连接生命周期超时，单位s
     pub idle_timeout: u64,
-    // 连接超时时间，默认为10s
+    // 连接超时时间，单位s
     pub connect_timeout: u64,
 }
 

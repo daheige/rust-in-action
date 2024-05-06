@@ -7,12 +7,12 @@ const POINTS_DETAILS_TABLE: &str = "points_details";
 // PointsDetailsEntity for points_details table
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct PointsDetailsEntity {
-    pub id: u64,
-    pub openid: String,
-    pub points: u64,
-    pub action: String,
-    pub reason: String,
-    pub created_at: NaiveDateTime,
+    pub id: u64,                   // 自增id
+    pub openid: String,            // 用户唯一标识
+    pub points: u64,               // 积分数
+    pub action: String,            // 增加或扣减动作，add表示增加，sub表示扣除
+    pub reason: String,            // 积分操作理由
+    pub created_at: NaiveDateTime, // 积分创建时间
 }
 
 // impl table_name method for PointsDetailsEntity
