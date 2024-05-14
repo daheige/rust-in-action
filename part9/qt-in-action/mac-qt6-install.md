@@ -18,7 +18,7 @@ brew安装的qt版本也有可能是高版本，在对应的目录执行ls命令
 
 ```shell
 % ls
-6.5.1_3
+6.7.0_1
 ```
 
 ## 安装qt必要的工具链
@@ -41,18 +41,15 @@ vim ~/.bash_profile
 
 ```shell
 # 分别对 LDFLAGS CPPFLAGS PKG_CONFIG_PATH 配置
-export QT_HOME=/usr/local/Cellar/qt/6.5.1_3 # qt安装目录
+export QT_HOME=/usr/local/Cellar/qt/6.7.0_1 # qt安装目录
 
-export LDFLAGS="-L$QT_HOME/lib"
-# 对于 LDFLAGS 如果系统中本身就有设置值的话
-# 请通过 export LDFLAGS="$LDFLAGS -L$QT_HOME/lib" 方式设置
-
+# 请通过下面的方式设置LDFLAGS
+export LDFLAGS="$LDFLAGS -L$QT_HOME/lib"
 export LDFLAGS="$LDFLAGS -L/usr/local/opt/llvm/lib"
 export LDFLAGS="$LDFLAGS -L/usr/local/opt/llvm/lib/c++ -Wl,-rpath,/usr/local/opt/llvm/lib/c++"
 
-# 对于 CPPFLAGS 如果系统中本身就有设置值的话
-# 请通过 export CPPFLAGS="$CPPFLAGS -I$QT_HOME/include" 方式配置
-export CPPFLAGS="-I$QT_HOME/include"
+# 请通过下面的方式设置CPPFLAGS
+export CPPFLAGS="$CPPFLAGS -I$QT_HOME/include"
 export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/llvm/include"
 
 # 对于 PKG_CONFIG_PATH 设置，如果系统中本身就有的话
@@ -72,4 +69,4 @@ source ~/.bash_profile
 # qt-creator 配置（可选）
 
 如果需要用c++开发qt项目，就需要qt link
-打开qt-creator填写qt安装路径`/usr/local/Cellar/qt/6.5.1_3`就完成了qt link设置
+打开qt-creator填写qt安装路径`/usr/local/Cellar/qt/6.7.0_1`就完成了qt link设置
