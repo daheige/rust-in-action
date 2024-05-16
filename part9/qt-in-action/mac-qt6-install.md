@@ -52,9 +52,10 @@ export LDFLAGS="$LDFLAGS -L/usr/local/opt/llvm/lib/c++ -Wl,-rpath,/usr/local/opt
 export CPPFLAGS="$CPPFLAGS -I$QT_HOME/include"
 export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/llvm/include"
 
-# 对于 PKG_CONFIG_PATH 设置，如果系统中本身就有的话
-# 请通过 export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$QT_HOME/lib/pkgconfig" 方式设置
+# 对于 PKG_CONFIG_PATH 设置，如果系统中没有设置过
 export PKG_CONFIG_PATH="$QT_HOME/lib/pkgconfig"
+# 如果你执行 echo $PKG_CONFIG_PATH 命令，输出结果不为空，就通过通过下面的方式设置
+# export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$QT_HOME/lib/pkgconfig"
 
 export PATH="$QT_HOME/bin:$PATH"
 export PATH="/usr/local/opt/llvm/bin:$PATH"
