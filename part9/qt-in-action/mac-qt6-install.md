@@ -1,11 +1,15 @@
-# mac os qt6 install
+# 安装qt必要的工具链
 
 ```shell
-brew install qt
+brew install llvm cmake make gcc mold clang-format
+```
+
+```shell
+brew install qt6
 brew install qt-creator # 可选，如果需要用c++开发qt项目，就需要安装qt-creator
 ```
 
-当看到下面这个表示安装好了
+当看到下面这个表示qt-creator
 
 ```
 ==> Installing Cask qt-creator
@@ -13,21 +17,14 @@ brew install qt-creator # 可选，如果需要用c++开发qt项目，就需要�
 🍺  qt-creator was successfully installed!
 ```
 
-安装好的目录在：`/usr/local/Cellar/qt`中
-brew安装的qt版本也有可能是高版本，在对应的目录执行ls命令查看Qt版本，如下所示：
+安装好的目录在：`/usr/local/Cellar/qt`中，需要注意的一点：brew安装的qt版本也有可能是高版本。 在对应的目录执行ls命令查看Qt版本，如下所示：
 
 ```shell
 % ls
 6.7.0_1
 ```
 
-## 安装qt必要的工具链
-
-```shell
-brew install llvm cmake make gcc mold clang-format
-```
-
-## qt link 绑定
+# qt link 绑定
 
 这一步需要做，不然cxx-qt找不到qt相关的路径
 
