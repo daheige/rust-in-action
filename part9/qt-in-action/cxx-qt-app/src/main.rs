@@ -1,4 +1,4 @@
-// 定义cxx qt object module
+// 定义cxx qt object模块
 mod cxxqt_object;
 use cxx_qt_lib::{QGuiApplication, QQmlApplicationEngine, QUrl};
 

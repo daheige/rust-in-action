@@ -9,11 +9,13 @@ fn main() {
     cc::Build::new()
         .define(
             "APP_NAME",
-            format!("\"{}\"", env!("CARGO_PKG_NAME")).as_str(), // 获取rust当前项目的名字
+            // 获取rust当前项目的名字
+            format!("\"{}\"", env!("CARGO_PKG_NAME")).as_str(),
         )
         .define(
             "VERSION",
-            format!("\"{}\"", env!("CARGO_PKG_VERSION")).as_str(), // 获取rust当前项目的版本号
+            // 获取rust当前项目的版本号
+            format!("\"{}\"", env!("CARGO_PKG_VERSION")).as_str(),
         )
         .define("WELCOME", "\"YES\"") //  定义WELCOME宏
         .file("c_code/foo.c")
