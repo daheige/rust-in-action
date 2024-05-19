@@ -1,0 +1,22 @@
+[package]
+name = "qmeta-app"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# 引入qmetaobject相关的包
+qmetaobject = { version = "0.2.10", features = ["log"] }
+qttypes = { version = "0.2.11", features = ["qtquick"] }
+cstr = "0.2.12"
+cpp = "0.5.9"
+# 引入md5加密的包
+md5 = "0.7.0"
+
+#引入日志相关的包
+log = "0.4.21"
+env_logger = "0.10.2"
+
+#引入chrono包用于日志时区设置
+chrono = "0.4.38"
