@@ -1,2 +1,2 @@
 # rust-in-action
-rust in action book
+Rust practical project development《rust实战项目开发》

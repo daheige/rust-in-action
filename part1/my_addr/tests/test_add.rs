@@ -12,7 +12,7 @@ use test::Bencher;
 fn bench_add2(b: &mut Bencher){
     b.iter(|| {
         for i in 1..100{
-            println!("add2(1,{}) = {}",i,add2(1,i));
+            println!("add2(1,{}) = {}",i,my_addr::add2(1,i));
         }
     })
 }

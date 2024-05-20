@@ -1,0 +1,17 @@
+[package]
+name = "string_utils"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# 这个名称在Python中用于导入
+name = "string_utils"
+
+# cdylib是生成供Python模块导入的共享库所必需的。
+crate-type = ["cdylib"]
+
+[dependencies]
+# pyo3包需要指定extension-module features
+pyo3 = { version = "0.21.2", features = ["extension-module"] }
