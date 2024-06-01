@@ -13,6 +13,7 @@ async fn hello() {
 // 在async fn中调用Future使用.await表达式
 async fn say() {
     println!("call hello_cat with .await keywords");
+    // 在async fn函数中使用.await可以等待任务执行完毕，并不会阻塞当前线程
     hello_cat().await;
     println!("hello,world");
 }
