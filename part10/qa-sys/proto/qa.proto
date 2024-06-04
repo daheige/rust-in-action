@@ -1,0 +1,214 @@
+syntax = "proto3";
+
+// protoc 3.11.4+ 版本请用这个
+option go_package = ".;pb";
+
+package qa; // 默认package
+
+// qa服务接口定义
+service QAService {
+  // 用户登录
+  rpc UserLogin(UserLoginRequest) returns (UserLoginReply);
+
+  // 用户退出
+  rpc UserLogout(UserLogoutRequest) returns(UserLogoutReply);
+
+  // 用户注册
+  rpc UserRegister(UserRegisterRequest) returns(UserRegisterReply);
+
+  // 发表问题
+  rpc AddQuestion(AddQuestionRequest) returns (AddQuestionReply);
+
+  // 删除问题
+  rpc DeleteQuestion(DeleteQuestionRequest) returns(DeleteQuestionReply);
+
+  // 修改问题
+  rpc UpdateQuestion(UpdateQuestionRequest) returns (UpdateQuestionReply);
+
+  // 查看问题详情
+  rpc QuestionDetail(QuestionDetailRequest) returns(QuestionDetailReply);
+
+  // 最新问题列表（采用下拉分页形式获取数据，按照id desc倒序）
+  rpc LatestQuestions(LatestQuestionsRequest) returns(LatestQuestionsReply);
+
+  // 回答列表
+  rpc AnswerList(AnswerListRequest) returns(AnswerListReply);
+
+  // 添加问题回答
+  rpc AddAnswer(AddAnswerRequest) returns (AddAnswerReply);
+
+  // 删除问题对应的回答
+  rpc DeleteAnswer(DeleteAnswerRequest) returns(DeleteAnswerReply);
+
+  // 修改回答
+  rpc UpdateAnswer(UpdateAnswerRequest) returns (UpdateAnswerReply);
+
+  // 用户点赞回答
+  rpc AnswerAgree(AnswerAgreeRequest) returns(AnswerAgreeReply);
+
+  // 问题阅读数
+  rpc QuestionReadCount(QuestionReadCountRequest) returns (QuestionReadCountReply);
+}
+
+// 登录请求
+message UserLoginRequest {
+  string username = 1; // 用户名
+  string password = 2; // 访问密码
+}
+
+// 登录返回结果
+message UserLoginReply {
+  string token = 1;
+}
+
+// 用户退出请求
+message UserLogoutRequest {
+  string token = 1; // 用户登录成功的token
+}
+
+// 用户退出返回结果
+message UserLogoutReply {
+  int64 state = 1;
+}
+
+// 用户注册请求
+message UserRegisterRequest {
+  string username = 1;
+  string password = 2;
+  string nick = 3;
+}
+
+// 用户注册返回结果
+message UserRegisterReply {
+  string openid = 1; // 用户唯一标识openid
+}
+
+// 发表问题
+message AddQuestionRequest {
+   string title = 1;
+   string content = 2;
+   string username = 3;
+}
+
+// 发表问题返回结果
+message AddQuestionReply {
+  int64 id = 1;
+}
+
+message DeleteQuestionRequest {
+  int64 id = 1;
+  string username = 2;
+}
+
+message DeleteQuestionReply {
+  int64 state = 1;
+}
+
+message UpdateQuestionRequest {
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  string username = 4;
+}
+
+message UpdateQuestionReply {
+  int64 state = 1;
+}
+
+message AnswerEntity {
+  int64 question_id = 1; // 问题id
+  string content = 2; // 回答内容
+  string username = 3; // 用户名
+  int64 agree_count = 4; // 点赞数
+}
+
+message AddAnswerRequest {
+    AnswerEntity answer = 1;
+}
+
+message AddAnswerReply {
+  int64 id = 1; // 回答唯一标识
+}
+
+message DeleteAnswerRequest {
+  int64  id = 1;
+  string username = 2;
+}
+
+message DeleteAnswerReply {
+  int64 state = 1;
+}
+
+message UpdateAnswerRequest {
+  int64  id = 1;
+  string content = 2; // 回答内容
+  string username = 3; // 用户名
+}
+
+message UpdateAnswerReply {
+  int64 state = 1;
+}
+
+message AnswerAgreeRequest {
+  int64 id = 1; // 回答id
+  string username = 2; // 用户名
+}
+
+message AnswerAgreeReply {
+  int64 id = 1;
+  int64 agree_count = 2;
+}
+
+message QuestionReadCountRequest {
+  int64 id = 1; // 问题id
+  string username = 2;
+}
+
+message QuestionReadCountReply {
+  int64 id = 1;
+  int64 read_count = 2;
+}
+
+message QuestionDetailRequest {
+  int64 id = 1; // 问题id
+  string username = 2;
+}
+
+message QuestionDetailReply {
+    QuestionEntity question = 1;
+}
+
+message QuestionEntity {
+  int64 id = 1; // 问题id
+  string title = 2; // 问题标题
+  string content = 3; // 内容，这里只返回部分内容
+  string username = 4; // 用户名
+  int64 read_count = 5; // 问题阅读数
+  int64 reply_count = 6; // 回答数量
+}
+
+message LatestQuestionsRequest {
+  string username = 1; // 用户名
+  int64 last_id = 2; // 上一次的question_id，第一页默认为0
+}
+
+message LatestQuestionsReply {
+  repeated QuestionEntity list = 1;
+  int64 last_id = 2; // 上一次的question_id
+  int64 limit = 3; // 每页展示条数
+  bool is_end = 4; // 是否到底了
+}
+
+message AnswerListRequest {
+  int64 question_id = 1; // 问题id
+  int64 page = 2; // 当前页数
+  int64 limit = 3; // 每页数据
+  string username = 4;
+}
+
+message AnswerListReply {
+  repeated AnswerEntity list = 1;
+  int64 total = 2;
+  int64 total_page = 3;
+  bool is_end = 4;
+}
