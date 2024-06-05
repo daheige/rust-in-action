@@ -3,7 +3,7 @@ syntax = "proto3";
 // protoc 3.11.4+ 版本请用这个
 option go_package = ".;pb";
 
-package qa; // 默认package
+package qa; // 默认的package为qa
 
 // qa服务接口定义
 service QAService {
@@ -58,12 +58,12 @@ message UserLoginRequest {
 
 // 登录返回结果
 message UserLoginReply {
-  string token = 1;
+  string token = 1; // 登录成功后加密的token
 }
 
-// 用户退出请求
+// 用户退出请求，直接清理redis中的存放的 username =>{"login_time":"2024-06-05 12:01:00"}
 message UserLogoutRequest {
-  string token = 1; // 用户登录成功的token
+  string username = 1; // 用户名（这个在网关层解密token后的username）
 }
 
 // 用户退出返回结果
@@ -75,109 +75,128 @@ message UserLogoutReply {
 message UserRegisterRequest {
   string username = 1;
   string password = 2;
-  string nick = 3;
 }
 
 // 用户注册返回结果
 message UserRegisterReply {
-  string openid = 1; // 用户唯一标识openid
+  int64 state = 1;
 }
 
 // 发表问题
 message AddQuestionRequest {
    string title = 1;
    string content = 2;
-   string username = 3;
+   string created_by = 3; // 创建者
 }
 
 // 发表问题返回结果
 message AddQuestionReply {
-  int64 id = 1;
+  int64 id = 1; // 问题id
 }
 
+// 删除问题请求
 message DeleteQuestionRequest {
-  int64 id = 1;
+  int64 id = 1; // 问题id
   string username = 2;
 }
 
+// 删除问题返回结果
 message DeleteQuestionReply {
   int64 state = 1;
 }
 
+// 更新问题请求
 message UpdateQuestionRequest {
-  int64 id = 1;
-  string title = 2;
-  string content = 3;
-  string username = 4;
+  int64 id = 1; // 问题id
+  string title = 2; // 标题
+  string content = 3; // 内容正文
+  string updated_by = 4; // 更新者
 }
 
+// 更新问题返回结果
 message UpdateQuestionReply {
   int64 state = 1;
 }
 
+// 答案实体
 message AnswerEntity {
-  int64 question_id = 1; // 问题id
-  string content = 2; // 回答内容
-  string username = 3; // 用户名
-  int64 agree_count = 4; // 点赞数
+  int64 id = 1; // 回答id
+  int64 question_id = 2; // 问题id
+  string content = 3; // 回答内容
+  string created_by= 4; // 回答者
+  int64 agree_count = 5; // 点赞数，添加时默认为0
+  bool has_agreed = 6; // 当前用户是否点赞
 }
 
+// 添加答案
 message AddAnswerRequest {
     AnswerEntity answer = 1;
 }
 
+// 添加回答返回结果
 message AddAnswerReply {
   int64 id = 1; // 回答唯一标识
 }
 
+// 删除回答
 message DeleteAnswerRequest {
-  int64  id = 1;
-  string username = 2;
+  int64  id = 1; // 回答id
+  string username = 2; // 默认当前用户
 }
 
+// 删除回答返回结果
 message DeleteAnswerReply {
   int64 state = 1;
 }
 
+// 更新回答基本信息
 message UpdateAnswerRequest {
   int64  id = 1;
   string content = 2; // 回答内容
   string username = 3; // 用户名
 }
 
+// 更新回答返回结果
 message UpdateAnswerReply {
   int64 state = 1;
 }
 
+// 回答点赞请求
 message AnswerAgreeRequest {
   int64 id = 1; // 回答id
-  string username = 2; // 用户名
+  string created_by = 2; // 用户名
 }
 
+// 回答点赞返回结果
 message AnswerAgreeReply {
   int64 id = 1;
   int64 agree_count = 2;
 }
 
+// 问题阅读数请求信息
 message QuestionReadCountRequest {
   int64 id = 1; // 问题id
   string username = 2;
 }
 
+// 问题阅读数处理的返回结果
 message QuestionReadCountReply {
   int64 id = 1;
   int64 read_count = 2;
 }
 
+// 问题详情请求
 message QuestionDetailRequest {
   int64 id = 1; // 问题id
-  string username = 2;
+  string username = 2; // 当前用户
 }
 
+// 问题详情，返回结果
 message QuestionDetailReply {
     QuestionEntity question = 1;
 }
 
+// 问题实体
 message QuestionEntity {
   int64 id = 1; // 问题id
   string title = 2; // 问题标题
@@ -187,11 +206,13 @@ message QuestionEntity {
   int64 reply_count = 6; // 回答数量
 }
 
+// 最新问题列表
 message LatestQuestionsRequest {
   string username = 1; // 用户名
   int64 last_id = 2; // 上一次的question_id，第一页默认为0
 }
 
+// 最新问题列表返回结果
 message LatestQuestionsReply {
   repeated QuestionEntity list = 1;
   int64 last_id = 2; // 上一次的question_id
@@ -199,13 +220,15 @@ message LatestQuestionsReply {
   bool is_end = 4; // 是否到底了
 }
 
+// 问题下的回答接口
 message AnswerListRequest {
   int64 question_id = 1; // 问题id
   int64 page = 2; // 当前页数
   int64 limit = 3; // 每页数据
-  string username = 4;
+  string username = 4; // 当前用户
 }
 
+// 回答列表返回结果
 message AnswerListReply {
   repeated AnswerEntity list = 1;
   int64 total = 2;

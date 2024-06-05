@@ -6,3 +6,31 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+tonic = "0.10.2"
+prost = "0.12.2"
+tokio = {version = "1.34.0",features = ["full"]}
+# note: Must be the same as the tonic version
+tonic-reflection = "0.10.2"
+
+# server hybrid
+# run the service on a single port
+tower = { version = "0.4", features = ["full"] }
+pin-project = "1.1.3"
+hyper = { version = "0.14", features = ["full"] }
+# 网关使用axum http框架接入
+axum = { version = "0.6.20"}
+
+# json序列化处理
+serde = { version = "1.0.192",features = ["derive"]}
+serde_json = "1.0.108"
+
+# axum multi service
+futures = "0.3"
+
+# tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[build-dependencies]
+# note: Must be the same as the tonic version
+tonic-build = "0.10.2"
