@@ -5,7 +5,7 @@ protoExec=$(which "protoc")
 if [ -z $protoExec ]; then
     echo 'Please install protoc!'
     echo "Please look readme.md to install proto3"
-    echo "if you use centos7,please look https://github.com/daheige/go-proj/blob/master/docs/centos7-protoc-install.md"
+    echo "if you use centos7,please see readme.md"
     exit 0
 fi
 
