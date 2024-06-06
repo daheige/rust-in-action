@@ -6,30 +6,44 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# grpc相关组件
 tonic = "0.10.2"
 prost = "0.12.2"
 tokio = {version = "1.34.0",features = ["full"]}
 # note: Must be the same as the tonic version
 tonic-reflection = "0.10.2"
 
-# server hybrid
-# run the service on a single port
-tower = { version = "0.4", features = ["full"] }
-pin-project = "1.1.3"
-hyper = { version = "0.14", features = ["full"] }
 # 网关使用axum http框架接入
-axum = { version = "0.6.20"}
+axum = { version = "0.7.5"}
 
 # json序列化处理
 serde = { version = "1.0.192",features = ["derive"]}
 serde_json = "1.0.108"
 
-# axum multi service
-futures = "0.3"
+# 配置文件读取以及用于消息序列化和反序列化处理
+serde_yaml = "0.9.33"
+once_cell = "1.19.0"
 
-# tracing
+# 操作日志
+log = "0.4.21"
+env_logger = "0.11.3"
+
+# tracing追踪
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# chrono用于时间处理
+chrono = "0.4.38"
+
+# sqlx用于数据库操作
+sqlx = { version = "0.7.4", features = ["runtime-tokio-rustls", "mysql", "chrono", "time"] }
+
+# pulsar消息队列相关crate
+futures = "0.3.30"
+pulsar = "6.1.0"
+
+# anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
+anyhow = "1.0.82"
 
 [build-dependencies]
 # note: Must be the same as the tonic version

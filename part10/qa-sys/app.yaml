@@ -1,0 +1,17 @@
+app_debug: true # 是否开启调试模式
+app_port: 3000 # http gateway运行端口
+graceful_wait_time: 3 # 平滑退出等待时间，单位s
+
+# 数据库配置
+mysql_conf:
+  dsn: "mysql://root:root123456@localhost/qa-sys" # dsn连接句柄信息
+  max_connections: 100 # 最大连接数
+  min_connections: 10  # 最小连接数
+  max_lifetime: 1800  # 连接池默认生命周期，单位s
+  idle_timeout: 300   # 空闲连接生命周期超时，单位s
+  connect_timeout: 10 # 连接超时时间，单位s
+
+# pulsar mq配置
+pulsar_conf:
+  addr: pulsar://127.0.0.1:6650
+  token: "" # pulsar auth token
