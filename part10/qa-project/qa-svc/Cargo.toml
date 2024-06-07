@@ -1,7 +1,9 @@
 [package]
-name = "qa-sys"
-version = "0.1.0"
-edition = "2021"
+name = "qa-svc"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -44,6 +46,8 @@ pulsar = "6.1.0"
 
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
 anyhow = "1.0.82"
+
+infras = {path = "../infras"}
 
 [build-dependencies]
 # note: Must be the same as the tonic version

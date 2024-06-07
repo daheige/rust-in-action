@@ -7,7 +7,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 推荐下面的方式生成grpc rust代码
     // 完成下面的步骤后，在main.rs中添加 mod rust_grpc;
     // 1.读取proto目录下的*.proto
-    let proto_dir: PathBuf = "proto".into(); // proto文件所在目录
+    let proto_dir: PathBuf = "../proto".into(); // proto文件所在目录
     let mut file_list = Vec::new(); // 存放proto文件名
     let lists = proto_dir.read_dir().expect("read proto dir failed");
     for entry_path in lists {
@@ -61,7 +61,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // 将生成的代码放在rust gateway目录中
-    let gateway_dir = Path::new("gateway/rust_grpc");
+    let gateway_dir = Path::new("../gateway/src/rust_grpc");
     fs::create_dir_all(gateway_dir)?; // 创建gateway目录
     copy_dir_to(out_dir, gateway_dir)?;
     fs::remove_file(gateway_dir.join("rpc_descriptor.bin"))?;

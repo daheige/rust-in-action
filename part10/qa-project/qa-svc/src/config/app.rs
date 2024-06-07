@@ -1,5 +1,5 @@
 use crate::config::{mysql, xpulsar};
-use crate::infras::{Config, ConfigTrait};
+use infras::{Config, ConfigTrait};
 use once_cell::sync::Lazy;
 use pulsar::{Pulsar, TokioExecutor};
 use serde::{Deserialize, Serialize};

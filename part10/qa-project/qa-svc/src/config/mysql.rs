@@ -1,5 +1,5 @@
 // 导入infras模块的MysqlService结构体
-use crate::infras::MysqlService;
+use infras::MysqlService;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 

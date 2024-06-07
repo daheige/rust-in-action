@@ -1,5 +1,5 @@
 // 导入infras模块的PulsarService结构体
-use crate::infras::PulsarService;
+use infras::PulsarService;
 use serde::{Deserialize, Serialize};
 // 导入pulsar包
 use pulsar::{Error as PulsarError, Pulsar, TokioExecutor};

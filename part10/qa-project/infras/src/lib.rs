@@ -7,3 +7,8 @@ mod xpulsar;
 pub use config::{Config, ConfigTrait};
 pub use xmysql::MysqlService;
 pub use xpulsar::PulsarService;
+
+#[test]
+fn it_works(){
+    println!("ok");
+}
