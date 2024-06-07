@@ -8,15 +8,14 @@ description.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# json序列化处理
-serde = { version = "1.0.192",features = ["derive"]}
-serde_json = "1.0.108"
+# 序列化处理
+serde = { workspace = true,features = ["derive"]}
 
 # 配置文件读取以及用于消息序列化和反序列化处理
-serde_yaml = "0.9.33"
+serde_yaml = { workspace = true }
 
 # sqlx用于数据库操作
-sqlx = { version = "0.7.4", features = ["runtime-tokio-rustls", "mysql", "chrono", "time"] }
+sqlx = { workspace = true, features = ["runtime-tokio-rustls", "mysql", "chrono", "time"] }
 
 # pulsar消息队列相关crate
-pulsar = "6.1.0"
+pulsar = { workspace = true }

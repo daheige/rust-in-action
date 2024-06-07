@@ -53,3 +53,6 @@ pulsar = "6.1.0"
 
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
 anyhow = "1.0.82"
+
+# note: Must be the same as the tonic version
+tonic-build = "0.10.2"

@@ -8,3 +8,35 @@ description.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# grpc相关组件
+tonic = {workspace = true}
+
+prost = {workspace = true}
+tokio = {workspace = true}
+# note: Must be the same as the tonic version
+tonic-reflection = {workspace = true}
+
+# 网关使用axum http框架接入
+axum = {workspace = true}
+
+# json序列化处理
+serde = {workspace = true}
+serde_json = {workspace = true}
+
+# 配置文件读取以及用于消息序列化和反序列化处理
+serde_yaml = {workspace = true}
+once_cell = {workspace = true}
+
+# 操作日志
+log = {workspace = true}
+env_logger = {workspace = true}
+
+# tracing追踪
+tracing = {workspace = true}
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+
+# chrono用于时间处理
+chrono = {workspace = true}
+
+# anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
+anyhow = {workspace = true}
