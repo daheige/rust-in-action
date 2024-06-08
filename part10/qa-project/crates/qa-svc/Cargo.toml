@@ -5,6 +5,11 @@ edition.workspace = true
 authors.workspace = true
 description.workspace = true
 
+# 定时任务脚本
+[[bin]]
+name = "qa-job"
+path = "src/job.rs"
+
 [dependencies]
 # grpc相关组件
 tonic = {workspace = true}
