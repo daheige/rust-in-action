@@ -5,12 +5,9 @@ edition.workspace = true
 authors.workspace = true
 description.workspace = true
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 # grpc相关组件
 tonic = {workspace = true}
-
 prost = {workspace = true}
 tokio = {workspace = true}
 # note: Must be the same as the tonic version
@@ -48,7 +45,9 @@ pulsar = {workspace = true}
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
 anyhow = {workspace = true}
 
-infras = {path = "../infras"}
+# 项目自定义的crates
+infras = {path = "../infras" }
+pb = {path = "../pb"}
 
 [build-dependencies]
 # note: Must be the same as the tonic version

@@ -1,0 +1,19 @@
+[package]
+name = "pb"
+
+# 继承根目录中Cargo.toml的配置
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+
+[dependencies]
+# grpc相关组件
+tonic = {workspace = true}
+prost = {workspace = true}
+tokio = {workspace = true}
+# note: Must be the same as the tonic version
+tonic-reflection = {workspace = true}
+
+# 序列化处理
+serde = {workspace = true}

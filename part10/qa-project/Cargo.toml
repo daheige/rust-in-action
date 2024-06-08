@@ -2,9 +2,10 @@
 resolver = "2"
 
 members = [
-    "qa-svc",
-    "gateway",
-    "infras"
+    "crates/qa-svc",
+    "crates/infras",
+    "crates/pb",
+    "crates/gateway"
 ]
 
 # 共享package配置项
@@ -12,15 +13,21 @@ members = [
 version = "0.1.0"
 edition = "2021"
 authors = ["daheige"]
-description = "qa sys"
+description = "a highly concurrent question answering system"
 
 [workspace.dependencies]
-# grpc相关组件
+# grpc微服务相关组件
 tonic = "0.10.2"
 prost = "0.12.2"
 tokio = {version = "1.34.0",features = ["full"]}
+
+# tonic-reflection主要用于grpcurl工具查看grpc微服务接口协议定义
 # note: Must be the same as the tonic version
 tonic-reflection = "0.10.2"
+
+# tonic-build包用于构建grpc代码
+# note: Must be the same as the tonic version
+tonic-build = "0.10.2"
 
 # 网关使用axum http框架接入
 axum = { version = "0.7.5"}
@@ -53,6 +60,3 @@ pulsar = "6.1.0"
 
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
 anyhow = "1.0.82"
-
-# note: Must be the same as the tonic version
-tonic-build = "0.10.2"
