@@ -1,4 +1,4 @@
-# qa-sys
+# qa-project
     综合型项目：QA问答系统
 # grpc client support
 - rust grpc微服务使用的crates: tokio,tonic,tonic-build,prost代码生成
