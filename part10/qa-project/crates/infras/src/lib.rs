@@ -9,6 +9,6 @@ pub use xmysql::MysqlService;
 pub use xpulsar::PulsarService;
 
 #[test]
-fn it_works(){
+fn it_works() {
     println!("ok");
 }

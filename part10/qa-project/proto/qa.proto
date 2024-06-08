@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// protoc 3.11.4+ 版本请用这个
+// protoc 3.11.4+以上版本请用这个
 option go_package = ".;pb";
 
 package qa; // 默认的package为qa

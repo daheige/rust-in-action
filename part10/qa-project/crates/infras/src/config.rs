@@ -28,7 +28,7 @@ impl ConfigTrait for Config {
 
     fn load(&mut self) -> Result<(), Error> {
         File::open(&self.filepath)
-            .unwrap()
+            .expect(format!("load file:{} failed", &self.filepath).as_str())
             .read_to_string(&mut self.sections)?;
         Ok(())
     }

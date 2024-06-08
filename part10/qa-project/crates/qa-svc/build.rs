@@ -19,8 +19,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let out_dir = Path::new("../pb/src"); // 存放grpc rust代码生成的目录
     let _ = fs::create_dir_all(out_dir); // 创建目录
 
-    // grpc reflection 描述信息这是一个二进制文件
-    let descriptor_path = out_dir.join("rpc_descriptor.bin");
+    // grpc reflection 描述信息这是一个二进制文件，主要用于协议描述
+    let descriptor_path = "rpc_descriptor.bin";
 
     // 2.生成rust grpc代码
     // 指定rust grpc 代码生成的目录

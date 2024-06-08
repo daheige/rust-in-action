@@ -60,3 +60,14 @@ pulsar = "6.1.0"
 
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
 anyhow = "1.0.82"
+
+#uuid
+uuid = { version = "1.7.0", features = ["serde", "v4"] }
+
+#validator
+validator = { version = "0.16.1", features = ["derive"] }
+async-trait = "0.1.77"
+thiserror = "1.0.56"
+
+# body util
+http-body-util = "0.1.0"
