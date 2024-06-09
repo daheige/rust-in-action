@@ -43,7 +43,7 @@ async fn main() -> anyhow::Result<()> {
         println!("conf:{:?}", conf);
     }
 
-    // create grpc client
+    // Create grpc client
     let grpc_client = QaServiceClient::connect(conf.grpc_address).await?;
 
     // 通过arc引用计数的方式传递state
@@ -54,7 +54,7 @@ async fn main() -> anyhow::Result<()> {
     println!("current process pid:{}", process::id());
     println!("app run on:{}", address.to_string());
 
-    // create axum router
+    // Create axum router
     let router = routers::router::api_router(app_state);
 
     // Create a `TcpListener` using tokio.

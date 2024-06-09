@@ -76,3 +76,107 @@ gen php code
 ```shell
 sh scripts/php-gen.sh
 ```
+
+# grpc grpcurl tools
+grpcurl工具主要用于grpcurl请求，可以快速查看grpc proto定义以及调用grpc service定义的方法。
+https://github.com/fullstorydev/grpcurl
+
+tonic grpc reflection使用需要注意的事项：
+- 使用这个操作必须将grpc proto的描述信息通过add_service添加才可以
+- tonic 和 tonic-reflection 以及 tonic-build 需要相同的版本，这个需要在Cargo.toml设置一样
+
+1. 安装grpcurl工具
+```shell
+brew install grpcurl
+```
+如果你本地安装了golang，那可以直接运行如下命令，安装grpcurl工具
+ ```shell
+ go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+ ```
+
+2. 验证rs-rpc service启动的效果
+```shell
+# 50051 是qa-svc grpc微服务的端口
+grpcurl -plaintext 127.0.0.1:50051 list
+```
+执行上面的命令，输出结果如下：
+```
+grpc.reflection.v1alpha.ServerReflection
+qa.QAService
+```
+3. 查看proto文件定义的所有方法
+```shell
+grpcurl -plaintext 127.0.0.1:50051 describe qa.QAService
+```
+输出结果如下：
+```protobuf
+// qa.QAService is a service:
+// qa服务接口定义
+service QAService {
+  // 添加问题回答
+  rpc AddAnswer ( .qa.AddAnswerRequest ) returns ( .qa.AddAnswerReply );
+  // 发表问题
+  rpc AddQuestion ( .qa.AddQuestionRequest ) returns ( .qa.AddQuestionReply );
+  // 用户点赞回答
+  rpc AnswerAgree ( .qa.AnswerAgreeRequest ) returns ( .qa.AnswerAgreeReply );
+  // 回答列表
+  rpc AnswerList ( .qa.AnswerListRequest ) returns ( .qa.AnswerListReply );
+  // 删除问题对应的回答
+  rpc DeleteAnswer ( .qa.DeleteAnswerRequest ) returns ( .qa.DeleteAnswerReply );
+  // 删除问题
+  rpc DeleteQuestion ( .qa.DeleteQuestionRequest ) returns ( .qa.DeleteQuestionReply );
+  // 最新问题列表（采用下拉分页形式获取数据，按照id desc倒序）
+  rpc LatestQuestions ( .qa.LatestQuestionsRequest ) returns ( .qa.LatestQuestionsReply );
+  // 查看问题详情
+  rpc QuestionDetail ( .qa.QuestionDetailRequest ) returns ( .qa.QuestionDetailReply );
+  // 问题阅读数
+  rpc QuestionReadCount ( .qa.QuestionReadCountRequest ) returns ( .qa.QuestionReadCountReply );
+  // 修改回答
+  rpc UpdateAnswer ( .qa.UpdateAnswerRequest ) returns ( .qa.UpdateAnswerReply );
+  // 修改问题
+  rpc UpdateQuestion ( .qa.UpdateQuestionRequest ) returns ( .qa.UpdateQuestionReply );
+  // 用户登录
+  rpc UserLogin ( .qa.UserLoginRequest ) returns ( .qa.UserLoginReply );
+  // 用户退出
+  rpc UserLogout ( .qa.UserLogoutRequest ) returns ( .qa.UserLogoutReply );
+  // 用户注册
+  rpc UserRegister ( .qa.UserRegisterRequest ) returns ( .qa.UserRegisterReply );
+}
+ ```
+4. 查看请求qa.UserLoginRequest请求参数定义
+ ```shell
+ grpcurl -plaintext 127.0.0.1:50051 describe qa.UserLoginRequest
+ ```
+完整的HelloReq定义如下：
+```
+qa.UserLoginRequest is a message:
+// 登录请求
+message UserLoginRequest {
+    string username = 1;
+    string password = 2;
+}
+```
+5. 查看相应qa.UserLoginReply响应结果定义
+```shell
+grpcurl -plaintext 127.0.0.1:8081 describe qa.UserLoginReply
+```
+完整的HelloReply定义如下：
+```
+qa.UserLoginReply is a message:
+// 登录返回结果
+message UserLoginReply {
+  string token = 1;
+}
+```
+6. 通过grpcurl调用rpc service method
+ ```shell
+ grpcurl -d '{"username":"daheige","password":"abc"}' -plaintext 127.0.0.1:50051 qa.QAService.UserLogin
+ ```
+响应结果如下：
+ ```json
+{
+  "token": "xxx"
+}
+ ```
+运行效果如下图所示：
+![](grpc-tools.jpg)

@@ -189,7 +189,8 @@ async fn publish_message(
         created_at: Some(created_at),
         ..message // 其他字段通过message结构体字段进行填充
     };
-    producer.send(message).await?;
+    // producer.send(message).await?;
+    producer.send_non_blocking(message).await?;
     Ok(())
 }
 
