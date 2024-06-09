@@ -71,19 +71,23 @@ app run on:0.0.0.0:50051
 ```
 
 # code gen for different clients
-gen go code
+- gen go code
 ```shell
 sh scripts/go-gen.sh
 ```
 执行效果如下图所示：
 ![](gen-go-code.jpg)
+运行客户端代码
+```shell
+go run clients/go/client.go daheige
+```
 
-gen nodejs code
+- gen nodejs code
 ```shell
 sh scripts/nodejs-gen.sh
 ```
 
-gen php code
+- gen php code
 ```shell
 sh scripts/php-gen.sh
 ```
