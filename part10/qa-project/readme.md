@@ -58,6 +58,17 @@ brew install automake
 brew install libtool
 brew install protobuf
 ```
+# start qa-svc
+```shell
+cp app.yaml crates/qa-svc
+cargo run --bin qa-svc
+```
+运行效果如下：
+```
+Hello, qa-svc!
+current process pid:96375
+app run on:0.0.0.0:50051
+```
 
 # code gen for different clients
 gen go code
@@ -180,3 +191,49 @@ message UserLoginReply {
  ```
 运行效果如下图所示：
 ![](grpc-tools.jpg)
+
+# run grpc http gateway
+please crates/gateway/main.rs
+```shell
+cp app-gw.yaml crates/gateway
+cargo run --bin gateway
+```
+output:
+```
+Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.31s
+ Running `target/debug/gateway`
+conf:AppConfig { app_debug: true, app_port: 8090, grpc_address: "http://127.0.0.1:50051", graceful_wait_time: 3 }
+current process pid:96460
+app run on:0.0.0.0:8090
+```
+
+curl http gateway
+```shell
+curl --location 'localhost:8090/api/user/login' \
+--header 'Content-Type: application/json' \
+--data '{
+    "username":"daheige",
+    "password":"abc"
+}'
+```
+output:
+```
+{
+    "code": 0,
+    "message": "ok",
+    "data": {
+        "token": "abc"
+    }
+}
+```
+http gateway运行机制(图片来自grpc-ecosystem/grpc-gateway):
+![](http-gateway.jpg)
+
+# go grpc gmicro
+https://github.com/daheige/gmicro
+
+# go grpc demo
+https://github.com/daheige/gmicro-demo
+
+# go grpc http gateway
+https://github.com/grpc-ecosystem/grpc-gateway
