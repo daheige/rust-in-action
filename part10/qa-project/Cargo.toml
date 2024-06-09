@@ -59,6 +59,11 @@ sqlx = { version = "0.7.4", features = ["runtime-tokio-rustls", "mysql", "chrono
 futures = "0.3.30"
 pulsar = "6.3.0"
 
+# redis操作库
+redis = { version ="0.25.4",features = ["r2d2","tokio-comp","cluster","cluster-async","json"]}
+# r2d2用于redis连接池管理
+r2d2 = "0.8.10"
+
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
 anyhow = "1.0.86"
 

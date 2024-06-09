@@ -5,11 +5,9 @@ edition.workspace = true
 authors.workspace = true
 description.workspace = true
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 # 序列化处理
-serde = { workspace = true,features = ["derive"]}
+serde = { workspace = true, features = ["derive"] }
 
 # 配置文件读取以及用于消息序列化和反序列化处理
 serde_yaml = { workspace = true }
@@ -19,3 +17,8 @@ sqlx = { workspace = true, features = ["runtime-tokio-rustls", "mysql", "chrono"
 
 # pulsar消息队列相关crate
 pulsar = { workspace = true }
+
+# redis操作库
+redis = { workspace = true, features = ["r2d2","tokio-comp","cluster","cluster-async","json"] }
+# r2d2用于redis连接池管理
+r2d2 = { workspace = true }

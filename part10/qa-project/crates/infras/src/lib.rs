@@ -2,6 +2,7 @@
 mod config;
 mod xmysql;
 mod xpulsar;
+mod xredis;
 
 // 使用use对模块重新导出
 pub use config::{Config, ConfigTrait};
