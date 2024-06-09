@@ -81,11 +81,42 @@ sh scripts/go-gen.sh
 ```shell
 go run clients/go/client.go daheige
 ```
+输出如下：
+```
+2024/06/09 10:55:50 reply token:abc
+```
 
 - gen nodejs code
 ```shell
 sh scripts/nodejs-gen.sh
 ```
+install nodejs package
+```shell
+# 安装yarn，如果执行无权限，请使用`sudo npm install -g yarn`命令安装yarn
+npm install -g yarn
+cd clients/nodejs && yarn install
+```
+效果如下图所示：
+![](gen-nodejs-code.jpg)
+
+run node client
+```shell
+node clients/nodejs/app.js
+```
+output:
+```
+{
+    wrappers_: null,
+    messageId_: undefined,
+    arrayIndexOffset_: -1,
+    array: [ 'abc' ],
+    pivot_: 1.7976931348623157e+308,
+    convertedPrimitiveFields_: {}
+}
+reply token:  abc
+```
+运行效果如下图所示：
+![](node-client-run.jpg)
 
 - gen php code
 ```shell
