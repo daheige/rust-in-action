@@ -1,5 +1,4 @@
 use chrono::Local;
-use env_logger::WriteStyle;
 use std::io::Write;
 
 pub struct Logger {

@@ -10,12 +10,12 @@ use config::AppState;
 use infras::{Config, ConfigTrait, Logger};
 
 // serde序列化处理
+use log::info;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
 use std::time::Duration;
-use log::info;
 
 // 引入tokio
 use pb::qa::qa_service_client::QaServiceClient;
