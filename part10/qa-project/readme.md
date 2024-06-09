@@ -122,14 +122,23 @@ reply token:  abc
 ```shell
 sh scripts/php-gen.sh
 ```
+run php client
+```shell
+composer install
+php clients/php/qa.php daheige
+```
+运行效果如下所示：
+```
+status code: 0
+reply token: abc
+```
 
 # grpc grpcurl tools
-grpcurl工具主要用于grpcurl请求，可以快速查看grpc proto定义以及调用grpc service定义的方法。
-https://github.com/fullstorydev/grpcurl
-
-tonic grpc reflection使用需要注意的事项：
-- 使用这个操作必须将grpc proto的描述信息通过add_service添加才可以
-- tonic 和 tonic-reflection 以及 tonic-build 需要相同的版本，这个需要在Cargo.toml设置一样
+- grpcurl工具主要用于grpcurl请求，可以快速查看grpc proto定义以及调用grpc service定义的方法。
+- grpcurl参考地址：https://github.com/fullstorydev/grpcurl
+- tonic grpc reflection使用需要注意的事项：
+    - 使用这个操作必须将grpc proto的描述信息通过add_service添加才可以
+    - tonic 和 tonic-reflection 以及 tonic-build 需要相同的版本，这个需要在Cargo.toml设置一样
 
 1. 安装grpcurl工具
 ```shell

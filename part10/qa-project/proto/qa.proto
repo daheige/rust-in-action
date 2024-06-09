@@ -5,6 +5,10 @@ option go_package = ".;pb";
 
 package qa; // 默认的package为qa
 
+// php 命名空间定义
+option php_namespace = "App\\Grpc\\Qa";
+option php_metadata_namespace = "App\\Grpc\\GPBMetadata";
+
 // qa服务接口定义
 service QAService {
   // 用户登录
