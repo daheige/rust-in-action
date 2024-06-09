@@ -7,7 +7,7 @@ mod utils;
 
 // 引入Config
 use config::AppState;
-use infras::{Config, ConfigTrait};
+use infras::{Config, ConfigTrait, Logger};
 
 // serde序列化处理
 use serde::{Deserialize, Serialize};
@@ -15,6 +15,7 @@ use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
 use std::time::Duration;
+use log::info;
 
 // 引入tokio
 use pb::qa::qa_service_client::QaServiceClient;
@@ -32,6 +33,13 @@ pub(crate) struct AppConfig {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
+    // 启动方式：RUST_LOG=debug cargo run --bin gateway
+    // std::env::set_var("RUST_LOG", "debug");
+    Logger::new().init(); // 使用默认方式初始化日志配置
+
+    info!("qa gateway start...");
+
     // 读取配置文件
     let mut c = Config::new("app-gw.yaml");
     c.load().expect("read file failed");

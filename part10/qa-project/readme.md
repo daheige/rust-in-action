@@ -273,6 +273,19 @@ output:
 http gateway运行机制(图片来自grpc-ecosystem/grpc-gateway):
 ![](http-gateway.jpg)
 
+# logger level
+log和env_logger依赖：
+```toml
+# 操作日志
+log = "0.4.21"
+env_logger = { version = "0.11.3",features = ["color"] }
+```
+```shell
+RUST_LOG=debug cargo run --bin gateway
+```
+日志输出结果，如下图所示：
+![](env_logger_init.jpg)
+
 # go grpc gmicro
 https://github.com/daheige/gmicro
 

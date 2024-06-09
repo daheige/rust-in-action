@@ -4,11 +4,12 @@ mod services;
 
 // 引入模块
 use crate::config::{mysql, xpulsar, APP_CONFIG};
+use infras::Logger; // 日志模块
+use log::info;
 use pb::qa::qa_service_server::QaServiceServer;
 use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
-
 use tonic::transport::Server;
 
 // 这个file descriptor文件是build.rs中定义的descriptor_path路径
@@ -19,11 +20,16 @@ pub(crate) const PROTO_FILE_DESCRIPTOR_SET: &[u8] = include_bytes!("../rpc_descr
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     println!("Hello, qa-svc!");
-    // env::set_var("RUST_LOG", "debug");
-    env_logger::init(); // 初始化操作日志配置
+    // 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
+    // 启动方式：RUST_LOG=debug cargo run --bin qa-svc
+    // std::env::set_var("RUST_LOG", "debug");
+    Logger::new().init(); // 使用默认方式初始化日志配置
 
-    println!("app_debug:{:?}", APP_CONFIG.app_debug);
-    println!("current process pid:{}", process::id());
+    // 自定义方式初始化日志配置
+    // Logger::new().with_custom(true).init();
+
+    info!("app_debug:{:?}", APP_CONFIG.app_debug);
+    info!("current process pid:{}", process::id());
 
     // 微服务启动地址
     let address: SocketAddr = format!("0.0.0.0:{}", APP_CONFIG.app_port).parse().unwrap();

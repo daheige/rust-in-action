@@ -22,3 +22,10 @@ pulsar = { workspace = true }
 redis = { workspace = true, features = ["r2d2","tokio-comp","cluster","cluster-async","json"] }
 # r2d2用于redis连接池管理
 r2d2 = { workspace = true }
+
+# 操作日志
+log = { workspace = true }
+env_logger = { workspace = true, features = ["color"] }
+
+# chrono用于时间处理
+chrono = { workspace = true }

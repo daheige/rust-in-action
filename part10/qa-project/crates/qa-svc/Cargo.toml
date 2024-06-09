@@ -30,8 +30,8 @@ serde_yaml = {workspace = true}
 once_cell = {workspace = true}
 
 # 操作日志
-log = {workspace = true}
-env_logger = {workspace = true}
+log = { workspace = true }
+env_logger = { workspace = true, features = ["color"] }
 
 # tracing追踪
 tracing = {workspace = true}
