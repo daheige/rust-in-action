@@ -1,7 +1,22 @@
 # php grpc run
+1. install php grpc tools
+- for linux centos7: [centos7-php-grc](centos7-php-grpc.md)
+- for macOS: [mac-php-grpc](mac-php-grpc.md)
 
-     composer install
-     php hello_client.php
+2. install php composer dependencies
+```shell
+# Install php dependencies
+composer install
+```
+3. call grpc micro service
+```shell
+php qa.php daheige
+```
+output:
+```
+status code: 0
+reply token: abc
+```
 
 # About whether to use protobuf.so
 
@@ -18,17 +33,3 @@
 
      For those who do not support php protobuf expansion, you can replace composer2.json with composer.json
 
-# composer mirror settings
-
-     Use composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-
-# run php client
-```shell
-composer install
-php qa.php daheige
-```
-output:
-```
-status code: 0
-reply token: abc
-```
