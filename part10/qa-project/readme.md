@@ -287,7 +287,54 @@ RUST_LOG=debug cargo run --bin gateway
 ![](env_logger_init.jpg)
 
 # prometheus metrics
-使用`autometrics`库完成，使用方法参考：https://crates.io/crates/autometrics
+rust prometheus服务可观测性，使用`autometrics`库完成，使用方法参考：https://crates.io/crates/autometrics
+# macOS下安装prometheus和接入
+```shell
+brew install prometheus
+```
+- 安装位置: /usr/local/opt/prometheus
+- 配置文件位置：/usr/local/etc/prometheus.yml
+
+添加metrics handler
+vim /usr/local/etc/prometheus.yml 编辑配置文件，加入如下内容：
+```yaml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+    - targets: ["localhost:9090"]
+  - job_name: "qa_gateway"
+    static_configs:
+    - targets: ["localhost:1338"]
+  - job_name: "qa_svc"
+    static_configs:
+    - targets: ["localhost:2338"]
+```
+启动prometheus
+```shell
+brew services start prometheus
+# 重启
+# brew services restart prometheus
+```
+访问`localhost:9090`，然后输入`function_calls_duration_seconds_bucket`点击Execute按钮，效果如下图所示：
+![](prometheus.jpg)
+
+# macOS下安装grafana和接入prometheus数据
+```shell
+brew install grafana
+```
+启动grafana
+```shell
+brew services start grafana
+# 重启
+# brew services restart grafana
+```
+访问`localhost:3000`进入grafana界面，如下图所示：
+![](grafana.jpg)
+输入默认用户名和密码: admin/admin (你也可自行修改，配置文件：/usr/local/etc/grafana/grafana.ini)
+接下来，你就可以配置对应的prometheus控制面板。
 
 # go grpc gmicro
 https://github.com/daheige/gmicro
