@@ -6,12 +6,11 @@ mod routers;
 mod utils;
 
 // 引入Config
-use config::AppState;
-use infras::{prometheus_init, Config, ConfigTrait, Logger};
+use config::{AppConfig, AppState};
+use infras::{graceful_shutdown, prometheus_init, Config, ConfigTrait, Logger};
 
 // serde序列化处理
 use log::info;
-use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
@@ -20,16 +19,6 @@ use std::time::Duration;
 // 引入tokio
 use pb::qa::qa_service_client::QaServiceClient;
 use tokio::net::TcpListener;
-use tokio::signal;
-
-// AppConfig 项目配置信息
-#[derive(Debug, PartialEq, Serialize, Deserialize, Default)]
-pub(crate) struct AppConfig {
-    app_debug: bool,         // 是否开启调试模式
-    app_port: u32,           // http gateway port
-    grpc_address: String,    // grpc service运行端口
-    graceful_wait_time: u64, // http service平滑退出等待时间，单位s
-}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -51,12 +40,12 @@ async fn main() -> anyhow::Result<()> {
         println!("conf:{:?}", conf);
     }
 
+    // build http /metrics endpoint
+    let metrics_server = prometheus_init(conf.metrics_port);
+    let metrics_handler = tokio::spawn(metrics_server);
+
     // http gateway handler
     let gateway_handler = tokio::spawn(gateway_server(conf));
-
-    // build http /metrics endpoint
-    let metrics_server = prometheus_init(2338);
-    let metrics_handler = tokio::spawn(metrics_server);
 
     // start http gateway and metrics service
     let _ = tokio::try_join!(gateway_handler, metrics_handler)
@@ -85,39 +74,9 @@ async fn gateway_server(conf: AppConfig) {
 
     // Run the server with graceful shutdown
     axum::serve(listener, router)
-        .with_graceful_shutdown(graceful_shutdown(conf.graceful_wait_time))
+        .with_graceful_shutdown(graceful_shutdown(Duration::from_secs(
+            conf.graceful_wait_time,
+        )))
         .await
         .expect("failed to start gateway service");
-}
-
-// graceful shutdown
-async fn graceful_shutdown(wait_secs: u64) {
-    let ctrl_c = async {
-        signal::ctrl_c()
-            .await
-            .expect("failed to install ctrl+c handler");
-    };
-
-    #[cfg(unix)]
-    let terminate = async {
-        signal::unix::signal(signal::unix::SignalKind::terminate())
-            .expect("failed to install signal handler")
-            .recv()
-            .await;
-    };
-
-    #[cfg(not(unix))]
-    let terminate = std::future::pending::<()>();
-    tokio::select! {
-        _ = ctrl_c =>{
-            println!("received ctrl_c signal,server will exist...");
-            tokio::time::sleep(Duration::from_secs(wait_secs)).await;
-        },
-        _ = terminate => {
-            println!("received terminate signal,server will exist...");
-            tokio::time::sleep(Duration::from_secs(wait_secs)).await;
-        },
-    }
-
-    println!("signal received,starting graceful shutdown");
 }

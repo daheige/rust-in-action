@@ -11,7 +11,6 @@ use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
 use std::time::Duration;
-use tokio::signal;
 use tonic::transport::Server;
 
 // 这个file descriptor文件是build.rs中定义的descriptor_path路径
@@ -59,15 +58,18 @@ async fn main() -> anyhow::Result<()> {
         .build()
         .unwrap();
 
-    // create grpc service
+    // Create grpc service
     let qa_service = services::QAServiceImpl::new();
     let grpc_server = Server::builder()
         .add_service(reflection_service)
         .add_service(QaServiceServer::new(qa_service))
-        .serve_with_shutdown(address, graceful_shutdown(Duration::from_secs(5)));
+        .serve_with_shutdown(
+            address,
+            graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)),
+        );
 
     // build http /metrics endpoint
-    let metrics_server = prometheus_init(1338);
+    let metrics_server = prometheus_init(APP_CONFIG.metrics_port);
 
     // create handler for each server
     let grpc_handler = tokio::spawn(grpc_server);

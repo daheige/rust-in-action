@@ -17,7 +17,9 @@ pub struct AppState {
 pub struct AppConfig {
     pub mysql_conf: mysql::MysqlConf,
     pub pulsar_conf: xpulsar::PulsarConf,
-    pub app_port: u32,
+    pub app_port: u16,           // grpc 微服务端口
+    pub metrics_port: u16,       // prometheus metrics port
+    pub graceful_wait_time: u64, // 平滑退出等待时间，单位s
     pub app_debug: bool,
 }
 

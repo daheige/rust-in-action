@@ -48,6 +48,7 @@ uuid = { workspace = true, features = ["serde", "v4"] }
 
 #validator
 validator = { workspace = true, features = ["derive"] }
+
 async-trait = { workspace = true }
 thiserror = { workspace = true }
 
