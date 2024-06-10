@@ -7,7 +7,7 @@ mod utils;
 
 // 引入Config
 use config::AppState;
-use infras::{Config, ConfigTrait, Logger};
+use infras::{prometheus_init, Config, ConfigTrait, Logger};
 
 // serde序列化处理
 use log::info;
@@ -51,16 +51,31 @@ async fn main() -> anyhow::Result<()> {
         println!("conf:{:?}", conf);
     }
 
+    // http gateway handler
+    let gateway_handler = tokio::spawn(gateway_server(conf));
+
+    // build http /metrics endpoint
+    let metrics_server = prometheus_init(2338);
+    let metrics_handler = tokio::spawn(metrics_server);
+
+    // start http gateway and metrics service
+    let _ = tokio::try_join!(gateway_handler, metrics_handler)
+        .expect("failed to start http gateway and metrics service");
+    Ok(())
+}
+
+async fn gateway_server(conf: AppConfig) {
     // Create grpc client
-    let grpc_client = QaServiceClient::connect(conf.grpc_address).await?;
+    let grpc_client = QaServiceClient::connect(conf.grpc_address)
+        .await
+        .expect("failed to connect grpc service");
 
     // 通过arc引用计数的方式传递state
     let app_state = Arc::new(AppState { grpc_client });
 
     let address: SocketAddr = format!("0.0.0.0:{}", conf.app_port).parse().unwrap();
-
     println!("current process pid:{}", process::id());
-    println!("app run on:{}", address.to_string());
+    println!("http gateway run on:{}", address.to_string());
 
     // Create axum router
     let router = routers::router::api_router(app_state);
@@ -72,9 +87,7 @@ async fn main() -> anyhow::Result<()> {
     axum::serve(listener, router)
         .with_graceful_shutdown(graceful_shutdown(conf.graceful_wait_time))
         .await
-        .unwrap();
-
-    Ok(())
+        .expect("failed to start gateway service");
 }
 
 // graceful shutdown

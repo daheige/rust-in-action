@@ -77,3 +77,8 @@ thiserror = "1.0.61"
 
 # body util
 http-body-util = "0.1.1"
+
+# autometrics-rs 用于自动prometheus metrics服务可观测性
+autometrics = {version = "1.0.1",features = ["prometheus-exporter"]}
+
+

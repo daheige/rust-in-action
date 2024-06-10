@@ -4,12 +4,14 @@ mod services;
 
 // 引入模块
 use crate::config::{mysql, xpulsar, APP_CONFIG};
-use infras::Logger; // 日志模块
+use infras::{graceful_shutdown, prometheus_init, Logger}; // 日志模块
 use log::info;
 use pb::qa::qa_service_server::QaServiceServer;
 use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
+use std::time::Duration;
+use tokio::signal;
 use tonic::transport::Server;
 
 // 这个file descriptor文件是build.rs中定义的descriptor_path路径
@@ -57,13 +59,21 @@ async fn main() -> anyhow::Result<()> {
         .build()
         .unwrap();
 
-    // 启动grpc service
+    // create grpc service
     let qa_service = services::QAServiceImpl::new();
-    Server::builder()
+    let grpc_server = Server::builder()
         .add_service(reflection_service)
         .add_service(QaServiceServer::new(qa_service))
-        .serve(address)
-        .await?;
+        .serve_with_shutdown(address, graceful_shutdown(Duration::from_secs(5)));
+
+    // build http /metrics endpoint
+    let metrics_server = prometheus_init(1338);
+
+    // create handler for each server
+    let grpc_handler = tokio::spawn(grpc_server);
+    let http_handler = tokio::spawn(metrics_server);
+    let _ = tokio::try_join!(grpc_handler, http_handler)
+        .expect("failed to start grpc service and metrics service");
 
     Ok(())
 }

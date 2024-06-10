@@ -286,6 +286,9 @@ RUST_LOG=debug cargo run --bin gateway
 日志输出结果，如下图所示：
 ![](env_logger_init.jpg)
 
+# prometheus metrics
+使用`autometrics`库完成，使用方法参考：https://crates.io/crates/autometrics
+
 # go grpc gmicro
 https://github.com/daheige/gmicro
 

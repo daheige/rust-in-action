@@ -1,6 +1,7 @@
+use autometrics::autometrics;
 use pb::qa::qa_service_server::QaService;
 use pb::qa::*;
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status};
 
 /// 实现hello.proto 接口服务
 #[derive(Debug, Default)]
@@ -15,6 +16,7 @@ impl QAServiceImpl {
 /// 实现qa微服务对应的接口
 #[tonic::async_trait]
 impl QaService for QAServiceImpl {
+    #[autometrics]
     async fn user_login(
         &self,
         request: Request<UserLoginRequest>,

@@ -18,9 +18,6 @@ tokio = {workspace = true}
 # note: Must be the same as the tonic version
 tonic-reflection = {workspace = true}
 
-# 网关使用axum http框架接入
-axum = {workspace = true}
-
 # json序列化处理
 serde = {workspace = true}
 serde_json = {workspace = true}
@@ -44,16 +41,21 @@ chrono = {workspace = true}
 sqlx = { workspace = true, features = ["runtime-tokio-rustls", "mysql", "chrono", "time"] }
 
 # pulsar消息队列相关crate
-futures = {workspace = true}
-pulsar = {workspace = true}
+futures = { workspace = true }
+pulsar = { workspace = true }
 
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
-anyhow = {workspace = true}
+anyhow = { workspace = true }
 
 # 项目自定义的crates
-infras = {path = "../infras" }
-pb = {path = "../pb"}
+infras = { path = "../infras" }
+pb = { path = "../pb" }
+
+# prometheus metrics
+autometrics = { workspace = true }
+# metrics run on axum http framework
+axum = { workspace = true }
 
 [build-dependencies]
 # note: Must be the same as the tonic version
-tonic-build = {workspace = true}
+tonic-build = { workspace = true }

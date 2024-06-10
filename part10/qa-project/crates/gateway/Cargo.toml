@@ -53,3 +53,6 @@ thiserror = { workspace = true }
 
 # body util
 http-body-util = { workspace = true }
+
+# prometheus metrics
+autometrics = { workspace = true }

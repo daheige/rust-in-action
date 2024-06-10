@@ -13,19 +13,23 @@ use std::sync::Arc;
 use tonic::Request;
 
 // validate error
+use autometrics::autometrics;
 use pb::qa::UserLoginRequest;
 use validator::Validate;
 
 // basic handler that responds with a static string
+#[autometrics]
 pub async fn root() -> &'static str {
     "Hello, World!"
 }
 
+#[autometrics]
 pub async fn hello() -> &'static str {
     "Hello, qa-svc!"
 }
 
 // 将请求反序列化到UserLoginRequest，然后调用grpc service
+#[autometrics]
 pub async fn user_login(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<UserLoginRequest>,

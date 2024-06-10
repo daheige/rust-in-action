@@ -29,3 +29,11 @@ env_logger = { workspace = true, features = ["color"] }
 
 # chrono用于时间处理
 chrono = { workspace = true }
+
+# tokio运行时
+tokio = { workspace = true }
+
+# prometheus metrics
+autometrics = { workspace = true }
+# metrics http framework
+axum = { workspace = true }
