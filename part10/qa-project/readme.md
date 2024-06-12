@@ -287,8 +287,10 @@ RUST_LOG=debug cargo run --bin gateway
 ![](env_logger_init.jpg)
 
 # prometheus metrics
-rust prometheus服务可观测性，使用`autometrics`库完成，使用方法参考：https://crates.io/crates/autometrics
-在rust代码中使用步骤：
+- rust prometheus服务可观测性，使用`autometrics`库完成，crate地址：https://crates.io/crates/autometrics
+- `autometrics`使用方式参考：https://docs.autometrics.dev/rust/quickstart
+
+在rust代码中使用autometrics步骤：
 1. 初始化prometheus metrics
 核心代码已经封装在infras/src/metrics.rs中
 ```rust
@@ -347,6 +349,7 @@ pub async fn root() -> &'static str {
     "Hello, World!"
 }
 ```
+接下来就可以使用prometheus和grafana拉取metrics数据展示
 
 # macOS下安装prometheus和接入
 ```shell
