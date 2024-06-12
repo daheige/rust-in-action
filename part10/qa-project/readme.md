@@ -288,6 +288,66 @@ RUST_LOG=debug cargo run --bin gateway
 
 # prometheus metrics
 rust prometheus服务可观测性，使用`autometrics`库完成，使用方法参考：https://crates.io/crates/autometrics
+在rust代码中使用步骤：
+1. 初始化prometheus metrics
+核心代码已经封装在infras/src/metrics.rs中
+```rust
+use super::graceful_shutdown;
+use autometrics::prometheus_exporter;
+use axum::routing::get;
+use axum::Router;
+use std::net::SocketAddr;
+use std::time::Duration;
+use tokio::net::TcpListener;
+
+// prometheus init
+pub async fn prometheus_init(port: u16) {
+    // Set up prometheus metrics exporter
+    prometheus_exporter::init();
+
+    // Build http /metrics endpoint
+    let router = Router::new().route(
+        "/metrics",
+        get(|| async { prometheus_exporter::encode_http_response() }),
+    );
+
+    let address: SocketAddr = format!("0.0.0.0:{}", port).parse().unwrap();
+    let listener = TcpListener::bind(address).await.unwrap();
+    println!("prometheus at:{}/metrics", address);
+
+    // start http service
+    axum::serve(listener, router)
+        .with_graceful_shutdown(graceful_shutdown(Duration::from_secs(5)))
+        .await
+        .expect("prometheus metrics init failed");
+}
+```
+2. 项目中使用方式
+例如：在gateway中接入metrics，main.rs代码片段如下：
+```rust
+    // build http /metrics endpoint
+    let metrics_server = prometheus_init(conf.metrics_port);
+    let metrics_handler = tokio::spawn(metrics_server);
+
+    // http gateway handler
+    let gateway_handler = tokio::spawn(gateway_server(conf));
+
+    // start http gateway and metrics service
+    let _ = tokio::try_join!(gateway_handler, metrics_handler)
+        .expect("failed to start http gateway and metrics service");
+    Ok(())
+```
+这里需要注意的两点：
+- tokio::spawn方法的返回值是一个handle，如果不调用tokio::join!或tokio::try_join!，tokio是不会将这两个handle放入工作线程中去运行的。
+- 当我们调用了tokio::join!后，相当于调用了handl.await，驱动futrue执行，main函数主线程会阻塞等待这个handle执行完成。
+3. 在调用的函数上方通过宏标记接入metrics数据采集
+```rust
+#[autometrics]
+pub async fn root() -> &'static str {
+    "Hello, World!"
+}
+```
+
 # macOS下安装prometheus和接入
 ```shell
 brew install prometheus
