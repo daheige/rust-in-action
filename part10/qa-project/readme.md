@@ -339,9 +339,9 @@ pub async fn prometheus_init(port: u16) {
         .expect("failed to start http gateway and metrics service");
     Ok(())
 ```
-这里需要注意的两点：
-- tokio::spawn方法的返回值是一个handle，如果不调用tokio::join!或tokio::try_join!，tokio是不会将这两个handle放入工作线程中去运行的。
-- 当我们调用了tokio::join!后，相当于调用了handl.await，驱动futrue执行，main函数主线程会阻塞等待这个handle执行完成。
+这里需要注意的2点：
+- tokio::spawn函数用于将一个异步任务放入tokio的任务调度器中进行执行，它接受一个返回Future的异步函数作为参数，并返回一个JoinHandle。
+- 如果不调用handle.await或tokio::join!或tokio::try_join!，tokio是不会将这个handle放入工作线程中去运行的。当我们调用了tokio::try_join!后，相当于调用了handle.await，驱动future任务执行，main函数主线程会阻塞等待这个handle执行完成。
 3. 在调用的函数上方通过宏标记接入metrics数据采集
 ```rust
 #[autometrics]
