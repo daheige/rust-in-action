@@ -37,3 +37,5 @@ RUN cd /app && cargo build --release
 
 # 设置默认命令
 CMD ["bash"]
+
+# 将上面构建好的二进制文件复制到容器中 todo
