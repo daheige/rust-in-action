@@ -33,7 +33,7 @@ RUN echo "deb http://mirrors.aliyun.com/debian bullseye main" > /etc/apt/sources
     echo "check-revoke = false" >> /usr/local/cargo/config.toml && \
     rm -rf /var/lib/apt/lists/*
 
-RUN cd /app && cargo build --release
+RUN cargo build --release
 
 # 设置默认命令
 CMD ["bash"]
