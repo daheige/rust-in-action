@@ -39,9 +39,9 @@ RUN echo "deb http://mirrors.aliyun.com/debian bullseye main" > /etc/apt/sources
     mkdir -p /go/{bin,pkg,src} &&  \
     echo "export GOPATH=/go" >> ~/.bashrc && \
     echo "export GOROOT=/usr/local/go" >> ~/.bashrc && \
-    echo "export PATH=\$PATH:$GOPATH/bin:/usr/local/go/bin" >> ~/.bashrc && \
     echo "export CGO_ENABLED=0" >> ~/.bashrc &&  \
     echo "export GOPROXY=https://goproxy.cn,direct" >> ~/.bashrc &&  \
+    echo "export PATH=\$PATH:\$GOPATH/bin:/usr/local/go/bin" >> ~/.bashrc && \
     ln -s /usr/local/go/bin/go /usr/bin/go && \
     rm -rf /var/lib/apt/lists/*
 
