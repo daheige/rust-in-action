@@ -5,6 +5,10 @@ LABEL authors="heige"
 # 设置环境变量
 ENV LANG C.UTF-8
 
+# 设置rust相关的环境变量
+ENV RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static \
+    RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
+
 WORKDIR /app
 
 COPY . .
@@ -12,11 +16,8 @@ COPY . .
 RUN echo "deb http://mirrors.aliyun.com/debian bullseye main" > /etc/apt/sources.list &&  \
     echo "deb http://mirrors.aliyun.com/debian-security bullseye-security main" >> /etc/apt/sources.list &&  \
     echo "deb http://mirrors.aliyun.com/debian bullseye-updates main" >> /etc/apt/sources.list &&  \
-    echo "export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static" >> ~/.bashrc &&  \
-    echo "export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup" >> ~/.bashrc &&  \
-    echo "export PATH=/usr/local/cargo/bin:\$PATH" >> ~/.bashrc &&  \
-    apt-get update && apt-get install -y ca-certificates gcc cmake make libtool vim bash  \
-    curl libc6-dev wget git net-tools protobuf-compiler &&  \
+    apt-get update && apt-get install -y ca-certificates gcc cmake make libtool vim bash curl libc6-dev wget  \
+    git net-tools protobuf-compiler apt-transport-https &&  \
     echo "#replace source" >> /usr/local/cargo/config.toml &&  \
     echo "replace-with = 'ustc'" >> /usr/local/cargo/config.toml &&  \
     echo "[source.crates-io]" >> /usr/local/cargo/config.toml &&  \
@@ -31,11 +32,8 @@ RUN echo "deb http://mirrors.aliyun.com/debian bullseye main" > /etc/apt/sources
     echo "git-fetch-with-cli=true" >> /usr/local/cargo/config.toml &&  \
     echo "[http]" >> /usr/local/cargo/config.toml &&  \
     echo "check-revoke = false" >> /usr/local/cargo/config.toml && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN cargo build --release
-
-# 设置默认命令
-CMD ["bash"]
 
 # 将上面构建好的二进制文件复制到容器中 todo
