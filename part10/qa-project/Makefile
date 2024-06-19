@@ -40,10 +40,10 @@ gateway-start:
 	docker run --name=${GATEWAY_SERVICE} -p 8090:8090 -p 1338:1338 \
 	-v ./config:/app/config -itd ${GATEWAY_IMAGE_NAME}:${VERSION}
 
-# 删除qa-svc容器
+# 删除gateway容器
 gateway-stop:
 	docker stop ${GATEWAY_SERVICE}
 	docker rm ${GATEWAY_SERVICE}
 
-# 重启qa-svc
+# 重启gateway
 gateway-restart: gateway-stop rpc-start
