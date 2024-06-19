@@ -1,36 +1,33 @@
 // yaml配置文件读取封装
 use serde_yaml::{self, Value};
 use std::fs::File;
-use std::io::{Error, Read};
+use std::io::Read;
+use std::path::Path;
 
 // ConfigTrait define config trait
 pub trait ConfigTrait {
-    fn new(path: &str) -> Self;
-    fn load(&mut self) -> Result<(), Error>;
+    fn load<P: AsRef<Path>>(path: P) -> Self;
     fn sections(&self) -> Value;
     fn content(&self) -> &str;
 }
 
 // Config impl config trait
 pub struct Config {
-    filepath: String,
     sections: String,
 }
 
 impl ConfigTrait for Config {
-    fn new(filepath: &str) -> Self {
-        let s = Config {
-            filepath: filepath.to_string(),
+    fn load<P: AsRef<Path>>(path: P) -> Self {
+        let mut c = Self {
             sections: String::new(),
         };
-        s
-    }
 
-    fn load(&mut self) -> Result<(), Error> {
-        File::open(&self.filepath)
-            .expect(format!("load file:{} failed", &self.filepath).as_str())
-            .read_to_string(&mut self.sections)?;
-        Ok(())
+        // 读取配置文件内容
+        File::open(path)
+            .expect("open config file")
+            .read_to_string(&mut c.sections)
+            .expect("failed to read config file");
+        c
     }
 
     fn sections(&self) -> Value {

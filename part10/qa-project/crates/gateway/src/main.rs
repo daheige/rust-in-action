@@ -12,6 +12,7 @@ use infras::{graceful_shutdown, prometheus_init, Config, ConfigTrait, Logger};
 // serde序列化处理
 use log::info;
 use std::net::SocketAddr;
+use std::path::Path;
 use std::process;
 use std::sync::Arc;
 use std::time::Duration;
@@ -30,8 +31,10 @@ async fn main() -> anyhow::Result<()> {
     info!("qa gateway start...");
 
     // 读取配置文件
-    let mut c = Config::new("app-gw.yaml");
-    c.load().expect("read file failed");
+    let config_dir = std::env::var("QA_CONFIG_DIR").unwrap_or("./".to_string());
+    let filename = Path::new(config_dir.as_str()).join("app-gw.yaml");
+    println!("filename:{:?}", filename);
+    let c = Config::load(filename);
 
     // 将配置文件内容解析到结构体中
     let conf: AppConfig = serde_yaml::from_str(c.content()).unwrap();

@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	grpcAddress     = "localhost:50051"
+	grpcAddress     = "127.0.0.1:50051"
+// 	grpcAddress     = "192.168.1.4:50051"
 	defaultUserName = "daheige"
 )
 

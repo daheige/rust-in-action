@@ -20,7 +20,7 @@ pub(crate) const PROTO_FILE_DESCRIPTOR_SET: &[u8] = include_bytes!("../rpc_descr
 /// 采用 tokio 运行时来执行grpc server
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("Hello, qa-svc!");
+    println!("Hello, qa-svc");
     // 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
     // 启动方式：RUST_LOG=debug cargo run --bin qa-svc
     // std::env::set_var("RUST_LOG", "debug");

@@ -10,6 +10,7 @@ request.setPassword('abc');
 // 创建grpc client
 let client = new services.QAServiceClient(
     'localhost:50051',
+    // '192.168.1.4:50051',
     grpc.credentials.createInsecure()
 );
 

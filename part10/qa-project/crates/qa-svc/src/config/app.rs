@@ -3,6 +3,7 @@ use infras::{Config, ConfigTrait};
 use once_cell::sync::Lazy;
 use pulsar::{Pulsar, TokioExecutor};
 use serde::{Deserialize, Serialize};
+use std::path::Path;
 
 // 定义传递给axum handlers的app_state，这里是通过引用计数的方式共享变量
 // Sharing state with handlers
@@ -25,8 +26,10 @@ pub struct AppConfig {
 
 // config read and init app config
 pub static APP_CONFIG: Lazy<AppConfig> = Lazy::new(|| {
-    let mut c = Config::new("app.yaml");
-    c.load().expect("read file failed");
+    let config_dir = std::env::var("QA_CONFIG_DIR").unwrap_or("./".to_string());
+    let filename = Path::new(config_dir.as_str()).join("app.yaml");
+    println!("filename:{:?}", filename);
+    let c = Config::load(filename);
 
     // read config to struct
     let conf: AppConfig = serde_yaml::from_str(c.content()).unwrap();

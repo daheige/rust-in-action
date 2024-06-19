@@ -9,3 +9,5 @@ scripts/php-gen.sh
 scripts/pulsar-run.sh
 scripts/docker-cargo-build.sh
 scripts/docker-rust-dev.sh
+Dockerfile
+Dockerfile-dev
