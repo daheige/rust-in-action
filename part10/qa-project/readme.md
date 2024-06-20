@@ -59,6 +59,14 @@ brew install libtool
 brew install protobuf
 ```
 # start qa-svc
+启动qa-svc之前，需要做的事情：
+- 请安装好对应的protoc工具链
+- 启动pulsar docker容器服务
+```shell
+sh scripts/pulsar-run.sh
+```
+
+启动qa-svc服务：
 ```shell
 cp app.yaml crates/qa-svc
 cargo run --bin qa-svc
@@ -398,6 +406,28 @@ brew services start grafana
 ![](grafana.jpg)
 输入默认用户名和密码: admin/admin (你也可自行修改，配置文件：/usr/local/etc/grafana/grafana.ini)
 接下来，你就可以配置对应的prometheus控制面板。
+
+# 部署方式选择
+有两种方式部署：
+- 方式1: 采用supervisor工具部署二进制文件
+supervisor安装步骤参考：[supervisor-install](supervisor-install.md)
+- 方式2: 采用rust docker镜像构建与发布
+1) 首先构建rust 开发环境
+```shell
+make rust-dev
+```
+执行上述命令，会构建一个 rust qa-project 开发环境镜像: qa-project-dev:v1.0
+2) 容器运行
+```shell
+# 启动qa-svc 微服务
+make rpc-start
+```
+3) 启动gateway
+```shell
+make gateway-build
+make gateway-start
+```
+其他命令，请参考：[Makefile](Makefile)
 
 # go grpc gmicro
 https://github.com/daheige/gmicro
