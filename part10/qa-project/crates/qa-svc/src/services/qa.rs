@@ -10,7 +10,7 @@ use sqlx::FromRow;
 use tonic::{Code, Request, Response, Status};
 use uuid::Uuid;
 
-/// 实现hello.proto 接口服务
+/// 实现qa.proto 接口服务
 pub struct QAServiceImpl {
     app_state: AppState,
 }
@@ -41,7 +41,7 @@ impl QAServiceImpl {
         let sql = r#"insert into users (username,password,openid,created_at) value(?,?,?,?)"#;
         let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
         let pwd = format!("{:x}", md5::compute(password.as_bytes()));
-        let openid = Uuid::new_v4().to_string().replace("-","");
+        let openid = Uuid::new_v4().to_string().replace("-", "");
         let affect_rows = sqlx::query(sql)
             .bind(username)
             .bind(pwd)
@@ -65,7 +65,7 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<UserLoginRequest>,
     ) -> Result<Response<UserLoginReply>, Status> {
-        let req = &request.into_inner();
+        let req = request.into_inner();
         println!("username:{}", req.username);
         let reply = UserLoginReply {
             token: "abc".to_string(),
@@ -86,7 +86,7 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<UserRegisterRequest>,
     ) -> Result<Response<UserRegisterReply>, Status> {
-        let req = &request.into_inner();
+        let req = request.into_inner();
         // 先判断用户是否存在
         let res = self.check_user(&req.username).await;
         match res {
