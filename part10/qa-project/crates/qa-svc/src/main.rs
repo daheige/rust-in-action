@@ -45,12 +45,12 @@ async fn main() -> anyhow::Result<()> {
         .expect("pulsar client init failed");
 
     // 通过arc引用计数的方式传递state
-    let app_state = Arc::new(config::AppState {
+    let app_state = config::AppState {
         // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
         mysql_pool,
         // 这里等价于pulsar_client: pulsar_client
         pulsar_client,
-    });
+    };
 
     // grpc reflection服务
     let reflection_service = tonic_reflection::server::Builder::configure()
@@ -59,7 +59,7 @@ async fn main() -> anyhow::Result<()> {
         .unwrap();
 
     // Create grpc service
-    let qa_service = services::QAServiceImpl::new();
+    let qa_service = services::QAServiceImpl::new(app_state);
     let grpc_server = Server::builder()
         .add_service(reflection_service)
         .add_service(QaServiceServer::new(qa_service))

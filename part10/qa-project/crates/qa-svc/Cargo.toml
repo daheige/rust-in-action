@@ -46,6 +46,8 @@ pulsar = { workspace = true }
 
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
 anyhow = { workspace = true }
+md5 = { workspace = true }
+uuid = { workspace = true, features = ["serde", "v4"] }
 
 # 项目自定义的crates
 infras = { path = "../infras" }

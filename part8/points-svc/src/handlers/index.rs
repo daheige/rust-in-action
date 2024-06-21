@@ -200,7 +200,7 @@ pub async fn check_user(openid: &str, mysql_pool: &sqlx::MySqlPool) -> Result<bo
         "select * from {} where openid = ?",
         MembersEntity::table_name()
     );
-    // query_as将其映射到结构体UserEntity中
+    // query_as将其映射到结构体MembersEntity中
     let user: MembersEntity = sqlx::query_as(&sql)
         .bind(openid)
         .fetch_one(mysql_pool)

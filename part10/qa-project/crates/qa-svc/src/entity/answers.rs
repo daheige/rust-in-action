@@ -1,11 +1,12 @@
 // 引入sqlx对应的时间格式数据类型
+use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::NaiveDateTime;
 
 // ANSWERS_TABLE for answers table
 const ANSWERS_TABLE: &str = "answers";
 
 // AnswersEntity for answers table
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize, Deserialize, sqlx::FromRow)]
 pub struct AnswersEntity {
     pub id: i64,
     pub question_id: i64,
@@ -21,7 +22,7 @@ pub struct AnswersEntity {
 
 // impl table_name method for AnswersEntity
 impl AnswersEntity {
-    pub fn table_name(&self) -> String {
+    pub fn table_name() -> String {
         ANSWERS_TABLE.to_string()
     }
 }

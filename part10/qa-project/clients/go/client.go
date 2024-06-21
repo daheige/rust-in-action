@@ -44,14 +44,25 @@ func main() {
 	}
 
 	ctx := context.Background()
-	res, err := c.UserLogin(ctx, &pb.UserLoginRequest{
-		Username: name,
-		Password: "abc",
-	})
+// 	res, err := c.UserLogin(ctx, &pb.UserLoginRequest{
+// 		Username: name,
+// 		Password: "abc",
+// 	})
 
+// if err != nil {
+// 		log.Fatalf("could not greet: %v", err)
+// 	}
+//
+// 	log.Printf("reply token:%s", res.Token)
+
+    res, err := c.UserRegister(ctx, &pb.UserRegisterRequest{
+            Username: name,
+            Password: "abc",
+    })
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
 
-	log.Printf("reply token:%s", res.Token)
+    log.Println("res: ",res)
+// 	log.Printf("reply token:%s", res.Token)
 }

@@ -70,6 +70,9 @@ anyhow = "1.0.86"
 #uuid
 uuid = { version = "1.8.0", features = ["serde", "v4"] }
 
+#md5
+md5 = "0.7.0"
+
 #validator
 validator = { version = "0.18.1", features = ["derive"] }
 async-trait = "0.1.80"
