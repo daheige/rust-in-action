@@ -60,7 +60,7 @@ async fn main() -> anyhow::Result<()> {
         .unwrap();
 
     // Create grpc service
-    let qa_service = application::QAServiceImpl::new(app_state);
+    let qa_service = application::new_qa_service(app_state);
     let grpc_server = Server::builder()
         .add_service(reflection_service)
         .add_service(QaServiceServer::new(qa_service))

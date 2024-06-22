@@ -1,5 +1,4 @@
 use crate::config::AppState;
-use crate::domain::entity::users::UsersEntity;
 use crate::domain::repository::UserRepo;
 use crate::infrastructure::persistence::new_user_repo;
 use autometrics::autometrics;
@@ -13,15 +12,14 @@ use tonic::{Code, Request, Response, Status};
 use uuid::Uuid;
 
 /// 实现qa.proto 接口服务
-pub struct QAServiceImpl {
+struct QAServiceImpl {
     user_repo: Box<dyn UserRepo>,
 }
 
-impl QAServiceImpl {
-    pub fn new(app_state: AppState) -> Self {
-        let user_repo = Box::new(new_user_repo(app_state.mysql_pool));
-        Self { user_repo }
-    }
+// 创建QaService实例
+pub fn new_qa_service(app_state: AppState) -> impl QaService {
+    let user_repo = Box::new(new_user_repo(app_state.mysql_pool));
+    QAServiceImpl { user_repo }
 }
 
 /// 实现qa微服务对应的接口

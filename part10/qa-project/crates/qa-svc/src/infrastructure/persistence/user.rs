@@ -1,4 +1,4 @@
-use crate::domain::entity::users::UsersEntity;
+use crate::domain::entity::UsersEntity;
 use crate::domain::repository::UserRepo;
 use chrono::Local;
 use uuid::Uuid;
@@ -17,17 +17,7 @@ pub fn new_user_repo(mysql_pool: sqlx::MySqlPool) -> impl UserRepo {
 impl UserRepo for UserRepoImpl {
     // 检查用户是否存在
     async fn check_user(&self, username: &str) -> anyhow::Result<bool> {
-        let sql = format!(
-            "select * from {} where username = ?",
-            UsersEntity::table_name(),
-        );
-
-        // query_as将其映射到结构体UserEntity中
-        let user: UsersEntity = sqlx::query_as(&sql)
-            .bind(username)
-            .fetch_one(&self.mysql_pool)
-            .await?;
-
+        let user = self.query_user(username).await?;
         Ok(user.id > 0)
     }
 
@@ -49,5 +39,20 @@ impl UserRepo for UserRepoImpl {
         println!("current insert user id = {}", id);
 
         Ok(())
+    }
+
+    // 查询用户信息
+    async fn query_user(&self, username: &str) -> anyhow::Result<UsersEntity> {
+        let sql = format!(
+            "select * from {} where username = ?",
+            UsersEntity::table_name(),
+        );
+
+        // query_as将其映射到结构体UserEntity中
+        let user: UsersEntity = sqlx::query_as(&sql)
+            .bind(username)
+            .fetch_one(&self.mysql_pool)
+            .await?;
+        Ok(user)
     }
 }

@@ -1,3 +1,3 @@
 mod qa;
 
-pub use qa::QAServiceImpl;
+pub use qa::new_qa_service;
