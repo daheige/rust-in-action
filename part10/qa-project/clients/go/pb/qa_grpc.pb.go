@@ -19,20 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	QAService_UserLogin_FullMethodName         = "/qa.QAService/UserLogin"
-	QAService_UserLogout_FullMethodName        = "/qa.QAService/UserLogout"
-	QAService_UserRegister_FullMethodName      = "/qa.QAService/UserRegister"
-	QAService_AddQuestion_FullMethodName       = "/qa.QAService/AddQuestion"
-	QAService_DeleteQuestion_FullMethodName    = "/qa.QAService/DeleteQuestion"
-	QAService_UpdateQuestion_FullMethodName    = "/qa.QAService/UpdateQuestion"
-	QAService_QuestionDetail_FullMethodName    = "/qa.QAService/QuestionDetail"
-	QAService_LatestQuestions_FullMethodName   = "/qa.QAService/LatestQuestions"
-	QAService_AnswerList_FullMethodName        = "/qa.QAService/AnswerList"
-	QAService_AddAnswer_FullMethodName         = "/qa.QAService/AddAnswer"
-	QAService_DeleteAnswer_FullMethodName      = "/qa.QAService/DeleteAnswer"
-	QAService_UpdateAnswer_FullMethodName      = "/qa.QAService/UpdateAnswer"
-	QAService_AnswerAgree_FullMethodName       = "/qa.QAService/AnswerAgree"
-	QAService_QuestionReadCount_FullMethodName = "/qa.QAService/QuestionReadCount"
+	QAService_UserLogin_FullMethodName       = "/qa.QAService/UserLogin"
+	QAService_UserLogout_FullMethodName      = "/qa.QAService/UserLogout"
+	QAService_UserRegister_FullMethodName    = "/qa.QAService/UserRegister"
+	QAService_AddQuestion_FullMethodName     = "/qa.QAService/AddQuestion"
+	QAService_DeleteQuestion_FullMethodName  = "/qa.QAService/DeleteQuestion"
+	QAService_UpdateQuestion_FullMethodName  = "/qa.QAService/UpdateQuestion"
+	QAService_QuestionDetail_FullMethodName  = "/qa.QAService/QuestionDetail"
+	QAService_LatestQuestions_FullMethodName = "/qa.QAService/LatestQuestions"
+	QAService_AnswerList_FullMethodName      = "/qa.QAService/AnswerList"
+	QAService_AddAnswer_FullMethodName       = "/qa.QAService/AddAnswer"
+	QAService_DeleteAnswer_FullMethodName    = "/qa.QAService/DeleteAnswer"
+	QAService_UpdateAnswer_FullMethodName    = "/qa.QAService/UpdateAnswer"
+	QAService_AnswerDetail_FullMethodName    = "/qa.QAService/AnswerDetail"
+	QAService_AnswerAgree_FullMethodName     = "/qa.QAService/AnswerAgree"
 )
 
 // QAServiceClient is the client API for QAService service.
@@ -63,10 +63,10 @@ type QAServiceClient interface {
 	DeleteAnswer(ctx context.Context, in *DeleteAnswerRequest, opts ...grpc.CallOption) (*DeleteAnswerReply, error)
 	// 修改回答
 	UpdateAnswer(ctx context.Context, in *UpdateAnswerRequest, opts ...grpc.CallOption) (*UpdateAnswerReply, error)
+	// 查看答案详情
+	AnswerDetail(ctx context.Context, in *AnswerDetailRequest, opts ...grpc.CallOption) (*AnswerDetailReply, error)
 	// 用户点赞回答
 	AnswerAgree(ctx context.Context, in *AnswerAgreeRequest, opts ...grpc.CallOption) (*AnswerAgreeReply, error)
-	// 问题阅读数
-	QuestionReadCount(ctx context.Context, in *QuestionReadCountRequest, opts ...grpc.CallOption) (*QuestionReadCountReply, error)
 }
 
 type qAServiceClient struct {
@@ -185,18 +185,18 @@ func (c *qAServiceClient) UpdateAnswer(ctx context.Context, in *UpdateAnswerRequ
 	return out, nil
 }
 
-func (c *qAServiceClient) AnswerAgree(ctx context.Context, in *AnswerAgreeRequest, opts ...grpc.CallOption) (*AnswerAgreeReply, error) {
-	out := new(AnswerAgreeReply)
-	err := c.cc.Invoke(ctx, QAService_AnswerAgree_FullMethodName, in, out, opts...)
+func (c *qAServiceClient) AnswerDetail(ctx context.Context, in *AnswerDetailRequest, opts ...grpc.CallOption) (*AnswerDetailReply, error) {
+	out := new(AnswerDetailReply)
+	err := c.cc.Invoke(ctx, QAService_AnswerDetail_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *qAServiceClient) QuestionReadCount(ctx context.Context, in *QuestionReadCountRequest, opts ...grpc.CallOption) (*QuestionReadCountReply, error) {
-	out := new(QuestionReadCountReply)
-	err := c.cc.Invoke(ctx, QAService_QuestionReadCount_FullMethodName, in, out, opts...)
+func (c *qAServiceClient) AnswerAgree(ctx context.Context, in *AnswerAgreeRequest, opts ...grpc.CallOption) (*AnswerAgreeReply, error) {
+	out := new(AnswerAgreeReply)
+	err := c.cc.Invoke(ctx, QAService_AnswerAgree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -231,10 +231,10 @@ type QAServiceServer interface {
 	DeleteAnswer(context.Context, *DeleteAnswerRequest) (*DeleteAnswerReply, error)
 	// 修改回答
 	UpdateAnswer(context.Context, *UpdateAnswerRequest) (*UpdateAnswerReply, error)
+	// 查看答案详情
+	AnswerDetail(context.Context, *AnswerDetailRequest) (*AnswerDetailReply, error)
 	// 用户点赞回答
 	AnswerAgree(context.Context, *AnswerAgreeRequest) (*AnswerAgreeReply, error)
-	// 问题阅读数
-	QuestionReadCount(context.Context, *QuestionReadCountRequest) (*QuestionReadCountReply, error)
 	mustEmbedUnimplementedQAServiceServer()
 }
 
@@ -278,11 +278,11 @@ func (UnimplementedQAServiceServer) DeleteAnswer(context.Context, *DeleteAnswerR
 func (UnimplementedQAServiceServer) UpdateAnswer(context.Context, *UpdateAnswerRequest) (*UpdateAnswerReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAnswer not implemented")
 }
+func (UnimplementedQAServiceServer) AnswerDetail(context.Context, *AnswerDetailRequest) (*AnswerDetailReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AnswerDetail not implemented")
+}
 func (UnimplementedQAServiceServer) AnswerAgree(context.Context, *AnswerAgreeRequest) (*AnswerAgreeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AnswerAgree not implemented")
-}
-func (UnimplementedQAServiceServer) QuestionReadCount(context.Context, *QuestionReadCountRequest) (*QuestionReadCountReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QuestionReadCount not implemented")
 }
 func (UnimplementedQAServiceServer) mustEmbedUnimplementedQAServiceServer() {}
 
@@ -513,6 +513,24 @@ func _QAService_UpdateAnswer_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _QAService_AnswerDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AnswerDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QAServiceServer).AnswerDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QAService_AnswerDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QAServiceServer).AnswerDetail(ctx, req.(*AnswerDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _QAService_AnswerAgree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AnswerAgreeRequest)
 	if err := dec(in); err != nil {
@@ -527,24 +545,6 @@ func _QAService_AnswerAgree_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QAServiceServer).AnswerAgree(ctx, req.(*AnswerAgreeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _QAService_QuestionReadCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QuestionReadCountRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QAServiceServer).QuestionReadCount(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: QAService_QuestionReadCount_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QAServiceServer).QuestionReadCount(ctx, req.(*QuestionReadCountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -605,12 +605,12 @@ var QAService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _QAService_UpdateAnswer_Handler,
 		},
 		{
-			MethodName: "AnswerAgree",
-			Handler:    _QAService_AnswerAgree_Handler,
+			MethodName: "AnswerDetail",
+			Handler:    _QAService_AnswerDetail_Handler,
 		},
 		{
-			MethodName: "QuestionReadCount",
-			Handler:    _QAService_QuestionReadCount_Handler,
+			MethodName: "AnswerAgree",
+			Handler:    _QAService_AnswerAgree_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

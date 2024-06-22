@@ -16,6 +16,7 @@ pub struct QuestionsEntity {
     pub created_at: NaiveDateTime,
     pub updated_at: Option<NaiveDateTime>,
     pub read_count: i64,
+    pub reply_count: i64,
     pub is_deleted: i64,
 }
 

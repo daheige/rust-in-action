@@ -70,6 +70,28 @@ function deserialize_qa_AnswerAgreeRequest(buffer_arg) {
   return qa_pb.AnswerAgreeRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_qa_AnswerDetailReply(arg) {
+  if (!(arg instanceof qa_pb.AnswerDetailReply)) {
+    throw new Error('Expected argument of type qa.AnswerDetailReply');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_qa_AnswerDetailReply(buffer_arg) {
+  return qa_pb.AnswerDetailReply.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_qa_AnswerDetailRequest(arg) {
+  if (!(arg instanceof qa_pb.AnswerDetailRequest)) {
+    throw new Error('Expected argument of type qa.AnswerDetailRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_qa_AnswerDetailRequest(buffer_arg) {
+  return qa_pb.AnswerDetailRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_qa_AnswerListReply(arg) {
   if (!(arg instanceof qa_pb.AnswerListReply)) {
     throw new Error('Expected argument of type qa.AnswerListReply');
@@ -178,28 +200,6 @@ function serialize_qa_QuestionDetailRequest(arg) {
 
 function deserialize_qa_QuestionDetailRequest(buffer_arg) {
   return qa_pb.QuestionDetailRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_qa_QuestionReadCountReply(arg) {
-  if (!(arg instanceof qa_pb.QuestionReadCountReply)) {
-    throw new Error('Expected argument of type qa.QuestionReadCountReply');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_qa_QuestionReadCountReply(buffer_arg) {
-  return qa_pb.QuestionReadCountReply.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_qa_QuestionReadCountRequest(arg) {
-  if (!(arg instanceof qa_pb.QuestionReadCountRequest)) {
-    throw new Error('Expected argument of type qa.QuestionReadCountRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_qa_QuestionReadCountRequest(buffer_arg) {
-  return qa_pb.QuestionReadCountRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_qa_UpdateAnswerReply(arg) {
@@ -459,6 +459,18 @@ updateAnswer: {
     responseSerialize: serialize_qa_UpdateAnswerReply,
     responseDeserialize: deserialize_qa_UpdateAnswerReply,
   },
+  // 查看答案详情
+answerDetail: {
+    path: '/qa.QAService/AnswerDetail',
+    requestStream: false,
+    responseStream: false,
+    requestType: qa_pb.AnswerDetailRequest,
+    responseType: qa_pb.AnswerDetailReply,
+    requestSerialize: serialize_qa_AnswerDetailRequest,
+    requestDeserialize: deserialize_qa_AnswerDetailRequest,
+    responseSerialize: serialize_qa_AnswerDetailReply,
+    responseDeserialize: deserialize_qa_AnswerDetailReply,
+  },
   // 用户点赞回答
 answerAgree: {
     path: '/qa.QAService/AnswerAgree',
@@ -470,18 +482,6 @@ answerAgree: {
     requestDeserialize: deserialize_qa_AnswerAgreeRequest,
     responseSerialize: serialize_qa_AnswerAgreeReply,
     responseDeserialize: deserialize_qa_AnswerAgreeReply,
-  },
-  // 问题阅读数
-questionReadCount: {
-    path: '/qa.QAService/QuestionReadCount',
-    requestStream: false,
-    responseStream: false,
-    requestType: qa_pb.QuestionReadCountRequest,
-    responseType: qa_pb.QuestionReadCountReply,
-    requestSerialize: serialize_qa_QuestionReadCountRequest,
-    requestDeserialize: deserialize_qa_QuestionReadCountRequest,
-    responseSerialize: serialize_qa_QuestionReadCountReply,
-    responseDeserialize: deserialize_qa_QuestionReadCountReply,
   },
 };
 

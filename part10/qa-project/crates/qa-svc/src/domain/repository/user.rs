@@ -7,8 +7,11 @@ pub trait UserRepo: Send + Sync + 'static {
     async fn check_user(&self, username: &str) -> anyhow::Result<bool>;
 
     // 插入用户
-    async fn insert_user(&self, username: &str, password: &str) -> anyhow::Result<()>;
+    async fn add(&self, username: &str, password: &str) -> anyhow::Result<()>;
 
     // 查询用户信息
     async fn query_user(&self, username: &str) -> anyhow::Result<UsersEntity>;
+
+    // 根据用户username批量获取用户信息
+    async fn batch_users(&self,usernames: Vec<&str>) ->anyhow::Result<Vec<UsersEntity>>;
 }

@@ -47,11 +47,11 @@ service QAService {
   // 修改回答
   rpc UpdateAnswer(UpdateAnswerRequest) returns (UpdateAnswerReply);
 
+  // 查看答案详情
+  rpc AnswerDetail(AnswerDetailRequest) returns(AnswerDetailReply);
+
   // 用户点赞回答
   rpc AnswerAgree(AnswerAgreeRequest) returns(AnswerAgreeReply);
-
-  // 问题阅读数
-  rpc QuestionReadCount(QuestionReadCountRequest) returns (QuestionReadCountReply);
 }
 
 // 登录请求
@@ -174,19 +174,9 @@ message AnswerAgreeRequest {
 // 回答点赞返回结果
 message AnswerAgreeReply {
   int64 id = 1;
+
+  // 这个点赞数相对来说是准确的，如果高并发场景下，它等于点赞增量数+点赞之前的数字
   int64 agree_count = 2;
-}
-
-// 问题阅读数请求信息
-message QuestionReadCountRequest {
-  int64 id = 1; // 问题id
-  string username = 2;
-}
-
-// 问题阅读数处理的返回结果
-message QuestionReadCountReply {
-  int64 id = 1;
-  int64 read_count = 2;
 }
 
 // 问题详情请求
@@ -237,5 +227,17 @@ message AnswerListReply {
   repeated AnswerEntity list = 1;
   int64 total = 2;
   int64 total_page = 3;
-  bool is_end = 4;
+  int64 page_size = 4; // 每页显示个数
+  int64 current_page = 5; // 当前第几页
+  bool is_end = 6; // 数据是否到底了
+}
+
+// 查看回答详情
+message AnswerDetailRequest {
+  int64 id = 1; // 问题id
+  string username = 2; // 当前用户
+}
+
+message AnswerDetailReply {
+  AnswerEntity answer = 1;
 }

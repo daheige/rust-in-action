@@ -22,7 +22,7 @@ impl UserRepo for UserRepoImpl {
     }
 
     // 插入用户
-    async fn insert_user(&self, username: &str, password: &str) -> anyhow::Result<()> {
+    async fn add(&self, username: &str, password: &str) -> anyhow::Result<()> {
         let sql = r#"insert into users (username,password,openid,created_at) value(?,?,?,?)"#;
         let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
         let pwd = format!("{:x}", md5::compute(password.as_bytes()));
@@ -54,5 +54,29 @@ impl UserRepo for UserRepoImpl {
             .fetch_one(&self.mysql_pool)
             .await?;
         Ok(user)
+    }
+
+    // 批量查询用户信息
+    async fn batch_users(&self, usernames: Vec<&str>) -> anyhow::Result<Vec<UsersEntity>> {
+        let parameters = usernames
+            .iter()
+            .map(|_| "?")
+            .collect::<Vec<&str>>()
+            .join(", ");
+        let sql = format!(
+            "select * from {} where username in ({})",
+            UsersEntity::table_name(),
+            parameters
+        );
+
+        let mut query = sqlx::query_as(&sql);
+        // 绑定参数
+        for username in &usernames {
+            query = query.bind(username);
+        }
+
+        // 通过sqlx提供的query_as方法将查询结果集映射到Vec中
+        let users: Vec<UsersEntity> = query.fetch_all(&self.mysql_pool).await?;
+        Ok(users)
     }
 }

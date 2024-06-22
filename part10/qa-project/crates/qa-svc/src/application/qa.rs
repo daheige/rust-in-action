@@ -69,7 +69,7 @@ impl QaService for QAServiceImpl {
                         // 用户不存在就插入记录
                         let result = self
                             .user_repo
-                            .insert_user(&req.username, &req.password)
+                            .add(&req.username, &req.password)
                             .await;
                         if let Err(err) = result {
                             return Err(Status::new(
@@ -164,10 +164,10 @@ impl QaService for QAServiceImpl {
         todo!()
     }
 
-    async fn question_read_count(
+    async fn answer_detail(
         &self,
-        request: Request<QuestionReadCountRequest>,
-    ) -> Result<Response<QuestionReadCountReply>, Status> {
+        request: Request<AnswerDetailRequest>,
+    ) -> Result<Response<AnswerDetailReply>, Status> {
         todo!()
     }
 }
