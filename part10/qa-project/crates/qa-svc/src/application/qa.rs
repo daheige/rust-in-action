@@ -1,5 +1,7 @@
 use crate::config::AppState;
-use crate::entity::users::UsersEntity;
+use crate::domain::entity::users::UsersEntity;
+use crate::domain::repository::UserRepo;
+use crate::infrastructure::persistence::new_user_repo;
 use autometrics::autometrics;
 use chrono::{DateTime, Local};
 use pb::qa::qa_service_server::QaService;
@@ -12,48 +14,13 @@ use uuid::Uuid;
 
 /// 实现qa.proto 接口服务
 pub struct QAServiceImpl {
-    app_state: AppState,
+    user_repo: Box<dyn UserRepo>,
 }
 
 impl QAServiceImpl {
     pub fn new(app_state: AppState) -> Self {
-        Self { app_state }
-    }
-
-    // 检查用户是否存在
-    async fn check_user(&self, username: &str) -> Result<bool, sqlx::Error> {
-        let sql = format!(
-            "select * from {} where username = ?",
-            UsersEntity::table_name(),
-        );
-
-        // query_as将其映射到结构体UserEntity中
-        let user: UsersEntity = sqlx::query_as(&sql)
-            .bind(username)
-            .fetch_one(&self.app_state.mysql_pool)
-            .await?;
-
-        Ok(user.id > 0)
-    }
-
-    // 插入用户
-    async fn insert_user(&self, username: &str, password: &str) -> Result<(), sqlx::Error> {
-        let sql = r#"insert into users (username,password,openid,created_at) value(?,?,?,?)"#;
-        let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-        let pwd = format!("{:x}", md5::compute(password.as_bytes()));
-        let openid = Uuid::new_v4().to_string().replace("-", "");
-        let affect_rows = sqlx::query(sql)
-            .bind(username)
-            .bind(pwd)
-            .bind(openid)
-            .bind(created_at)
-            .execute(&self.app_state.mysql_pool)
-            .await?;
-
-        let id = affect_rows.last_insert_id();
-        println!("current insert user id = {}", id);
-
-        Ok(())
+        let user_repo = Box::new(new_user_repo(app_state.mysql_pool));
+        Self { user_repo }
     }
 }
 
@@ -88,7 +55,7 @@ impl QaService for QAServiceImpl {
     ) -> Result<Response<UserRegisterReply>, Status> {
         let req = request.into_inner();
         // 先判断用户是否存在
-        let res = self.check_user(&req.username).await;
+        let res = self.user_repo.check_user(&req.username).await;
         match res {
             Ok(_) => {
                 return Err(Status::new(
@@ -97,10 +64,15 @@ impl QaService for QAServiceImpl {
                 ))
             }
             Err(err) => {
+                // 将错误转换为原始类型
+                let err = err.downcast().expect("failed to convert into sqlx error");
                 match err {
                     sqlx::Error::RowNotFound => {
                         // 用户不存在就插入记录
-                        let result = self.insert_user(&req.username, &req.password).await;
+                        let result = self
+                            .user_repo
+                            .insert_user(&req.username, &req.password)
+                            .await;
                         if let Err(err) = result {
                             return Err(Status::new(
                                 Code::Unknown,

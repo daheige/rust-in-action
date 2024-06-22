@@ -1,6 +1,7 @@
+mod application;
 mod config;
-mod entity;
-mod services;
+mod domain;
+mod infrastructure;
 
 // 引入模块
 use crate::config::{mysql, xpulsar, APP_CONFIG};
@@ -59,7 +60,7 @@ async fn main() -> anyhow::Result<()> {
         .unwrap();
 
     // Create grpc service
-    let qa_service = services::QAServiceImpl::new(app_state);
+    let qa_service = application::QAServiceImpl::new(app_state);
     let grpc_server = Server::builder()
         .add_service(reflection_service)
         .add_service(QaServiceServer::new(qa_service))
