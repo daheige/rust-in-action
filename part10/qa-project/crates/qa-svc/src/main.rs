@@ -4,7 +4,7 @@ mod domain;
 mod infrastructure;
 
 // 引入模块
-use crate::config::{mysql, xpulsar, APP_CONFIG};
+use crate::config::{mysql, xpulsar, xredis, APP_CONFIG};
 use infras::{graceful_shutdown, prometheus_init, Logger}; // 日志模块
 use log::info;
 use pb::qa::qa_service_server::QaServiceServer;
@@ -45,11 +45,13 @@ async fn main() -> anyhow::Result<()> {
     let pulsar_client = xpulsar::client(&APP_CONFIG.pulsar_conf)
         .await
         .expect("pulsar client init failed");
+    let redis_pool = xredis::pool(&APP_CONFIG.redis_conf).expect("redis pool init failed");
     let app_state = config::AppState {
         // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
         mysql_pool,
         // 这里等价于pulsar_client: pulsar_client
         pulsar_client,
+        redis_pool,
     };
 
     // grpc reflection服务

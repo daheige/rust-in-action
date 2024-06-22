@@ -14,6 +14,7 @@ pub use metrics::prometheus_init;
 pub use shutdown::graceful_shutdown;
 pub use xmysql::MysqlService;
 pub use xpulsar::PulsarService;
+pub use xredis::RedisService;
 
 #[test]
 fn it_works() {

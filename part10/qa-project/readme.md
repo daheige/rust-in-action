@@ -61,11 +61,12 @@ brew install protobuf
 # Preparations before starting qa-svc
 启动qa-svc之前，需要做的事情：
 - 安装好对应的protoc工具链（参考Makefile或者scripts中的shell脚本）
-- 启动pulsar docker容器服务
+- 启动pulsar docker容器服务或使用pulsar云服务
 ```shell
 sh scripts/pulsar-run.sh
 ```
 - 安装好mysql服务或使用mysql云服务，创建qa_sys数据库，并将`qa.sql`中的SQL语句导入到数据库中即可
+- 安装好redis服务或使用redis云服务
 
 # start qa-svc
 ```shell

@@ -13,3 +13,11 @@ mysql_conf:
 pulsar_conf:
   addr: pulsar://192.168.1.4:6650
   token: "" # pulsar auth token
+
+redis_conf:
+  dsn: "redis://:@192.168.1.4/0"   # redis dsn信息，用于连接redis
+  max_size: 300                       # 最大连接个数，默认为300
+  min_idle: 3                         # 最小空闲数，默认为3
+  max_lifetime: 1800                  # 过期时间，默认为1800s
+  idle_timeout: 300                   # 连接池最大生存期，默认为300s
+  connection_timeout: 10              # 连接超时时间，默认为10s

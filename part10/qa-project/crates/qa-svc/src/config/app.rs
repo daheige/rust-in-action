@@ -1,7 +1,8 @@
-use crate::config::{mysql, xpulsar};
+use crate::config::{mysql, xpulsar, xredis};
 use infras::{Config, ConfigTrait};
 use once_cell::sync::Lazy;
 use pulsar::{Pulsar, TokioExecutor};
+use r2d2::Pool;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 
@@ -10,6 +11,7 @@ use std::path::Path;
 pub struct AppState {
     pub mysql_pool: sqlx::MySqlPool,
     pub pulsar_client: Pulsar<TokioExecutor>,
+    pub redis_pool: Pool<redis::Client>,
 }
 
 // AppConfig 项目配置信息
@@ -17,6 +19,7 @@ pub struct AppState {
 pub struct AppConfig {
     pub mysql_conf: mysql::MysqlConf,
     pub pulsar_conf: xpulsar::PulsarConf,
+    pub redis_conf: xredis::RedisConf,
     pub app_port: u16,           // grpc 微服务端口
     pub metrics_port: u16,       // prometheus metrics port
     pub graceful_wait_time: u64, // 平滑退出等待时间，单位s
