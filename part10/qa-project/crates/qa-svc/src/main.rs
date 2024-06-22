@@ -41,11 +41,10 @@ async fn main() -> anyhow::Result<()> {
     let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf)
         .await
         .expect("mysql pool init failed");
+    // init pulsar client
     let pulsar_client = xpulsar::client(&APP_CONFIG.pulsar_conf)
         .await
         .expect("pulsar client init failed");
-
-    // 通过arc引用计数的方式传递state
     let app_state = config::AppState {
         // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
         mysql_pool,

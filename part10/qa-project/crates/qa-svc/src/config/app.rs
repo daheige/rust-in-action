@@ -5,8 +5,7 @@ use pulsar::{Pulsar, TokioExecutor};
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 
-// 定义传递给axum handlers的app_state，这里是通过引用计数的方式共享变量
-// Sharing state with handlers
+// 定义项目中使用的mysql pool 和pulsar client
 #[derive(Clone)]
 pub struct AppState {
     pub mysql_pool: sqlx::MySqlPool,
