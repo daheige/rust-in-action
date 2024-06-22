@@ -17,6 +17,7 @@ prost = {workspace = true}
 tokio = {workspace = true}
 # note: Must be the same as the tonic version
 tonic-reflection = {workspace = true}
+async-trait = { workspace = true}
 
 # json序列化处理
 serde = {workspace = true}

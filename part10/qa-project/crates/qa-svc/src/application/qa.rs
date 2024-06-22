@@ -23,7 +23,7 @@ pub fn new_qa_service(app_state: AppState) -> impl QaService {
 }
 
 /// 实现qa微服务对应的接口
-#[tonic::async_trait]
+#[async_trait::async_trait]
 impl QaService for QAServiceImpl {
     #[autometrics]
     async fn user_login(

@@ -13,7 +13,7 @@ pub fn new_user_repo(mysql_pool: sqlx::MySqlPool) -> impl UserRepo {
     user_repo
 }
 
-#[tonic::async_trait]
+#[async_trait::async_trait]
 impl UserRepo for UserRepoImpl {
     // 检查用户是否存在
     async fn check_user(&self, username: &str) -> anyhow::Result<bool> {
