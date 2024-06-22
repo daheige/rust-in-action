@@ -65,8 +65,7 @@ brew install protobuf
 ```shell
 sh scripts/pulsar-run.sh
 ```
-- 安装好mysql服务或使用mysql云服务，创建qa_sys数据库
-将`qa.sql`中的SQL语句导入到数据库中即可
+- 安装好mysql服务或使用mysql云服务，创建qa_sys数据库，并将`qa.sql`中的SQL语句导入到数据库中即可
 
 # start qa-svc
 ```shell
