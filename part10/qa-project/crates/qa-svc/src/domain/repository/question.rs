@@ -4,16 +4,16 @@ use crate::domain::entity::QuestionsEntity;
 #[async_trait::async_trait]
 pub trait QuestionRepo: Send + Sync + 'static {
     // 发表问题
-    async fn add(&self, question: QuestionsEntity) -> anyhow::Result<i64>;
+    async fn add(&self, question: &QuestionsEntity) -> anyhow::Result<u64>;
 
     // 修改问题
-    async fn update(&self, id: i64, question: QuestionsEntity) -> anyhow::Result<()>;
+    async fn update(&self, id: u64, question: &mut QuestionsEntity) -> anyhow::Result<()>;
 
     // 删除问题
-    async fn delete(&self, id: i64, username: &str) -> anyhow::Result<()>;
+    async fn delete(&self, id: u64, username: &str) -> anyhow::Result<()>;
 
-    // 查看问题
-    async fn detail(&self, id: i64) -> anyhow::Result<QuestionsEntity>;
+    // 根据id查询问题实体
+    async fn fetch_one(&self, id: u64) -> anyhow::Result<QuestionsEntity>;
 
     // 问题列表
     async fn lists(

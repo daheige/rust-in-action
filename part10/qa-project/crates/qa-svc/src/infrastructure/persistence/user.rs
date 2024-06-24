@@ -23,11 +23,14 @@ impl UserRepo for UserRepoImpl {
 
     // 插入用户
     async fn add(&self, username: &str, password: &str) -> anyhow::Result<()> {
-        let sql = r#"insert into users (username,password,openid,created_at) value(?,?,?,?)"#;
+        let sql = format!(
+            "insert into {} (username,password,openid,created_at) value(?,?,?,?)",
+            UsersEntity::table_name()
+        );
         let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
         let pwd = format!("{:x}", md5::compute(password.as_bytes()));
         let openid = Uuid::new_v4().to_string().replace("-", "");
-        let affect_rows = sqlx::query(sql)
+        let affect_rows = sqlx::query(&sql)
             .bind(username)
             .bind(pwd)
             .bind(openid)
@@ -50,7 +53,7 @@ impl UserRepo for UserRepoImpl {
 
         // query_as将其映射到结构体UserEntity中
         let user: UsersEntity = sqlx::query_as(&sql)
-            .bind(username)
+            .bind(username.to_string())
             .fetch_one(&self.mysql_pool)
             .await?;
         Ok(user)
@@ -69,13 +72,14 @@ impl UserRepo for UserRepoImpl {
             parameters
         );
 
+        println!("exec batch users sql:{}",sql);
         let mut query = sqlx::query_as(&sql);
         // 绑定参数
-        for username in &usernames {
-            query = query.bind(username);
+        for username in usernames {
+            query = query.bind(username.to_string());
         }
 
-        // 通过sqlx提供的query_as方法将查询结果集映射到Vec中
+        // 将查询结果集放入到Vec中
         let users: Vec<UsersEntity> = query.fetch_all(&self.mysql_pool).await?;
         Ok(users)
     }

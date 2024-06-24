@@ -8,7 +8,7 @@ const QUESTIONS_TABLE: &str = "questions";
 // QuestionsEntity for questions table
 #[derive(Debug, Default, Serialize, Deserialize, sqlx::FromRow)]
 pub struct QuestionsEntity {
-    pub id: i64,
+    pub id: u64,
     pub title: String,
     pub content: String,
     pub created_by: String,

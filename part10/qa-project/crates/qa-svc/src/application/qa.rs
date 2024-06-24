@@ -1,6 +1,6 @@
 use crate::config::AppState;
-use crate::domain::repository::UserRepo;
-use crate::infrastructure::persistence::new_user_repo;
+use crate::domain::repository::{QuestionRepo, UserRepo};
+use crate::infrastructure::persistence::{new_user_repo,new_question_repo};
 use autometrics::autometrics;
 use chrono::{DateTime, Local};
 use pb::qa::qa_service_server::QaService;
@@ -10,16 +10,19 @@ use sqlx::types::chrono::NaiveDateTime;
 use sqlx::FromRow;
 use tonic::{Code, Request, Response, Status};
 use uuid::Uuid;
+use crate::domain::entity::QuestionsEntity;
 
 /// 实现qa.proto 接口服务
 struct QAServiceImpl {
     user_repo: Box<dyn UserRepo>,
+    question_repo: Box<dyn QuestionRepo>,
 }
 
 // 创建QaService实例
 pub fn new_qa_service(app_state: AppState) -> impl QaService {
-    let user_repo = Box::new(new_user_repo(app_state.mysql_pool));
-    QAServiceImpl { user_repo }
+    let user_repo = Box::new(new_user_repo(app_state.mysql_pool.clone()));
+    let question_repo = Box::new(new_question_repo(app_state.mysql_pool.clone()));
+    QAServiceImpl { user_repo,question_repo }
 }
 
 /// 实现qa微服务对应的接口
@@ -35,6 +38,19 @@ impl QaService for QAServiceImpl {
         let reply = UserLoginReply {
             token: "abc".to_string(),
         };
+
+
+        // let mut question = QuestionsEntity::default();
+        // question.title = "abc".to_string();
+        // question.content = "hello".to_string();
+        // question.created_by = "daheige".to_string();
+        //
+        // let res = self.question_repo.add(&question).await;
+        //
+        // println!("res:{:?}",res);
+
+        // let _ = self.question_repo.delete(2,"daheige").await;
+
 
         Ok(Response::new(reply))
     }
