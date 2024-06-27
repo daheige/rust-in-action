@@ -16,8 +16,8 @@ pub fn new_user_repo(mysql_pool: sqlx::MySqlPool) -> impl UserRepo {
 #[async_trait::async_trait]
 impl UserRepo for UserRepoImpl {
     // 检查用户是否存在
-    async fn check_user(&self, username: &str) -> anyhow::Result<bool> {
-        let user = self.query_user(username).await?;
+    async fn check_user_exist(&self, username: &str) -> anyhow::Result<bool> {
+        let user = self.fetch_one(username).await?;
         Ok(user.id > 0)
     }
 
@@ -45,7 +45,7 @@ impl UserRepo for UserRepoImpl {
     }
 
     // 查询用户信息
-    async fn query_user(&self, username: &str) -> anyhow::Result<UsersEntity> {
+    async fn fetch_one(&self, username: &str) -> anyhow::Result<UsersEntity> {
         let sql = format!(
             "select * from {} where username = ?",
             UsersEntity::table_name(),
@@ -61,8 +61,8 @@ impl UserRepo for UserRepoImpl {
 
     // 批量查询用户信息
     async fn batch_users(&self, usernames: Vec<&str>) -> anyhow::Result<Vec<UsersEntity>> {
-        let parameters = usernames
-            .iter()
+        // 将参数转换为(?,?)格式
+        let parameters = (0..usernames.len()).into_iter()
             .map(|_| "?")
             .collect::<Vec<&str>>()
             .join(", ");

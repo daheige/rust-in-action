@@ -8,16 +8,15 @@ const ANSWERS_TABLE: &str = "answers";
 // AnswersEntity for answers table
 #[derive(Debug, Default, Serialize, Deserialize, sqlx::FromRow)]
 pub struct AnswersEntity {
-    pub id: i64,
-    pub question_id: i64,
+    pub id: u64,
+    pub question_id: u64,
     pub content: String,
     pub created_by: String,
     pub updated_by: String,
     pub created_at: NaiveDateTime,
     pub updated_at: Option<NaiveDateTime>,
-    pub read_count: i64,
-    pub agree_count: i64,
-    pub is_deleted: i64,
+    pub agree_count: u64,
+    pub is_deleted: u8,
 }
 
 // impl table_name method for AnswersEntity

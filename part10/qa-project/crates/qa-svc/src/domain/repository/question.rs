@@ -7,7 +7,7 @@ pub trait QuestionRepo: Send + Sync + 'static {
     async fn add(&self, question: &QuestionsEntity) -> anyhow::Result<u64>;
 
     // 修改问题
-    async fn update(&self, id: u64, question: &mut QuestionsEntity) -> anyhow::Result<()>;
+    async fn update(&self, id: u64, question: &QuestionsEntity) -> anyhow::Result<()>;
 
     // 删除问题
     async fn delete(&self, id: u64, username: &str) -> anyhow::Result<()>;

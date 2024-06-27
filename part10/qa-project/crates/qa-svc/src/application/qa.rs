@@ -51,6 +51,18 @@ impl QaService for QAServiceImpl {
 
         // let _ = self.question_repo.delete(2,"daheige").await;
 
+        // let usernames = vec!["daheige"];
+        // let users = self.user_repo.batch_users(usernames).await;
+        // println!("users:{:?}",users);
+
+        // let question = self.question_repo.fetch_one(1).await;
+        // println!("question:{:?}",question);
+
+        // let mut question = QuestionsEntity::default();
+        // question.title = "abc".to_string();
+        // question.content = "abc".to_string();
+        // question.updated_by = "daheige".to_string();
+        // let res = self.question_repo.update(1,&question).await;
 
         Ok(Response::new(reply))
     }
@@ -69,7 +81,7 @@ impl QaService for QAServiceImpl {
     ) -> Result<Response<UserRegisterReply>, Status> {
         let req = request.into_inner();
         // 先判断用户是否存在
-        let res = self.user_repo.check_user(&req.username).await;
+        let res = self.user_repo.check_user_exist(&req.username).await;
         match res {
             Ok(_) => {
                 return Err(Status::new(

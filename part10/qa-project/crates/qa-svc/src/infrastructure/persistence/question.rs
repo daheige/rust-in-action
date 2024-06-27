@@ -1,7 +1,7 @@
-use chrono::Local;
-use sqlx::{MySql, Pool};
 use crate::domain::entity::{QuestionsEntity, UsersEntity};
 use crate::domain::repository::QuestionRepo;
+use chrono::{Local, NaiveDateTime};
+use sqlx::{MySql, Pool};
 
 // QuestionRepo 具体实现
 struct QuestionRepoImpl {
@@ -50,8 +50,28 @@ impl QuestionRepo for QuestionRepoImpl {
         Ok(())
     }
 
-    async fn update(&self, id: u64, question: &mut QuestionsEntity) -> anyhow::Result<()> {
-        todo!()
+    async fn update(&self, id: u64, question: &QuestionsEntity) -> anyhow::Result<()> {
+        let sql = format!(
+            r#"update {} set title = ?,content = ?,updated_by = ?,updated_at = ? where id = ?"#,
+            QuestionsEntity::table_name(),
+        );
+
+        println!("update sql:{}", sql);
+        let updated_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+        let affect_res = sqlx::query(&sql)
+            .bind(&question.title)
+            .bind(&question.content)
+            .bind(&question.updated_by)
+            .bind(updated_at)
+            .bind(id)
+            .execute(&self.mysql_pool)
+            .await?;
+
+        println!(
+            "current question affected_rows = {}",
+            affect_res.rows_affected()
+        );
+        Ok(())
     }
 
     async fn fetch_one(&self, id: u64) -> anyhow::Result<QuestionsEntity> {

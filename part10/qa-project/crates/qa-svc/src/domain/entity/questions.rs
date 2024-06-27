@@ -15,9 +15,9 @@ pub struct QuestionsEntity {
     pub updated_by: String,
     pub created_at: NaiveDateTime,
     pub updated_at: Option<NaiveDateTime>,
-    pub read_count: i64,
-    pub reply_count: i64,
-    pub is_deleted: i64,
+    pub read_count: u64,
+    pub reply_count: u64,
+    pub is_deleted: u8,
 }
 
 // impl table_name method for QuestionsEntity
