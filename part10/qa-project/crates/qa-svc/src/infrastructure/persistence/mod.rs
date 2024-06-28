@@ -1,5 +1,5 @@
-mod user;
 mod question;
+mod user;
 
-pub use user::new_user_repo;
 pub use question::new_question_repo;
+pub use user::new_user_repo;

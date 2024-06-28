@@ -62,7 +62,8 @@ impl UserRepo for UserRepoImpl {
     // 批量查询用户信息
     async fn batch_users(&self, usernames: Vec<&str>) -> anyhow::Result<Vec<UsersEntity>> {
         // 将参数转换为(?,?)格式
-        let parameters = (0..usernames.len()).into_iter()
+        let parameters = (0..usernames.len())
+            .into_iter()
             .map(|_| "?")
             .collect::<Vec<&str>>()
             .join(", ");
@@ -72,7 +73,7 @@ impl UserRepo for UserRepoImpl {
             parameters
         );
 
-        println!("exec batch users sql:{}",sql);
+        println!("exec batch users sql:{}", sql);
         let mut query = sqlx::query_as(&sql);
         // 绑定参数
         for username in usernames {

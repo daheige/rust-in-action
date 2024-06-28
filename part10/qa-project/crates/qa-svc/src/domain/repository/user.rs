@@ -13,5 +13,5 @@ pub trait UserRepo: Send + Sync + 'static {
     async fn fetch_one(&self, username: &str) -> anyhow::Result<UsersEntity>;
 
     // 根据用户username批量获取用户信息
-    async fn batch_users(&self,usernames: Vec<&str>) ->anyhow::Result<Vec<UsersEntity>>;
+    async fn batch_users(&self, usernames: Vec<&str>) -> anyhow::Result<Vec<UsersEntity>>;
 }

@@ -1,6 +1,6 @@
-use crate::domain::entity::{QuestionsEntity, UsersEntity};
-use crate::domain::repository::QuestionRepo;
-use chrono::{Local, NaiveDateTime};
+use crate::domain::entity::{LatestQuestions, QuestionsEntity, CountInfo};
+use crate::domain::repository::{QuestionRepo};
+use chrono::Local;
 use sqlx::{MySql, Pool};
 
 // QuestionRepo 具体实现
@@ -14,6 +14,7 @@ pub fn new_question_repo(mysql_pool: Pool<MySql>) -> impl QuestionRepo {
 
 #[async_trait::async_trait]
 impl QuestionRepo for QuestionRepoImpl {
+    // 发表问题
     async fn add(&self, question: &QuestionsEntity) -> anyhow::Result<u64> {
         let sql = format!(
             "insert into {} (title,content,created_by,created_at) value(?,?,?,?)",
@@ -35,6 +36,7 @@ impl QuestionRepo for QuestionRepoImpl {
         Ok(id)
     }
 
+    // 删除问题
     async fn delete(&self, id: u64, username: &str) -> anyhow::Result<()> {
         let sql = format!(
             "delete from {} where id = ? and created_by = ?",
@@ -50,6 +52,7 @@ impl QuestionRepo for QuestionRepoImpl {
         Ok(())
     }
 
+    // 修改问题
     async fn update(&self, id: u64, question: &QuestionsEntity) -> anyhow::Result<()> {
         let sql = format!(
             r#"update {} set title = ?,content = ?,updated_by = ?,updated_at = ? where id = ?"#,
@@ -74,6 +77,7 @@ impl QuestionRepo for QuestionRepoImpl {
         Ok(())
     }
 
+    // 根据id查询问题实体
     async fn fetch_one(&self, id: u64) -> anyhow::Result<QuestionsEntity> {
         let sql = format!(
             "select * from {} where id = ?",
@@ -89,12 +93,46 @@ impl QuestionRepo for QuestionRepoImpl {
         Ok(question)
     }
 
-    async fn lists(
-        &self,
-        last_id: i64,
-        limit: i64,
-        order_by: String,
-    ) -> anyhow::Result<Vec<QuestionsEntity>> {
-        todo!()
+    // 最新问题列表
+    async fn latest_lists(&self, last_id: u64, limit: u64) -> anyhow::Result<LatestQuestions> {
+        let mut questions: Vec<QuestionsEntity> = vec![];
+        if last_id > 0 {
+            let sql = format!(
+                "select * from {} where id < ? order by id desc limit ?",
+                QuestionsEntity::table_name(),
+            );
+            // query_as将其映射到vec中
+            questions = sqlx::query_as(&sql)
+                .bind(last_id)
+                .bind(limit)
+                .fetch_all(&self.mysql_pool)
+                .await?;
+        } else {
+            let sql = format!(
+                "select * from {} order by id desc limit ?",
+                QuestionsEntity::table_name(),
+            );
+            // query_as将其映射到vec中
+            questions = sqlx::query_as(&sql)
+                .bind(limit)
+                .fetch_all(&self.mysql_pool)
+                .await?;
+        }
+
+        let num = questions.len() as u64;
+        let is_end = num < limit;
+        let mut last_id: Option<u64> = None;
+        if !is_end {
+            // 数据没有到底
+            last_id = Some(questions.last().unwrap().id);
+        }
+
+        let reply = LatestQuestions {
+            questions,
+            is_end,
+            last_id,
+        };
+
+        Ok(reply)
     }
 }

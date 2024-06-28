@@ -204,14 +204,14 @@ message QuestionEntity {
 message LatestQuestionsRequest {
   string username = 1; // 用户名
   int64 last_id = 2; // 上一次的question_id，第一页默认为0
+  int64 limit = 3;
 }
 
 // 最新问题列表返回结果
 message LatestQuestionsReply {
   repeated QuestionEntity list = 1;
   int64 last_id = 2; // 上一次的question_id
-  int64 limit = 3; // 每页展示条数
-  bool is_end = 4; // 是否到底了
+  bool is_end = 3; // 是否到底了
 }
 
 // 问题下的回答接口

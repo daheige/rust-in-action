@@ -8,16 +8,16 @@ const USERS_FEEDBACK_TABLE: &str = "users_feedback";
 // UsersFeedbackEntity for users_feedback table
 #[derive(Debug, Default, Serialize, Deserialize, sqlx::FromRow)]
 pub struct UsersFeedbackEntity {
-	pub id: u64,
-	pub target_id: u64,
-	pub target_type: String,
-	pub created_by: String,
-	pub created_at: NaiveDateTime,
+    pub id: u64,
+    pub target_id: u64,
+    pub target_type: String,
+    pub created_by: String,
+    pub created_at: NaiveDateTime,
 }
 
 // impl table_name method for UsersFeedbackEntity
 impl UsersFeedbackEntity {
-	pub fn table_name() -> String {
-		USERS_FEEDBACK_TABLE.to_string()
-	}
+    pub fn table_name() -> String {
+        USERS_FEEDBACK_TABLE.to_string()
+    }
 }

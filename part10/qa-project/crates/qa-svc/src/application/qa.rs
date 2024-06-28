@@ -1,6 +1,7 @@
 use crate::config::AppState;
+use crate::domain::entity::QuestionsEntity;
 use crate::domain::repository::{QuestionRepo, UserRepo};
-use crate::infrastructure::persistence::{new_user_repo,new_question_repo};
+use crate::infrastructure::persistence::{new_question_repo, new_user_repo};
 use autometrics::autometrics;
 use chrono::{DateTime, Local};
 use pb::qa::qa_service_server::QaService;
@@ -10,7 +11,6 @@ use sqlx::types::chrono::NaiveDateTime;
 use sqlx::FromRow;
 use tonic::{Code, Request, Response, Status};
 use uuid::Uuid;
-use crate::domain::entity::QuestionsEntity;
 
 /// 实现qa.proto 接口服务
 struct QAServiceImpl {
@@ -22,7 +22,10 @@ struct QAServiceImpl {
 pub fn new_qa_service(app_state: AppState) -> impl QaService {
     let user_repo = Box::new(new_user_repo(app_state.mysql_pool.clone()));
     let question_repo = Box::new(new_question_repo(app_state.mysql_pool.clone()));
-    QAServiceImpl { user_repo,question_repo }
+    QAServiceImpl {
+        user_repo,
+        question_repo,
+    }
 }
 
 /// 实现qa微服务对应的接口
@@ -38,7 +41,6 @@ impl QaService for QAServiceImpl {
         let reply = UserLoginReply {
             token: "abc".to_string(),
         };
-
 
         // let mut question = QuestionsEntity::default();
         // question.title = "abc".to_string();
@@ -63,6 +65,9 @@ impl QaService for QAServiceImpl {
         // question.content = "abc".to_string();
         // question.updated_by = "daheige".to_string();
         // let res = self.question_repo.update(1,&question).await;
+
+        // let questions = self.question_repo.latest_lists(1, 1).await;
+        // println!("latest questions:{:?}", questions);
 
         Ok(Response::new(reply))
     }
@@ -95,10 +100,7 @@ impl QaService for QAServiceImpl {
                 match err {
                     sqlx::Error::RowNotFound => {
                         // 用户不存在就插入记录
-                        let result = self
-                            .user_repo
-                            .add(&req.username, &req.password)
-                            .await;
+                        let result = self.user_repo.add(&req.username, &req.password).await;
                         if let Err(err) = result {
                             return Err(Status::new(
                                 Code::Unknown,

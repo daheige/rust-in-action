@@ -20,6 +20,14 @@ pub struct QuestionsEntity {
     pub is_deleted: u8,
 }
 
+// 最新问题列表返回结果
+#[derive(Debug, Default)]
+pub struct LatestQuestions {
+    pub questions: Vec<QuestionsEntity>,
+    pub is_end: bool,
+    pub last_id: Option<u64>,
+}
+
 // impl table_name method for QuestionsEntity
 impl QuestionsEntity {
     pub fn table_name() -> String {

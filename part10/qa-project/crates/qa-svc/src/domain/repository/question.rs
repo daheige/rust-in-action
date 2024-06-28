@@ -1,4 +1,4 @@
-use crate::domain::entity::QuestionsEntity;
+use crate::domain::entity::{LatestQuestions, QuestionsEntity};
 
 // 通过async_trait宏标记定义异步方法
 #[async_trait::async_trait]
@@ -15,11 +15,6 @@ pub trait QuestionRepo: Send + Sync + 'static {
     // 根据id查询问题实体
     async fn fetch_one(&self, id: u64) -> anyhow::Result<QuestionsEntity>;
 
-    // 问题列表
-    async fn lists(
-        &self,
-        last_id: i64,
-        limit: i64,
-        order_by: String,
-    ) -> anyhow::Result<Vec<QuestionsEntity>>;
+    // 最新问题列表
+    async fn latest_lists(&self, last_id: u64, limit: u64) -> anyhow::Result<LatestQuestions>;
 }
