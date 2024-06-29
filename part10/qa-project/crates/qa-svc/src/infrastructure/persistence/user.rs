@@ -1,3 +1,4 @@
+use super::sql_builder::gen_in_placeholder;
 use crate::domain::entity::UsersEntity;
 use crate::domain::repository::UserRepo;
 use chrono::Local;
@@ -17,8 +18,17 @@ pub fn new_user_repo(mysql_pool: sqlx::MySqlPool) -> impl UserRepo {
 impl UserRepo for UserRepoImpl {
     // 检查用户是否存在
     async fn check_user_exist(&self, username: &str) -> anyhow::Result<bool> {
-        let user = self.fetch_one(username).await?;
-        Ok(user.id > 0)
+        let sql = format!(
+            "select id from {} where username = ?",
+            UsersEntity::table_name(),
+        );
+
+        // query_as将查询结果映射到元组中
+        let res: (u64,) = sqlx::query_as(&sql)
+            .bind(username.to_string())
+            .fetch_one(&self.mysql_pool)
+            .await?;
+        Ok(res.0 > 0)
     }
 
     // 插入用户
@@ -51,7 +61,7 @@ impl UserRepo for UserRepoImpl {
             UsersEntity::table_name(),
         );
 
-        // query_as将其映射到结构体UserEntity中
+        // query_as将查询结果映射到结构体UserEntity中
         let user: UsersEntity = sqlx::query_as(&sql)
             .bind(username.to_string())
             .fetch_one(&self.mysql_pool)
@@ -62,11 +72,7 @@ impl UserRepo for UserRepoImpl {
     // 批量查询用户信息
     async fn batch_users(&self, usernames: Vec<&str>) -> anyhow::Result<Vec<UsersEntity>> {
         // 将参数转换为(?,?)格式
-        let parameters = (0..usernames.len())
-            .into_iter()
-            .map(|_| "?")
-            .collect::<Vec<&str>>()
-            .join(", ");
+        let parameters = gen_in_placeholder(usernames.len());
         let sql = format!(
             "select * from {} where username in ({})",
             UsersEntity::table_name(),
@@ -80,7 +86,7 @@ impl UserRepo for UserRepoImpl {
             query = query.bind(username.to_string());
         }
 
-        // 将查询结果集放入到Vec中
+        // 将查询结果集映射到Vec中
         let users: Vec<UsersEntity> = query.fetch_all(&self.mysql_pool).await?;
         Ok(users)
     }

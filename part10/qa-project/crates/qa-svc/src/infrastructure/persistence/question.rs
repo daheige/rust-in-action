@@ -1,7 +1,8 @@
-use crate::domain::entity::{LatestQuestions, QuestionsEntity, CountInfo};
-use crate::domain::repository::{QuestionRepo};
 use chrono::Local;
 use sqlx::{MySql, Pool};
+
+use crate::domain::entity::{LatestQuestions, QuestionsEntity};
+use crate::domain::repository::QuestionRepo;
 
 // QuestionRepo 具体实现
 struct QuestionRepoImpl {
@@ -36,22 +37,6 @@ impl QuestionRepo for QuestionRepoImpl {
         Ok(id)
     }
 
-    // 删除问题
-    async fn delete(&self, id: u64, username: &str) -> anyhow::Result<()> {
-        let sql = format!(
-            "delete from {} where id = ? and created_by = ?",
-            QuestionsEntity::table_name()
-        );
-        let affect_rows = sqlx::query(&sql)
-            .bind(id)
-            .bind(username)
-            .execute(&self.mysql_pool)
-            .await?;
-        println!("affected rows: {}", affect_rows.rows_affected());
-
-        Ok(())
-    }
-
     // 修改问题
     async fn update(&self, id: u64, question: &QuestionsEntity) -> anyhow::Result<()> {
         let sql = format!(
@@ -74,6 +59,22 @@ impl QuestionRepo for QuestionRepoImpl {
             "current question affected_rows = {}",
             affect_res.rows_affected()
         );
+        Ok(())
+    }
+
+    // 删除问题
+    async fn delete(&self, id: u64, username: &str) -> anyhow::Result<()> {
+        let sql = format!(
+            "delete from {} where id = ? and created_by = ?",
+            QuestionsEntity::table_name()
+        );
+        let affect_rows = sqlx::query(&sql)
+            .bind(id)
+            .bind(username)
+            .execute(&self.mysql_pool)
+            .await?;
+        println!("affected rows: {}", affect_rows.rows_affected());
+
         Ok(())
     }
 

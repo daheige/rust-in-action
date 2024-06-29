@@ -69,6 +69,13 @@ impl QaService for QAServiceImpl {
         // let questions = self.question_repo.latest_lists(1, 1).await;
         // println!("latest questions:{:?}", questions);
 
+        // let res = self.user_repo.check_user_exist("xiaoming").await;
+        // if let Ok(exist) = res {
+        //     println!("exist:{}", exist);
+        // } else {
+        //     println!("user not found");
+        // }
+
         Ok(Response::new(reply))
     }
 
