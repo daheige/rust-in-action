@@ -19,11 +19,11 @@ impl UserRepo for UserRepoImpl {
     // 检查用户是否存在
     async fn check_user_exist(&self, username: &str) -> anyhow::Result<bool> {
         let sql = format!(
-            "select id from {} where username = ?",
+            "select id from {} where username = ? limit 1",
             UsersEntity::table_name(),
         );
 
-        // query_as将查询结果映射到元组中
+        // 将结果放入一个Result对应的元组中
         let res: (u64,) = sqlx::query_as(&sql)
             .bind(username.to_string())
             .fetch_one(&self.mysql_pool)
@@ -57,7 +57,7 @@ impl UserRepo for UserRepoImpl {
     // 查询用户信息
     async fn fetch_one(&self, username: &str) -> anyhow::Result<UsersEntity> {
         let sql = format!(
-            "select * from {} where username = ?",
+            "select * from {} where username = ? limit 1",
             UsersEntity::table_name(),
         );
 

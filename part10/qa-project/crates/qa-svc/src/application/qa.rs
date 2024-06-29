@@ -1,7 +1,7 @@
 use crate::config::AppState;
-use crate::domain::entity::QuestionsEntity;
-use crate::domain::repository::{QuestionRepo, UserRepo};
-use crate::infrastructure::persistence::{new_question_repo, new_user_repo};
+use crate::domain::entity::{AnswersEntity, QuestionsEntity};
+use crate::domain::repository::{AnswerRepo, QuestionRepo, UserRepo};
+use crate::infrastructure::persistence::{new_answer_repo, new_question_repo, new_user_repo};
 use autometrics::autometrics;
 use chrono::{DateTime, Local};
 use pb::qa::qa_service_server::QaService;
@@ -16,15 +16,18 @@ use uuid::Uuid;
 struct QAServiceImpl {
     user_repo: Box<dyn UserRepo>,
     question_repo: Box<dyn QuestionRepo>,
+    answer_repo: Box<dyn AnswerRepo>,
 }
 
 // 创建QaService实例
 pub fn new_qa_service(app_state: AppState) -> impl QaService {
     let user_repo = Box::new(new_user_repo(app_state.mysql_pool.clone()));
     let question_repo = Box::new(new_question_repo(app_state.mysql_pool.clone()));
+    let answer_repo = Box::new(new_answer_repo(app_state.mysql_pool.clone()));
     QAServiceImpl {
         user_repo,
         question_repo,
+        answer_repo,
     }
 }
 
@@ -75,6 +78,27 @@ impl QaService for QAServiceImpl {
         // } else {
         //     println!("user not found");
         // }
+
+        // let mut answer = AnswersEntity::default();
+        // answer.question_id = 1;
+        // answer.content = "abc".to_string();
+        // answer.created_by = "daheige".to_string();
+        // let res = self.answer_repo.add(&answer).await;
+
+        // let res = self.answer_repo.delete(1,"daheige").await;
+        // let res = self.answer_repo.fetch_one(20).await;
+        // if res.is_ok(){
+        //     println!("res:{:?}",res.unwrap());
+        // }else{
+        //     let err : sqlx::Error = res.err().unwrap().downcast().unwrap();
+        //     println!("err: {}",err);
+        // }
+
+        // let res = self.answer_repo.update(2,"hello","daheige").await;
+        // let res = self.answer_repo.lists(2,1,2,"id desc").await;
+
+        // let res = self.user_repo.check_user_exist("lisi").await;
+        // println!("res:{:?}",res.is_ok());
 
         Ok(Response::new(reply))
     }

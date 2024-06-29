@@ -22,7 +22,7 @@ pub struct QuestionsEntity {
 
 // 最新问题列表返回结果
 #[derive(Debug, Default)]
-pub struct LatestQuestions {
+pub struct LatestQuestionsReply {
     pub questions: Vec<QuestionsEntity>,
     pub is_end: bool,
     pub last_id: Option<u64>,

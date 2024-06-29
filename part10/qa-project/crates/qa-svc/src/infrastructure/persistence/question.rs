@@ -1,7 +1,6 @@
 use chrono::Local;
-use sqlx::{MySql, Pool};
 
-use crate::domain::entity::{LatestQuestions, QuestionsEntity};
+use crate::domain::entity::{LatestQuestionsReply, QuestionsEntity};
 use crate::domain::repository::QuestionRepo;
 
 // QuestionRepo 具体实现
@@ -9,7 +8,7 @@ struct QuestionRepoImpl {
     mysql_pool: sqlx::MySqlPool,
 }
 
-pub fn new_question_repo(mysql_pool: Pool<MySql>) -> impl QuestionRepo {
+pub fn new_question_repo(mysql_pool: sqlx::MySqlPool) -> impl QuestionRepo {
     QuestionRepoImpl { mysql_pool }
 }
 
@@ -81,7 +80,7 @@ impl QuestionRepo for QuestionRepoImpl {
     // 根据id查询问题实体
     async fn fetch_one(&self, id: u64) -> anyhow::Result<QuestionsEntity> {
         let sql = format!(
-            "select * from {} where id = ?",
+            "select * from {} where id = ? limit 1",
             QuestionsEntity::table_name(),
         );
 
@@ -95,7 +94,7 @@ impl QuestionRepo for QuestionRepoImpl {
     }
 
     // 最新问题列表
-    async fn latest_lists(&self, last_id: u64, limit: u64) -> anyhow::Result<LatestQuestions> {
+    async fn latest_lists(&self, last_id: u64, limit: u64) -> anyhow::Result<LatestQuestionsReply> {
         let mut questions: Vec<QuestionsEntity> = vec![];
         if last_id > 0 {
             let sql = format!(
@@ -128,7 +127,7 @@ impl QuestionRepo for QuestionRepoImpl {
             last_id = Some(questions.last().unwrap().id);
         }
 
-        let reply = LatestQuestions {
+        let reply = LatestQuestionsReply {
             questions,
             is_end,
             last_id,

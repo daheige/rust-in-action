@@ -168,7 +168,7 @@ async fn add_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
         r#"update {} set points = points + ?,updated_at = ? where openid = ?"#,
         MembersEntity::table_name(),
     );
-    println!("insert sql:{}", sql);
+    println!("update user points sql:{}", sql);
     let affect_res = sqlx::query(&sql)
         .bind(msg.points)
         .bind(NaiveDateTime::parse_from_str(&created_at, fmt).unwrap())
@@ -239,7 +239,7 @@ async fn sub_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
         r#"update {} set points = points - ?,used_points = used_points + ?,updated_at = ? where openid = ?;"#,
         MembersEntity::table_name(),
     );
-    println!("update sql:{}", sql);
+    println!("update user points sql:{}", sql);
     let affect_res = sqlx::query(&sql)
         .bind(points)
         .bind(points)
