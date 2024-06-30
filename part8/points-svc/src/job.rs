@@ -185,9 +185,12 @@ async fn add_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
 // 积分扣减操作
 async fn sub_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<(), sqlx::Error> {
     // 先查询用户积分
-    let sql = "select * from members where openid = ?";
+    let sql = format!(
+        "select * from {} where openid = ?",
+        MembersEntity::table_name()
+    );
     // query_as将其映射到结构体MembersEntity中
-    let member: MembersEntity = sqlx::query_as(sql)
+    let member: MembersEntity = sqlx::query_as(&sql)
         .bind(&msg.openid)
         .fetch_one(mysql_pool)
         .await?;
