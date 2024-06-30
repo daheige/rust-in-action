@@ -15,13 +15,6 @@ pub trait AnswerRepo: Send + Sync + 'static {
     // 查询回答信息
     async fn fetch_one(&self, id: u64) -> anyhow::Result<AnswersEntity>;
 
-    // 点赞回答和取消点赞回答
-    // 点赞后的数字是通过redis计数器增量数字+当前回答点赞数作为结果，立即返回，
-    // 点赞数通过异步job方式落地到db，因此这里只需要返回成功与否。
-    // 也就是说点赞数保持最终一致性就可以，不用做到百分百实时显示出来。
-    // 点赞的同时，发送一个消息（点赞流水记录）到pulsar消息队列中，后续通过异步job方式写入db中。
-    async fn handler_agree(&self, id: u64, username: &str, action: &str) -> anyhow::Result<bool>;
-
     // 回答列表
     async fn lists(
         &self,

@@ -1,8 +1,9 @@
 use crate::config::AppState;
 use crate::domain::entity::{AnswersEntity, EntityReadCountData, QuestionsEntity};
-use crate::domain::repository::{AnswerRepo, QuestionRepo, ReadCountRepo, UserRepo};
+use crate::domain::repository::{AnswerRepo, QuestionRepo, ReadCountRepo, UserRepo, VoteRepo};
 use crate::infrastructure::persistence::{new_answer_repo, new_question_repo, new_user_repo};
 use crate::infrastructure::read_count::new_read_count_repo;
+use crate::infrastructure::vote::new_vote_repo;
 use autometrics::autometrics;
 use chrono::{DateTime, Local};
 use pb::qa::qa_service_server::QaService;
@@ -19,6 +20,7 @@ struct QAServiceImpl {
     question_repo: Box<dyn QuestionRepo>,
     answer_repo: Box<dyn AnswerRepo>,
     read_count_repo: Box<dyn ReadCountRepo>,
+    vote_repo: Box<dyn VoteRepo>,
 }
 
 // 创建QaService实例
@@ -28,13 +30,15 @@ pub fn new_qa_service(app_state: AppState) -> impl QaService {
     let answer_repo = Box::new(new_answer_repo(app_state.mysql_pool.clone()));
     let read_count_repo = Box::new(new_read_count_repo(
         app_state.redis_pool,
-        app_state.mysql_pool,
+        app_state.mysql_pool.clone(),
     ));
+    let vote_repo = Box::new(new_vote_repo(app_state.mysql_pool, app_state.pulsar_client));
     QAServiceImpl {
         user_repo,
         question_repo,
         answer_repo,
         read_count_repo,
+        vote_repo,
     }
 }
 
@@ -106,10 +110,6 @@ impl QaService for QAServiceImpl {
 
         // let res = self.user_repo.check_user_exist("lisi").await;
         // println!("res:{:?}",res.is_ok());
-        // answer vote
-        // let res = self.answer_repo.handler_agree(3,"daheige","up").await;
-        // // let res = self.answer_repo.handler_agree(3,"daheige","cancel").await;
-        // println!("res:{:?}",res.is_err());
         // let data = EntityReadCountData{
         //     target_id:1,
         //     target_type:"question".to_string(),
