@@ -157,9 +157,10 @@
     - 10.6 QA问答系统技术实现
         - 10.6.1 使用tonic库编写grpc微服务接口
         - 10.6.2 使用serde-yaml读取配置文件
-        - 10.6.3 使用redis计数器实现点赞和阅读数功能
-        - 10.6.4 使用log和env_logger记录日志
-        - 10.6.5 grpc http网关层
+        - 10.6.3 使用redis计数器实现问题阅读数功能
+        - 10.6.4 使用pulsar实现回答点赞功能
+        - 10.6.5 使用log和env_logger记录日志
+        - 10.6.6 grpc http网关层
     - 10.7 QA问答系统的服务可观测性
         - 10.7.1 pprof metrics接入
         - 10.7.2 prometheus部署与接入

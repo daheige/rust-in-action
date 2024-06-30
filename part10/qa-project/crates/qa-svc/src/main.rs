@@ -24,7 +24,7 @@ async fn main() -> anyhow::Result<()> {
     println!("Hello, qa-svc");
     // 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
     // 启动方式：RUST_LOG=debug cargo run --bin qa-svc
-    // std::env::set_var("RUST_LOG", "debug");
+    std::env::set_var("RUST_LOG", "debug");
     Logger::new().init(); // 使用默认方式初始化日志配置
 
     // 自定义方式初始化日志配置

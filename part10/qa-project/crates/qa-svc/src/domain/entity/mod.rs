@@ -1,8 +1,10 @@
 use serde::{Deserialize, Serialize};
 mod answers;
+mod entity_read_count;
 mod questions;
 mod users;
 mod users_votes;
+mod vote_message;
 
 // 总数对象
 #[derive(Debug, Default, Serialize, Deserialize, sqlx::FromRow)]
@@ -12,6 +14,8 @@ pub struct CountInfo {
 
 // 重新导出这些实体结构体
 pub use answers::{AnswerListReply, AnswersEntity};
+pub use entity_read_count::EntityReadCountData;
 pub use questions::{LatestQuestionsReply, QuestionsEntity};
 pub use users::UsersEntity;
 pub use users_votes::UsersVotesEntity;
+pub use vote_message::VoteMessage;

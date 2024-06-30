@@ -1,4 +1,4 @@
-use super::sql_builder::gen_in_placeholder;
+use super::sql_utils::gen_in_placeholder;
 use crate::domain::entity::UsersEntity;
 use crate::domain::repository::UserRepo;
 use chrono::Local;

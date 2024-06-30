@@ -216,9 +216,10 @@ impl AnswerRepo for AnswerRepoImpl {
         // 判断是否点赞
         let res = self.has_voted(id, username).await;
         if action == "up" {
-            if res.is_ok(){ // 已经点赞，直接返回即可
+            if res.is_ok() {
+                // 已经点赞，直接返回即可
                 println!("user:{} has voted answer id:{}", username, id);
-                return Ok(false)
+                return Ok(false);
             }
 
             return self.vote(id, username).await;
@@ -228,11 +229,13 @@ impl AnswerRepo for AnswerRepoImpl {
         if let Err(err) = res {
             let err = err.downcast().unwrap();
             match err {
-                sqlx::Error::RowNotFound => { // 未点赞
+                sqlx::Error::RowNotFound => {
+                    // 未点赞
                     println!("user:{} does not vote answer id:{}", username, id);
                     Ok(false)
                 }
-                other => { // 其他未知错误
+                other => {
+                    // 其他未知错误
                     println!("query user:{} answer vote error:{}", username, id);
                     Err(anyhow::Error::from(other))
                 }
