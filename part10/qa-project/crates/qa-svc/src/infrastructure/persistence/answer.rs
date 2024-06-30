@@ -1,7 +1,8 @@
 use crate::domain::entity::{
-    AnswerListReply, AnswersEntity, CountInfo, QuestionsEntity, UsersVotesEntity,
+    AnswerListReply, AnswersEntity, CountInfo, QuestionsEntity, UsersEntity, UsersVotesEntity,
 };
 use crate::domain::repository::AnswerRepo;
+use axum::routing::any;
 use chrono::{Local, NaiveDateTime};
 use log::info;
 use std::ops::DerefMut;
@@ -63,6 +64,20 @@ impl AnswerRepoImpl {
         Ok(true)
     }
 
+    async fn has_voted(&self, id: u64, username: &str) -> anyhow::Result<bool> {
+        let sql = format!(
+            "select id from {} where target_id = ? and target_type = ? and created_by = ?",
+            UsersVotesEntity::table_name(),
+        );
+        let res: (u64,) = sqlx::query_as(&sql)
+            .bind(id)
+            .bind("answer")
+            .bind(username)
+            .fetch_one(&self.mysql_pool)
+            .await?;
+        Ok(res.0 > 0)
+    }
+
     // 取消回答点赞
     async fn cancel_vote(&self, id: u64, username: &str) -> anyhow::Result<bool> {
         let sql = format!(
@@ -84,8 +99,11 @@ impl AnswerRepoImpl {
         info!("cancel vote affect_rows:{}", affect_res.rows_affected());
 
         // 先查询回答点赞数
-        let sql = "select id,agree_count from members where id = ?";
-        let res: (u64, u64) = sqlx::query_as(sql).bind(id).fetch_one(mysql_pool).await?;
+        let sql = format!(
+            "select id,agree_count from {} where id = ?",
+            AnswersEntity::table_name(),
+        );
+        let res: (u64, u64) = sqlx::query_as(&sql).bind(id).fetch_one(mysql_pool).await?;
         let agree_count = res.1; // 当前回答点赞数
         let mut remain = agree_count as i64 - 1; // 取消点赞后的点赞数
         if remain <= 0 {
@@ -195,8 +213,30 @@ impl AnswerRepo for AnswerRepoImpl {
     }
 
     async fn handler_agree(&self, id: u64, username: &str, action: &str) -> anyhow::Result<bool> {
+        // 判断是否点赞
+        let res = self.has_voted(id, username).await;
         if action == "up" {
-            self.vote(id, username).await
+            if res.is_ok(){ // 已经点赞，直接返回即可
+                println!("user:{} has voted answer id:{}", username, id);
+                return Ok(false)
+            }
+
+            return self.vote(id, username).await;
+        }
+
+        // 取消点赞处理逻辑
+        if let Err(err) = res {
+            let err = err.downcast().unwrap();
+            match err {
+                sqlx::Error::RowNotFound => { // 未点赞
+                    println!("user:{} does not vote answer id:{}", username, id);
+                    Ok(false)
+                }
+                other => { // 其他未知错误
+                    println!("query user:{} answer vote error:{}", username, id);
+                    Err(anyhow::Error::from(other))
+                }
+            }
         } else {
             self.cancel_vote(id, username).await
         }

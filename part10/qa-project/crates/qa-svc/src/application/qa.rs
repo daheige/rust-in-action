@@ -99,6 +99,10 @@ impl QaService for QAServiceImpl {
 
         // let res = self.user_repo.check_user_exist("lisi").await;
         // println!("res:{:?}",res.is_ok());
+        // answer vote
+        let res = self.answer_repo.handler_agree(3,"daheige","up").await;
+        // let res = self.answer_repo.handler_agree(3,"daheige","cancel").await;
+        println!("res:{:?}",res.is_err());
 
         Ok(Response::new(reply))
     }

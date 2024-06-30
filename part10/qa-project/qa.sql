@@ -28,7 +28,6 @@ CREATE TABLE `answers` (
   `updated_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '更新者',
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
-  `read_count` bigint unsigned NOT NULL DEFAULT '0' COMMENT '阅读数',
   `agree_count` bigint unsigned NOT NULL DEFAULT '0' COMMENT '点赞数',
   `is_deleted` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否删除，1表示删除，0表示正常',
   PRIMARY KEY (`id`),
@@ -51,3 +50,13 @@ CREATE TABLE `users` (
   KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `users_votes` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `target_id` bigint unsigned NOT NULL DEFAULT '0' COMMENT '实体id',
+  `target_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '实体类型',
+  `created_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '创建者',
+  `created_at` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_created_by` (`created_by`),
+  KEY `idx_target_id` (`target_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
