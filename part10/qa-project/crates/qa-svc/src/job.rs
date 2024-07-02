@@ -2,7 +2,7 @@ use crate::config::{mysql, xpulsar, xredis, APP_CONFIG};
 use crate::domain::repository::UserVoteRepo;
 use crate::infrastructure::vote::new_vote_repo;
 use infras::{job_graceful_shutdown, Logger}; // 日志模块
-use log::error;
+
 use std::io::Write;
 use std::process;
 use std::sync::{mpsc, Arc};

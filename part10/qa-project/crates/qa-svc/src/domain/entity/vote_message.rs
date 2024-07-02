@@ -1,4 +1,3 @@
-use chrono::NaiveDateTime;
 // 引入pulsar包涉及到的基本模块
 use pulsar::{producer, DeserializeMessage, Error as PulsarError, Payload, SerializeMessage};
 use serde::{Deserialize, Serialize};
