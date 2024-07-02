@@ -1,14 +1,12 @@
 use crate::config::AppState;
-use crate::domain::entity::{AnswersEntity, EntityReadCountData, QuestionsEntity};
-use crate::domain::repository::{AnswerRepo, QuestionRepo, ReadCountRepo, UserRepo, VoteRepo};
+use crate::domain::entity::{AnswersEntity, EntityReadCountData, QuestionsEntity, VoteMessage};
+use crate::domain::repository::{AnswerRepo, QuestionRepo, ReadCountRepo, UserRepo, UserVoteRepo};
 use crate::infrastructure::persistence::{new_answer_repo, new_question_repo, new_user_repo};
 use crate::infrastructure::read_count::new_read_count_repo;
 use crate::infrastructure::vote::new_vote_repo;
 use autometrics::autometrics;
-use chrono::{DateTime, Local};
 use pb::qa::qa_service_server::QaService;
 use pb::qa::*;
-use pulsar::proto::schema::Type::LocalDateTime;
 use sqlx::types::chrono::NaiveDateTime;
 use sqlx::FromRow;
 use tonic::{Code, Request, Response, Status};
@@ -20,7 +18,7 @@ struct QAServiceImpl {
     question_repo: Box<dyn QuestionRepo>,
     answer_repo: Box<dyn AnswerRepo>,
     read_count_repo: Box<dyn ReadCountRepo>,
-    vote_repo: Box<dyn VoteRepo>,
+    vote_repo: Box<dyn UserVoteRepo>,
 }
 
 // 创建QaService实例
@@ -118,6 +116,15 @@ impl QaService for QAServiceImpl {
         // let res = self.read_count_repo.incr(&data).await;
         // let res = self.read_count_repo.handler("question").await;
         // println!("res:{:?}",res);
+
+        // answer vote
+        // let res = self.vote_repo.publish(VoteMessage {
+        //     target_type: "answer".to_string(),
+        //     target_id: 3,
+        //     created_by: "daheige".to_string(),
+        //     action: "cancel".to_string(),
+        // }).await;
+        // println!("res:{:?}", res);
 
         Ok(Response::new(reply))
     }

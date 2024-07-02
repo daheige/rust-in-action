@@ -8,4 +8,4 @@ pub use answer::AnswerRepo;
 pub use entity_read_count::ReadCountRepo;
 pub use question::QuestionRepo;
 pub use user::UserRepo;
-pub use vote::VoteRepo;
+pub use vote::UserVoteRepo;

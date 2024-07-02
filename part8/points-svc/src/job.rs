@@ -91,8 +91,7 @@ async fn consumer_message(exit: Arc<RwLock<bool>>) -> anyhow::Result<()> {
             return Ok(());
         }
 
-        println!("metadata:{:?}", msg.message_id());
-        println!("id:{:?}", msg.message_id());
+        println!("message id:{:?}", msg.message_id());
         let data = match msg.deserialize() {
             Ok(data) => data,
             Err(err) => {
