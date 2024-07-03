@@ -1,6 +1,9 @@
 use crate::config::AppState;
 use crate::domain::entity::{AnswersEntity, EntityReadCountData, QuestionsEntity, VoteMessage};
-use crate::domain::repository::{AnswerRepo, QuestionRepo, ReadCountRepo, UserRepo, UserVoteRepo};
+use crate::domain::repository::{
+    AnswerRepo, QuestionRepo, ReadCountRepo, UserCacheRepo, UserRepo, UserVoteRepo,
+};
+use crate::infrastructure::cache::new_user_cache;
 use crate::infrastructure::persistence::{new_answer_repo, new_question_repo, new_user_repo};
 use crate::infrastructure::read_count::new_read_count_repo;
 use crate::infrastructure::vote::new_vote_repo;
@@ -20,6 +23,7 @@ struct QAServiceImpl {
     answer_repo: Box<dyn AnswerRepo>,
     read_count_repo: Box<dyn ReadCountRepo>,
     vote_repo: Box<dyn UserVoteRepo>,
+    user_cache_repo: Box<dyn UserCacheRepo>,
 }
 
 // 创建QaService实例
@@ -28,12 +32,14 @@ pub fn new_qa_service(app_state: AppState) -> impl QaService {
     let question_repo = Box::new(new_question_repo(app_state.mysql_pool.clone()));
     let answer_repo = Box::new(new_answer_repo(app_state.mysql_pool.clone()));
     let read_count_repo = Box::new(new_read_count_repo(
-        app_state.redis_pool,
+        app_state.redis_pool.clone(),
         app_state.mysql_pool.clone(),
     ));
+    let user_cache_repo = Box::new(new_user_cache(app_state.redis_pool));
     let vote_repo = Box::new(new_vote_repo(app_state.mysql_pool, app_state.pulsar_client));
     QAServiceImpl {
         user_repo,
+        user_cache_repo,
         question_repo,
         answer_repo,
         read_count_repo,
@@ -65,7 +71,10 @@ impl QaService for QAServiceImpl {
                         ))
                     }
                     other => {
-                        info!("login request user:{} server inner error:{}", req.username, other);
+                        info!(
+                            "login request user:{} server inner error:{}",
+                            req.username, other
+                        );
                         Err(Status::new(
                             Code::Internal,
                             format!("用户:{} 登录发生未知错误:{}", req.username, other),
@@ -82,6 +91,9 @@ impl QaService for QAServiceImpl {
                         format!("用户{}输入的密码错误", &req.username),
                     ));
                 }
+
+                // 设置cache
+                let _ = self.user_cache_repo.set(&user).await;
 
                 // 登录成功，返回用户的openid
                 let reply = Response::new(UserLoginReply { token: user.openid });
@@ -127,7 +139,10 @@ impl QaService for QAServiceImpl {
                         }
                     }
                     other => {
-                        info!("register request user:{} server inner error:{}", req.username, other);
+                        info!(
+                            "register request user:{} server inner error:{}",
+                            req.username, other
+                        );
                         return Err(Status::new(
                             Code::Internal,
                             format!("服务内部错误:{}", other),
