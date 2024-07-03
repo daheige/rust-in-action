@@ -5,7 +5,7 @@ let grpc = require('@grpc/grpc-js');
 // 创建请求对象
 let request = new messages.UserLoginRequest();
 request.setUsername('daheige');
-request.setPassword('abc');
+request.setPassword('abc123456');
 
 // 创建grpc client
 let client = new services.QAServiceClient(
@@ -17,7 +17,7 @@ let client = new services.QAServiceClient(
 // 调用grpc微服务的方法
 client.userLogin(request, function(err, data) {
     if (err) {
-        console.error(err);
+        console.error("user login error: ",err);
         return;
     }
 

@@ -15,7 +15,7 @@ pub struct VoteMessage {
 impl SerializeMessage for VoteMessage {
     // 实现消息序列化处理，返回producer::Message和PulsarError
     fn serialize_message(input: Self) -> Result<producer::Message, PulsarError> {
-        // 将PointsMessage转换为Vec<u8>格式
+        // 序列化处理，将VoteMessage转换为Vec<u8>格式
         let payload = serde_json::to_vec(&input).map_err(|e| PulsarError::Custom(e.to_string()))?;
         Ok(producer::Message {
             payload,              // pulsar Message主体payload

@@ -37,7 +37,7 @@ pub async fn graceful_shutdown(wait_time: Duration) {
 }
 
 // job平滑退出信号量处理
-pub async fn job_graceful_shutdown(wait_time: Duration,sender: mpsc::Sender<&str>) {
+pub async fn job_graceful_shutdown(wait_time: Duration, sender: mpsc::Sender<bool>) {
     let ctrl_c = async {
         signal::ctrl_c()
             .await
@@ -45,15 +45,16 @@ pub async fn job_graceful_shutdown(wait_time: Duration,sender: mpsc::Sender<&str
     };
 
     #[cfg(unix)]
-        let terminate = async {
+    let terminate = async {
         signal::unix::signal(signal::unix::SignalKind::terminate())
             .expect("failed to install signal handler")
             .recv()
             .await;
     };
 
+    // 监听退出信号量
     #[cfg(not(unix))]
-        let terminate = std::future::pending::<()>();
+    let terminate = std::future::pending::<()>();
     tokio::select! {
         _ = ctrl_c =>{
             println!("received ctrl_c signal,server will exist...");
@@ -67,6 +68,6 @@ pub async fn job_graceful_shutdown(wait_time: Duration,sender: mpsc::Sender<&str
 
     println!("signal received,starting graceful shutdown");
 
-    // 发送平滑退出消息通知
-    sender.send("shutdown").unwrap();
+    // 发送退出通知
+    sender.send(true).unwrap();
 }

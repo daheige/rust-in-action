@@ -242,7 +242,7 @@ impl UserVoteRepo for UserVoteRepoImpl {
             }
 
             // 输出消息id
-            println!("message id:{:?}", msg.message_id());
+            info!("message id:{:?}", msg.message_id());
             // 解析message到VoteMessage结构体中
             let data = match msg.deserialize() {
                 Ok(data) => data,
@@ -253,7 +253,7 @@ impl UserVoteRepo for UserVoteRepoImpl {
             };
 
             // 消费消息逻辑,这里需要将用户点赞明细落地到数据库DB中，并更新回答点赞数
-            println!("got message data:{:?}", data);
+            info!("got message data:{:?}", data);
 
             if target_type == "answer" {
                 let reply = self
@@ -270,7 +270,7 @@ impl UserVoteRepo for UserVoteRepoImpl {
 
             // 提交消息ack确认
             consumer.ack(&msg).await?;
-            println!(
+            info!(
                 "consumer message target_id:{} target_type:{} action:{} success",
                 data.target_id, data.target_type, data.action,
             );
