@@ -24,6 +24,8 @@ pub struct AppConfig {
     pub metrics_port: u16,       // prometheus metrics port
     pub graceful_wait_time: u64, // 平滑退出等待时间，单位s
     pub app_debug: bool,
+    pub aes_key: String,
+    pub aes_iv: String,
 }
 
 // config read and init app config

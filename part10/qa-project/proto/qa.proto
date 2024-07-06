@@ -20,6 +20,9 @@ service QAService {
   // 用户注册
   rpc UserRegister(UserRegisterRequest) returns(UserRegisterReply);
 
+  // 验证登录的token是否有效
+  rpc VerifyToken(VerifyTokenRequest) returns(VerifyTokenReply);
+
   // 发表问题
   rpc AddQuestion(AddQuestionRequest) returns (AddQuestionReply);
 
@@ -62,12 +65,12 @@ message UserLoginRequest {
 
 // 登录返回结果
 message UserLoginReply {
-  string token = 1; // 登录成功后加密的token
+  string token = 1; // 登录成功返回的唯一标识token
 }
 
-// 用户退出请求，直接清理redis中的存放的 username =>{"login_time":"2024-06-05 12:01:00"}
+// 用户退出请求，直接清理redis中的存放的数据
 message UserLogoutRequest {
-  string username = 1; // 用户名（这个在网关层解密token后的username）
+  string token = 1; // 唯一标识token
 }
 
 // 用户退出返回结果
@@ -84,6 +87,19 @@ message UserRegisterRequest {
 // 用户注册返回结果
 message UserRegisterReply {
   int64 state = 1;
+}
+
+// 验证登录token请求
+message VerifyTokenRequest {
+  string token = 1; // 登录成功后的token
+  string request_id = 2; // 请求id
+}
+
+// 验证token返回结果
+message VerifyTokenReply {
+  int64 state = 1; // 1表示验证成功，0验证失败
+  string reason = 2; // 验证失败返回具体的提示信息
+  string username = 3; // 当前用户username
 }
 
 // 发表问题

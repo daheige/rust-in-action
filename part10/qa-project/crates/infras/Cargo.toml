@@ -37,3 +37,8 @@ tokio = { workspace = true }
 autometrics = { workspace = true }
 # metrics http framework
 axum = { workspace = true }
+
+# crypto
+rust-crypto = { workspace = true }
+rand = { workspace = true }
+base64 = { workspace = true }

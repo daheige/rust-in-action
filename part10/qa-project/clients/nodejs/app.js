@@ -22,5 +22,5 @@ client.userLogin(request, function(err, data) {
     }
 
     console.log(data);
-    console.log("reply token: ",data.getToken());
+    console.log("reply token:",data.getToken());
 });

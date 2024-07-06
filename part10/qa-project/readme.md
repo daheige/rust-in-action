@@ -178,47 +178,36 @@ grpcurl -plaintext 127.0.0.1:50051 describe qa.QAService
 // qa.QAService is a service:
 // qa服务接口定义
 service QAService {
-  // 用户登录
-  rpc UserLogin(UserLoginRequest) returns (UserLoginReply);
-
-  // 用户退出
-  rpc UserLogout(UserLogoutRequest) returns(UserLogoutReply);
-
-  // 用户注册
-  rpc UserRegister(UserRegisterRequest) returns(UserRegisterReply);
-
-  // 发表问题
-  rpc AddQuestion(AddQuestionRequest) returns (AddQuestionReply);
-
-  // 删除问题
-  rpc DeleteQuestion(DeleteQuestionRequest) returns(DeleteQuestionReply);
-
-  // 修改问题
-  rpc UpdateQuestion(UpdateQuestionRequest) returns (UpdateQuestionReply);
-
-  // 查看问题详情
-  rpc QuestionDetail(QuestionDetailRequest) returns(QuestionDetailReply);
-
-  // 最新问题列表（采用下拉分页形式获取数据，按照id desc倒序）
-  rpc LatestQuestions(LatestQuestionsRequest) returns(LatestQuestionsReply);
-
-  // 回答列表
-  rpc AnswerList(AnswerListRequest) returns(AnswerListReply);
-
   // 添加问题回答
-  rpc AddAnswer(AddAnswerRequest) returns (AddAnswerReply);
-
-  // 删除问题对应的回答
-  rpc DeleteAnswer(DeleteAnswerRequest) returns(DeleteAnswerReply);
-
-  // 修改回答
-  rpc UpdateAnswer(UpdateAnswerRequest) returns (UpdateAnswerReply);
-
-  // 查看答案详情
-  rpc AnswerDetail(AnswerDetailRequest) returns(AnswerDetailReply);
-
+  rpc AddAnswer ( .qa.AddAnswerRequest ) returns ( .qa.AddAnswerReply );
+  // 发表问题
+  rpc AddQuestion ( .qa.AddQuestionRequest ) returns ( .qa.AddQuestionReply );
   // 用户点赞回答
-  rpc AnswerAgree(AnswerAgreeRequest) returns(AnswerAgreeReply);
+  rpc AnswerAgree ( .qa.AnswerAgreeRequest ) returns ( .qa.AnswerAgreeReply );
+  // 查看答案详情
+  rpc AnswerDetail ( .qa.AnswerDetailRequest ) returns ( .qa.AnswerDetailReply );
+  // 回答列表
+  rpc AnswerList ( .qa.AnswerListRequest ) returns ( .qa.AnswerListReply );
+  // 删除问题对应的回答
+  rpc DeleteAnswer ( .qa.DeleteAnswerRequest ) returns ( .qa.DeleteAnswerReply );
+  // 删除问题
+  rpc DeleteQuestion ( .qa.DeleteQuestionRequest ) returns ( .qa.DeleteQuestionReply );
+  // 最新问题列表（采用下拉分页形式获取数据，按照id desc倒序）
+  rpc LatestQuestions ( .qa.LatestQuestionsRequest ) returns ( .qa.LatestQuestionsReply );
+  // 查看问题详情
+  rpc QuestionDetail ( .qa.QuestionDetailRequest ) returns ( .qa.QuestionDetailReply );
+  // 修改回答
+  rpc UpdateAnswer ( .qa.UpdateAnswerRequest ) returns ( .qa.UpdateAnswerReply );
+  // 修改问题
+  rpc UpdateQuestion ( .qa.UpdateQuestionRequest ) returns ( .qa.UpdateQuestionReply );
+  // 用户登录
+  rpc UserLogin ( .qa.UserLoginRequest ) returns ( .qa.UserLoginReply );
+  // 用户退出
+  rpc UserLogout ( .qa.UserLogoutRequest ) returns ( .qa.UserLogoutReply );
+  // 用户注册
+  rpc UserRegister ( .qa.UserRegisterRequest ) returns ( .qa.UserRegisterReply );
+  // 验证登录的token是否有效
+  rpc VerifyToken ( .qa.VerifyTokenRequest ) returns ( .qa.VerifyTokenReply );
 }
  ```
 4. 查看请求qa.UserLoginRequest请求参数定义
@@ -236,7 +225,7 @@ message UserLoginRequest {
 ```
 5. 查看相应qa.UserLoginReply响应结果定义
 ```shell
-grpcurl -plaintext 127.0.0.1:8081 describe qa.UserLoginReply
+grpcurl -plaintext 127.0.0.1:50051 describe qa.UserLoginReply
 ```
 完整的HelloReply定义如下：
 ```

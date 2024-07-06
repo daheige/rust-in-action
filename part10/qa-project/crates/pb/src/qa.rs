@@ -14,17 +14,17 @@ pub struct UserLoginRequest {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct UserLoginReply {
-    /// 登录成功后加密的token
+    /// 登录成功返回的唯一标识token
     #[prost(string, tag = "1")]
     pub token: ::prost::alloc::string::String,
 }
-/// 用户退出请求，直接清理redis中的存放的 username =>{"login_time":"2024-06-05 12:01:00"}
+/// 用户退出请求，直接清理redis中的存放的数据
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct UserLogoutRequest {
-    /// 用户名（这个在网关层解密token后的username）
+    /// 唯一标识token
     #[prost(string, tag = "1")]
-    pub username: ::prost::alloc::string::String,
+    pub token: ::prost::alloc::string::String,
 }
 /// 用户退出返回结果
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -48,6 +48,31 @@ pub struct UserRegisterRequest {
 pub struct UserRegisterReply {
     #[prost(int64, tag = "1")]
     pub state: i64,
+}
+/// 验证登录token请求
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
+pub struct VerifyTokenRequest {
+    /// 登录成功后的token
+    #[prost(string, tag = "1")]
+    pub token: ::prost::alloc::string::String,
+    /// 请求id
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// 验证token返回结果
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
+pub struct VerifyTokenReply {
+    /// 1表示验证成功，0验证失败
+    #[prost(int64, tag = "1")]
+    pub state: i64,
+    /// 验证失败返回具体的提示信息
+    #[prost(string, tag = "2")]
+    pub reason: ::prost::alloc::string::String,
+    /// 当前用户username
+    #[prost(string, tag = "3")]
+    pub username: ::prost::alloc::string::String,
 }
 /// 发表问题
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -331,8 +356,8 @@ pub struct AnswerDetailReply {
 /// Generated client implementations.
 pub mod qa_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::http::Uri;
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// qa服务接口定义
     #[derive(Debug, Clone)]
     pub struct QaServiceClient<T> {
@@ -377,8 +402,9 @@ pub mod qa_service_client {
                     <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
                 >,
             >,
-            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
-                Into<StdError> + Send + Sync,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
         {
             QaServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -418,87 +444,136 @@ pub mod qa_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::UserLoginRequest>,
         ) -> std::result::Result<tonic::Response<super::UserLoginReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static("/qa.QAService/UserLogin");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "UserLogin"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "UserLogin"));
             self.inner.unary(req, path, codec).await
         }
         /// 用户退出
         pub async fn user_logout(
             &mut self,
             request: impl tonic::IntoRequest<super::UserLogoutRequest>,
-        ) -> std::result::Result<tonic::Response<super::UserLogoutReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::UserLogoutReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static("/qa.QAService/UserLogout");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "UserLogout"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "UserLogout"));
             self.inner.unary(req, path, codec).await
         }
         /// 用户注册
         pub async fn user_register(
             &mut self,
             request: impl tonic::IntoRequest<super::UserRegisterRequest>,
-        ) -> std::result::Result<tonic::Response<super::UserRegisterReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::UserRegisterReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/qa.QAService/UserRegister");
+            let path = http::uri::PathAndQuery::from_static(
+                "/qa.QAService/UserRegister",
+            );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "UserRegister"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "UserRegister"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// 验证登录的token是否有效
+        pub async fn verify_token(
+            &mut self,
+            request: impl tonic::IntoRequest<super::VerifyTokenRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::VerifyTokenReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/qa.QAService/VerifyToken");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "VerifyToken"));
             self.inner.unary(req, path, codec).await
         }
         /// 发表问题
         pub async fn add_question(
             &mut self,
             request: impl tonic::IntoRequest<super::AddQuestionRequest>,
-        ) -> std::result::Result<tonic::Response<super::AddQuestionReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::AddQuestionReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static("/qa.QAService/AddQuestion");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "AddQuestion"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "AddQuestion"));
             self.inner.unary(req, path, codec).await
         }
         /// 删除问题
         pub async fn delete_question(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteQuestionRequest>,
-        ) -> std::result::Result<tonic::Response<super::DeleteQuestionReply>, tonic::Status>
-        {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::DeleteQuestionReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/qa.QAService/DeleteQuestion");
+            let path = http::uri::PathAndQuery::from_static(
+                "/qa.QAService/DeleteQuestion",
+            );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("qa.QAService", "DeleteQuestion"));
@@ -508,16 +583,23 @@ pub mod qa_service_client {
         pub async fn update_question(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateQuestionRequest>,
-        ) -> std::result::Result<tonic::Response<super::UpdateQuestionReply>, tonic::Status>
-        {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateQuestionReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/qa.QAService/UpdateQuestion");
+            let path = http::uri::PathAndQuery::from_static(
+                "/qa.QAService/UpdateQuestion",
+            );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("qa.QAService", "UpdateQuestion"));
@@ -527,16 +609,23 @@ pub mod qa_service_client {
         pub async fn question_detail(
             &mut self,
             request: impl tonic::IntoRequest<super::QuestionDetailRequest>,
-        ) -> std::result::Result<tonic::Response<super::QuestionDetailReply>, tonic::Status>
-        {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::QuestionDetailReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/qa.QAService/QuestionDetail");
+            let path = http::uri::PathAndQuery::from_static(
+                "/qa.QAService/QuestionDetail",
+            );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("qa.QAService", "QuestionDetail"));
@@ -546,16 +635,23 @@ pub mod qa_service_client {
         pub async fn latest_questions(
             &mut self,
             request: impl tonic::IntoRequest<super::LatestQuestionsRequest>,
-        ) -> std::result::Result<tonic::Response<super::LatestQuestionsReply>, tonic::Status>
-        {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::LatestQuestionsReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/qa.QAService/LatestQuestions");
+            let path = http::uri::PathAndQuery::from_static(
+                "/qa.QAService/LatestQuestions",
+            );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("qa.QAService", "LatestQuestions"));
@@ -565,18 +661,23 @@ pub mod qa_service_client {
         pub async fn answer_list(
             &mut self,
             request: impl tonic::IntoRequest<super::AnswerListRequest>,
-        ) -> std::result::Result<tonic::Response<super::AnswerListReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::AnswerListReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static("/qa.QAService/AnswerList");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "AnswerList"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "AnswerList"));
             self.inner.unary(req, path, codec).await
         }
         /// 添加问题回答
@@ -584,89 +685,117 @@ pub mod qa_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::AddAnswerRequest>,
         ) -> std::result::Result<tonic::Response<super::AddAnswerReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static("/qa.QAService/AddAnswer");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "AddAnswer"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "AddAnswer"));
             self.inner.unary(req, path, codec).await
         }
         /// 删除问题对应的回答
         pub async fn delete_answer(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAnswerRequest>,
-        ) -> std::result::Result<tonic::Response<super::DeleteAnswerReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::DeleteAnswerReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/qa.QAService/DeleteAnswer");
+            let path = http::uri::PathAndQuery::from_static(
+                "/qa.QAService/DeleteAnswer",
+            );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "DeleteAnswer"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "DeleteAnswer"));
             self.inner.unary(req, path, codec).await
         }
         /// 修改回答
         pub async fn update_answer(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAnswerRequest>,
-        ) -> std::result::Result<tonic::Response<super::UpdateAnswerReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateAnswerReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/qa.QAService/UpdateAnswer");
+            let path = http::uri::PathAndQuery::from_static(
+                "/qa.QAService/UpdateAnswer",
+            );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "UpdateAnswer"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "UpdateAnswer"));
             self.inner.unary(req, path, codec).await
         }
         /// 查看答案详情
         pub async fn answer_detail(
             &mut self,
             request: impl tonic::IntoRequest<super::AnswerDetailRequest>,
-        ) -> std::result::Result<tonic::Response<super::AnswerDetailReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::AnswerDetailReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/qa.QAService/AnswerDetail");
+            let path = http::uri::PathAndQuery::from_static(
+                "/qa.QAService/AnswerDetail",
+            );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "AnswerDetail"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "AnswerDetail"));
             self.inner.unary(req, path, codec).await
         }
         /// 用户点赞回答
         pub async fn answer_agree(
             &mut self,
             request: impl tonic::IntoRequest<super::AnswerAgreeRequest>,
-        ) -> std::result::Result<tonic::Response<super::AnswerAgreeReply>, tonic::Status> {
-            self.inner.ready().await.map_err(|e| {
-                tonic::Status::new(
-                    tonic::Code::Unknown,
-                    format!("Service was not ready: {}", e.into()),
-                )
-            })?;
+        ) -> std::result::Result<
+            tonic::Response<super::AnswerAgreeReply>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static("/qa.QAService/AnswerAgree");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("qa.QAService", "AnswerAgree"));
+            req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "AnswerAgree"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -692,32 +821,58 @@ pub mod qa_service_server {
         async fn user_register(
             &self,
             request: tonic::Request<super::UserRegisterRequest>,
-        ) -> std::result::Result<tonic::Response<super::UserRegisterReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::UserRegisterReply>,
+            tonic::Status,
+        >;
+        /// 验证登录的token是否有效
+        async fn verify_token(
+            &self,
+            request: tonic::Request<super::VerifyTokenRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::VerifyTokenReply>,
+            tonic::Status,
+        >;
         /// 发表问题
         async fn add_question(
             &self,
             request: tonic::Request<super::AddQuestionRequest>,
-        ) -> std::result::Result<tonic::Response<super::AddQuestionReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::AddQuestionReply>,
+            tonic::Status,
+        >;
         /// 删除问题
         async fn delete_question(
             &self,
             request: tonic::Request<super::DeleteQuestionRequest>,
-        ) -> std::result::Result<tonic::Response<super::DeleteQuestionReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::DeleteQuestionReply>,
+            tonic::Status,
+        >;
         /// 修改问题
         async fn update_question(
             &self,
             request: tonic::Request<super::UpdateQuestionRequest>,
-        ) -> std::result::Result<tonic::Response<super::UpdateQuestionReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateQuestionReply>,
+            tonic::Status,
+        >;
         /// 查看问题详情
         async fn question_detail(
             &self,
             request: tonic::Request<super::QuestionDetailRequest>,
-        ) -> std::result::Result<tonic::Response<super::QuestionDetailReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::QuestionDetailReply>,
+            tonic::Status,
+        >;
         /// 最新问题列表（采用下拉分页形式获取数据，按照id desc倒序）
         async fn latest_questions(
             &self,
             request: tonic::Request<super::LatestQuestionsRequest>,
-        ) -> std::result::Result<tonic::Response<super::LatestQuestionsReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::LatestQuestionsReply>,
+            tonic::Status,
+        >;
         /// 回答列表
         async fn answer_list(
             &self,
@@ -732,22 +887,34 @@ pub mod qa_service_server {
         async fn delete_answer(
             &self,
             request: tonic::Request<super::DeleteAnswerRequest>,
-        ) -> std::result::Result<tonic::Response<super::DeleteAnswerReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::DeleteAnswerReply>,
+            tonic::Status,
+        >;
         /// 修改回答
         async fn update_answer(
             &self,
             request: tonic::Request<super::UpdateAnswerRequest>,
-        ) -> std::result::Result<tonic::Response<super::UpdateAnswerReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateAnswerReply>,
+            tonic::Status,
+        >;
         /// 查看答案详情
         async fn answer_detail(
             &self,
             request: tonic::Request<super::AnswerDetailRequest>,
-        ) -> std::result::Result<tonic::Response<super::AnswerDetailReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::AnswerDetailReply>,
+            tonic::Status,
+        >;
         /// 用户点赞回答
         async fn answer_agree(
             &self,
             request: tonic::Request<super::AnswerAgreeRequest>,
-        ) -> std::result::Result<tonic::Response<super::AnswerAgreeReply>, tonic::Status>;
+        ) -> std::result::Result<
+            tonic::Response<super::AnswerAgreeReply>,
+            tonic::Status,
+        >;
     }
     /// qa服务接口定义
     #[derive(Debug)]
@@ -773,7 +940,10 @@ pub mod qa_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -829,16 +999,23 @@ pub mod qa_service_server {
                 "/qa.QAService/UserLogin" => {
                     #[allow(non_camel_case_types)]
                     struct UserLoginSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::UserLoginRequest> for UserLoginSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::UserLoginRequest>
+                    for UserLoginSvc<T> {
                         type Response = super::UserLoginReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::UserLoginRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut =
-                                async move { <T as QaService>::user_login(&inner, request).await };
+                            let fut = async move {
+                                <T as QaService>::user_login(&inner, request).await
+                            };
                             Box::pin(fut)
                         }
                     }
@@ -868,16 +1045,23 @@ pub mod qa_service_server {
                 "/qa.QAService/UserLogout" => {
                     #[allow(non_camel_case_types)]
                     struct UserLogoutSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::UserLogoutRequest> for UserLogoutSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::UserLogoutRequest>
+                    for UserLogoutSvc<T> {
                         type Response = super::UserLogoutReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::UserLogoutRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut =
-                                async move { <T as QaService>::user_logout(&inner, request).await };
+                            let fut = async move {
+                                <T as QaService>::user_logout(&inner, request).await
+                            };
                             Box::pin(fut)
                         }
                     }
@@ -907,9 +1091,15 @@ pub mod qa_service_server {
                 "/qa.QAService/UserRegister" => {
                     #[allow(non_camel_case_types)]
                     struct UserRegisterSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::UserRegisterRequest> for UserRegisterSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::UserRegisterRequest>
+                    for UserRegisterSvc<T> {
                         type Response = super::UserRegisterReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::UserRegisterRequest>,
@@ -944,12 +1134,64 @@ pub mod qa_service_server {
                     };
                     Box::pin(fut)
                 }
+                "/qa.QAService/VerifyToken" => {
+                    #[allow(non_camel_case_types)]
+                    struct VerifyTokenSvc<T: QaService>(pub Arc<T>);
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::VerifyTokenRequest>
+                    for VerifyTokenSvc<T> {
+                        type Response = super::VerifyTokenReply;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::VerifyTokenRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as QaService>::verify_token(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = VerifyTokenSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
                 "/qa.QAService/AddQuestion" => {
                     #[allow(non_camel_case_types)]
                     struct AddQuestionSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::AddQuestionRequest> for AddQuestionSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::AddQuestionRequest>
+                    for AddQuestionSvc<T> {
                         type Response = super::AddQuestionReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AddQuestionRequest>,
@@ -987,11 +1229,15 @@ pub mod qa_service_server {
                 "/qa.QAService/DeleteQuestion" => {
                     #[allow(non_camel_case_types)]
                     struct DeleteQuestionSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::DeleteQuestionRequest>
-                        for DeleteQuestionSvc<T>
-                    {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::DeleteQuestionRequest>
+                    for DeleteQuestionSvc<T> {
                         type Response = super::DeleteQuestionReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::DeleteQuestionRequest>,
@@ -1029,11 +1275,15 @@ pub mod qa_service_server {
                 "/qa.QAService/UpdateQuestion" => {
                     #[allow(non_camel_case_types)]
                     struct UpdateQuestionSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::UpdateQuestionRequest>
-                        for UpdateQuestionSvc<T>
-                    {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::UpdateQuestionRequest>
+                    for UpdateQuestionSvc<T> {
                         type Response = super::UpdateQuestionReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::UpdateQuestionRequest>,
@@ -1071,11 +1321,15 @@ pub mod qa_service_server {
                 "/qa.QAService/QuestionDetail" => {
                     #[allow(non_camel_case_types)]
                     struct QuestionDetailSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::QuestionDetailRequest>
-                        for QuestionDetailSvc<T>
-                    {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::QuestionDetailRequest>
+                    for QuestionDetailSvc<T> {
                         type Response = super::QuestionDetailReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::QuestionDetailRequest>,
@@ -1113,11 +1367,15 @@ pub mod qa_service_server {
                 "/qa.QAService/LatestQuestions" => {
                     #[allow(non_camel_case_types)]
                     struct LatestQuestionsSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::LatestQuestionsRequest>
-                        for LatestQuestionsSvc<T>
-                    {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::LatestQuestionsRequest>
+                    for LatestQuestionsSvc<T> {
                         type Response = super::LatestQuestionsReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::LatestQuestionsRequest>,
@@ -1155,16 +1413,23 @@ pub mod qa_service_server {
                 "/qa.QAService/AnswerList" => {
                     #[allow(non_camel_case_types)]
                     struct AnswerListSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::AnswerListRequest> for AnswerListSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::AnswerListRequest>
+                    for AnswerListSvc<T> {
                         type Response = super::AnswerListReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AnswerListRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut =
-                                async move { <T as QaService>::answer_list(&inner, request).await };
+                            let fut = async move {
+                                <T as QaService>::answer_list(&inner, request).await
+                            };
                             Box::pin(fut)
                         }
                     }
@@ -1194,16 +1459,23 @@ pub mod qa_service_server {
                 "/qa.QAService/AddAnswer" => {
                     #[allow(non_camel_case_types)]
                     struct AddAnswerSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::AddAnswerRequest> for AddAnswerSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::AddAnswerRequest>
+                    for AddAnswerSvc<T> {
                         type Response = super::AddAnswerReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AddAnswerRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut =
-                                async move { <T as QaService>::add_answer(&inner, request).await };
+                            let fut = async move {
+                                <T as QaService>::add_answer(&inner, request).await
+                            };
                             Box::pin(fut)
                         }
                     }
@@ -1233,9 +1505,15 @@ pub mod qa_service_server {
                 "/qa.QAService/DeleteAnswer" => {
                     #[allow(non_camel_case_types)]
                     struct DeleteAnswerSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::DeleteAnswerRequest> for DeleteAnswerSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::DeleteAnswerRequest>
+                    for DeleteAnswerSvc<T> {
                         type Response = super::DeleteAnswerReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::DeleteAnswerRequest>,
@@ -1273,9 +1551,15 @@ pub mod qa_service_server {
                 "/qa.QAService/UpdateAnswer" => {
                     #[allow(non_camel_case_types)]
                     struct UpdateAnswerSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::UpdateAnswerRequest> for UpdateAnswerSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::UpdateAnswerRequest>
+                    for UpdateAnswerSvc<T> {
                         type Response = super::UpdateAnswerReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::UpdateAnswerRequest>,
@@ -1313,9 +1597,15 @@ pub mod qa_service_server {
                 "/qa.QAService/AnswerDetail" => {
                     #[allow(non_camel_case_types)]
                     struct AnswerDetailSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::AnswerDetailRequest> for AnswerDetailSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::AnswerDetailRequest>
+                    for AnswerDetailSvc<T> {
                         type Response = super::AnswerDetailReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AnswerDetailRequest>,
@@ -1353,9 +1643,15 @@ pub mod qa_service_server {
                 "/qa.QAService/AnswerAgree" => {
                     #[allow(non_camel_case_types)]
                     struct AnswerAgreeSvc<T: QaService>(pub Arc<T>);
-                    impl<T: QaService> tonic::server::UnaryService<super::AnswerAgreeRequest> for AnswerAgreeSvc<T> {
+                    impl<
+                        T: QaService,
+                    > tonic::server::UnaryService<super::AnswerAgreeRequest>
+                    for AnswerAgreeSvc<T> {
                         type Response = super::AnswerAgreeReply;
-                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AnswerAgreeRequest>,
@@ -1390,14 +1686,18 @@ pub mod qa_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => Box::pin(async move {
-                    Ok(http::Response::builder()
-                        .status(200)
-                        .header("grpc-status", "12")
-                        .header("content-type", "application/grpc")
-                        .body(empty_body())
-                        .unwrap())
-                }),
+                _ => {
+                    Box::pin(async move {
+                        Ok(
+                            http::Response::builder()
+                                .status(200)
+                                .header("grpc-status", "12")
+                                .header("content-type", "application/grpc")
+                                .body(empty_body())
+                                .unwrap(),
+                        )
+                    })
+                }
             }
         }
     }

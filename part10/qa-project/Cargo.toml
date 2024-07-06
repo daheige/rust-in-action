@@ -81,5 +81,10 @@ thiserror = "1.0.61"
 # body util
 http-body-util = "0.1.1"
 
+# crypto
+rust-crypto = "0.2.36"
+rand = "0.8.5"
+base64 = "0.22.1"
+
 # autometrics-rs 用于自动prometheus metrics服务可观测性
 autometrics = {version = "1.0.1",features = ["prometheus-exporter"]}
