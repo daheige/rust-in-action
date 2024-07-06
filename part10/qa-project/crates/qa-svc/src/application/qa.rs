@@ -1,7 +1,6 @@
 use crate::config::{AppState, APP_CONFIG};
 use crate::domain::entity::{
-    AnswersEntity, EntityReadCountData, QuestionsEntity, UserSessionEntity,
-    VoteMessage,
+    AnswersEntity, EntityReadCountData, QuestionsEntity, UserSessionEntity, VoteMessage,
 };
 use crate::domain::repository::{
     AnswerRepo, QuestionRepo, ReadCountRepo, UserRepo, UserSessionRepo, UserVoteRepo,
@@ -281,7 +280,7 @@ impl QaService for QAServiceImpl {
         if res.is_err() {
             let err = res.err().unwrap();
             let err_msg = err.to_string();
-            if err_msg.contains("session not found") || err_msg.contains("session is empty"){
+            if err_msg.contains("session not found") || err_msg.contains("session is empty") {
                 let reply = VerifyTokenReply {
                     state: 0,
                     reason: "login session not found".to_string(),
@@ -293,7 +292,7 @@ impl QaService for QAServiceImpl {
             // 其他未知错误
             let reply = VerifyTokenReply {
                 state: -1,
-                reason: format!("unknown error:{}",err),
+                reason: format!("unknown error:{}", err),
                 username: "".to_string(),
             };
             return Ok(Response::new(reply));

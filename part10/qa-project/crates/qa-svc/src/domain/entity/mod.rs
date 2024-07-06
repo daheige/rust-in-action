@@ -16,6 +16,6 @@ pub struct CountInfo {
 pub use answers::{AnswerListReply, AnswersEntity};
 pub use entity_read_count::EntityReadCountData;
 pub use questions::{LatestQuestionsReply, QuestionsEntity};
-pub use users::{UsersEntity,UserSessionEntity};
+pub use users::{UserSessionEntity, UsersEntity};
 pub use users_votes::UsersVotesEntity;
 pub use vote_message::VoteMessage;

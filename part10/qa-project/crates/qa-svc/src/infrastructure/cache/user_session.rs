@@ -28,7 +28,7 @@ impl UserSessionRepo for UserCacheRepoImpl {
                     let err = RedisError::from((
                         ErrorKind::ResponseError,
                         "unknown error",
-                        format!("{}",err),
+                        format!("{}", err),
                     ));
                     return Err(anyhow::Error::from(err));
                 }

@@ -9,6 +9,7 @@ mod xpulsar;
 mod xredis;
 
 // 使用use对模块重新导出
+pub use aes::{AesCBCCrypto, AesKeySize};
 pub use config::{Config, ConfigTrait};
 pub use logger::Logger;
 pub use metrics::prometheus_init;
@@ -16,7 +17,6 @@ pub use shutdown::{graceful_shutdown, job_graceful_shutdown};
 pub use xmysql::MysqlService;
 pub use xpulsar::PulsarService;
 pub use xredis::RedisService;
-pub use aes::{AesCBCCrypto,AesKeySize};
 
 #[test]
 fn it_works() {
@@ -25,7 +25,7 @@ fn it_works() {
     let key = "YiBX0z9WnJjsS5aNXmi0AeT1yTPZZJYa";
     let iv = "3ZQEpwP9DbK4h1Z0";
 
-    let aes_crypto = AesCBCCrypto::new(key,iv,AesKeySize::Size256);
+    let aes_crypto = AesCBCCrypto::new(key, iv, AesKeySize::Size256);
     let data = "Hello, world!";
     let encrypted_data = aes_crypto.encrypt(data).unwrap();
     println!("encrypted_data:{}", encrypted_data);
@@ -33,5 +33,5 @@ fn it_works() {
     let decrypted_data = aes_crypto.decrypt(&encrypted_data).unwrap();
     println!("decrypted_data:{}", decrypted_data);
 
-    assert_eq!(data,decrypted_data.as_str());
+    assert_eq!(data, decrypted_data.as_str());
 }
