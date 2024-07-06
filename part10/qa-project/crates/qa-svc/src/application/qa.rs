@@ -425,15 +425,17 @@ impl QaService for QAServiceImpl {
             count: 1,
         };
         let mut read_count = entry.read_count as i64;
-        println!("question read_count:{}",read_count);
         let read_count_res = self.read_count_repo.incr(&data).await;
         if let Err(err) = read_count_res {
-            info!("failed to incr question read_count,error:{}", err);
+            info!(
+                "failed to incr question id:{} read_count,error:{}",
+                entry.id, err
+            );
         } else {
             read_count += read_count_res.unwrap() as i64;
         }
 
-        println!("read_count:{}",read_count);
+        println!("question read_count:{}", read_count);
 
         let question = QuestionEntity {
             id: entry.id as i64,
