@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _ = fs::create_dir_all(out_dir); // 创建目录
 
     // grpc reflection 描述信息这是一个二进制文件，主要用于协议描述
-    let descriptor_path = "rpc_descriptor.bin";
+    let descriptor_path = Path::new("../qa-svc").join("rpc_descriptor.bin");
 
     // 2.生成rust grpc代码
     // 指定rust grpc 代码生成的目录

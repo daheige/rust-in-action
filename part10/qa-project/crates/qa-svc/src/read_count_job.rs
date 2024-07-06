@@ -1,8 +1,9 @@
-use crate::config::{mysql, xpulsar, APP_CONFIG};
-use crate::domain::repository::UserVoteRepo;
-use crate::infrastructure::vote::new_vote_repo;
+use crate::config::{mysql, xpulsar, xredis, APP_CONFIG};
+use crate::domain::repository::{ReadCountRepo, UserVoteRepo};
 use infras::{job_graceful_shutdown, Logger}; // 日志模块
 
+use crate::infrastructure::read_count;
+use crate::infrastructure::read_count::new_read_count_repo;
 use std::io::Write;
 use std::process;
 use std::sync::{mpsc, Arc};
@@ -15,7 +16,7 @@ mod infrastructure;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("hello,qa-job");
+    println!("hello,qa-read-count-job");
     // 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
     // 启动方式：RUST_LOG=debug cargo run --bin qa-svc
     std::env::set_var("RUST_LOG", "debug");
@@ -33,25 +34,24 @@ async fn main() -> anyhow::Result<()> {
         .await
         .expect("mysql pool init failed");
 
-    // init pulsar client
-    let pulsar_client = xpulsar::client(&APP_CONFIG.pulsar_conf)
-        .await
-        .expect("pulsar client init failed");
-
-    let app_state = config::VoteJobAppState {
+    // create redis pool
+    let redis_pool = xredis::pool(&APP_CONFIG.redis_conf).expect("redis pool init failed");
+    let app_state = config::ReadCountJobAppState {
         // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
         mysql_pool,
         // 这里等价于pulsar_client: pulsar_client
-        pulsar_client,
+        redis_pool,
     };
 
     let stop1 = stop.clone();
-    let vote_repo = new_vote_repo(app_state.mysql_pool.clone(), app_state.pulsar_client);
-
-    // 回答点赞消息处理
-    // 通过tokio::spawn异步执行消息实时消费
+    let read_count_repo = new_read_count_repo(app_state.redis_pool, app_state.mysql_pool);
+    // 处理问题阅读数
     tokio::spawn(async move {
-        let _ = vote_repo.consumer("answer", stop1).await;
+        let mut interval = tokio::time::interval(Duration::from_millis(10));
+        loop{
+            interval.tick().await;
+            let _ = read_count_repo.handler("question").await;
+        }
     });
 
     // 当接收到退出信号量时候，更新stop为true

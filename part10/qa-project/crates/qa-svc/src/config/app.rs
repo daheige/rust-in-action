@@ -14,6 +14,18 @@ pub struct AppState {
     pub redis_pool: Pool<redis::Client>,
 }
 
+#[derive(Clone)]
+pub struct ReadCountJobAppState {
+    pub mysql_pool: sqlx::MySqlPool,
+    pub redis_pool: Pool<redis::Client>,
+}
+
+#[derive(Clone)]
+pub struct VoteJobAppState {
+    pub mysql_pool: sqlx::MySqlPool,
+    pub pulsar_client: Pulsar<TokioExecutor>,
+}
+
 // AppConfig 项目配置信息
 #[derive(Debug, PartialEq, Serialize, Deserialize, Default)]
 pub struct AppConfig {

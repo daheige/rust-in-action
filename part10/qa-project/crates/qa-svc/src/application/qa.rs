@@ -98,6 +98,7 @@ impl QAServiceImpl {
 /// 实现qa微服务对应的接口
 #[async_trait::async_trait]
 impl QaService for QAServiceImpl {
+    // 实现用户登录
     #[autometrics]
     async fn user_login(
         &self,
@@ -253,6 +254,7 @@ impl QaService for QAServiceImpl {
         Ok(Response::new(reply))
     }
 
+    // 验证登录的token是否有效
     async fn verify_token(
         &self,
         request: Request<VerifyTokenRequest>,
@@ -311,34 +313,143 @@ impl QaService for QAServiceImpl {
         Ok(Response::new(reply))
     }
 
+    // 发表问题
     async fn add_question(
         &self,
         request: Request<AddQuestionRequest>,
     ) -> Result<Response<AddQuestionReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        let question = QuestionsEntity {
+            title: req.title,
+            content: req.content,
+            created_by: req.created_by,
+            ..Default::default()
+        };
+        let res = self.question_repo.add(&question).await;
+        if let Err(err) = res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to add question,error:{}", err),
+            ));
+        }
+
+        let id = res.unwrap();
+        let reply = AddQuestionReply { id: id as i64 };
+        Ok(Response::new(reply))
     }
 
+    // 删除问题
     async fn delete_question(
         &self,
         request: Request<DeleteQuestionRequest>,
     ) -> Result<Response<DeleteQuestionReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!("request question id:{} username:{}", req.id, req.username);
+        let id = req.id as u64;
+        let res = self.question_repo.delete(id, &req.username).await;
+        if let Err(err) = res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to delete question,error:{}", err),
+            ));
+        }
+
+        let reply = DeleteQuestionReply { state: 1 };
+        Ok(Response::new(reply))
     }
 
+    // 更新问题
     async fn update_question(
         &self,
         request: Request<UpdateQuestionRequest>,
     ) -> Result<Response<UpdateQuestionReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!(
+            "request question id:{} updated_by:{}",
+            req.id, req.updated_by
+        );
+        let id = req.id as u64;
+        let question = QuestionsEntity {
+            title: req.title,
+            content: req.content,
+            updated_by: req.updated_by,
+            ..Default::default()
+        };
+
+        let res = self.question_repo.update(id, &question).await;
+        if let Err(err) = res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to update question,error:{}", err),
+            ));
+        }
+
+        let reply = UpdateQuestionReply { state: 1 };
+        Ok(Response::new(reply))
     }
 
+    // 查看问题详情
     async fn question_detail(
         &self,
         request: Request<QuestionDetailRequest>,
     ) -> Result<Response<QuestionDetailReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!("request question id:{} username:{}", req.id, req.username);
+        let id = req.id as u64;
+        let res = self.question_repo.fetch_one(id).await;
+        if let Err(err) = res {
+            let err = err.downcast().unwrap();
+            match err {
+                sqlx::Error::RowNotFound => {
+                    return Err(Status::new(
+                        Code::NotFound,
+                        "current question not found".to_string(),
+                    ));
+                }
+                _ => {
+                    info!("failed to query question,error:{}", err);
+                }
+            }
+
+            return Err(Status::new(
+                Code::Unknown,
+                "failed to query question".to_string(),
+            ));
+        }
+
+        let entry = res.unwrap();
+        // 增加问题浏览数
+        let data = EntityReadCountData {
+            target_id: entry.id,
+            target_type: "question".to_string(),
+            count: 1,
+        };
+        let mut read_count = entry.read_count as i64;
+        println!("question read_count:{}",read_count);
+        let read_count_res = self.read_count_repo.incr(&data).await;
+        if let Err(err) = read_count_res {
+            info!("failed to incr question read_count,error:{}", err);
+        } else {
+            read_count += read_count_res.unwrap() as i64;
+        }
+
+        println!("read_count:{}",read_count);
+
+        let question = QuestionEntity {
+            id: entry.id as i64,
+            title: entry.title,
+            content: entry.content,
+            username: entry.created_by,
+            read_count: read_count,
+            reply_count: entry.reply_count as i64,
+        };
+        let reply = QuestionDetailReply {
+            question: Some(question),
+        };
+        Ok(Response::new(reply))
     }
 
+    // 最新问题列表
     async fn latest_questions(
         &self,
         request: Request<LatestQuestionsRequest>,
@@ -346,6 +457,7 @@ impl QaService for QAServiceImpl {
         todo!()
     }
 
+    // 答案列表
     async fn answer_list(
         &self,
         request: Request<AnswerListRequest>,
@@ -353,6 +465,7 @@ impl QaService for QAServiceImpl {
         todo!()
     }
 
+    // 添加答案
     async fn add_answer(
         &self,
         request: Request<AddAnswerRequest>,
@@ -360,6 +473,7 @@ impl QaService for QAServiceImpl {
         todo!()
     }
 
+    // 删除答案
     async fn delete_answer(
         &self,
         request: Request<DeleteAnswerRequest>,
@@ -367,6 +481,7 @@ impl QaService for QAServiceImpl {
         todo!()
     }
 
+    // 更新答案
     async fn update_answer(
         &self,
         request: Request<UpdateAnswerRequest>,
@@ -374,6 +489,7 @@ impl QaService for QAServiceImpl {
         todo!()
     }
 
+    // 回答详情
     async fn answer_detail(
         &self,
         request: Request<AnswerDetailRequest>,
@@ -381,6 +497,7 @@ impl QaService for QAServiceImpl {
         todo!()
     }
 
+    // 回答点赞
     async fn answer_agree(
         &self,
         request: Request<AnswerAgreeRequest>,

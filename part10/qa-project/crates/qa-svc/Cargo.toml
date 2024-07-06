@@ -10,6 +10,10 @@ description.workspace = true
 name = "qa-job"
 path = "src/job.rs"
 
+[[bin]]
+name = "qa-read-count"
+path = "src/read_count_job.rs"
+
 [dependencies]
 # grpc相关组件
 tonic = { workspace = true }
