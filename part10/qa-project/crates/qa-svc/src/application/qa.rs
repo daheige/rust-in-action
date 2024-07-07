@@ -53,8 +53,7 @@ pub fn new_qa_service(app_state: AppState) -> impl QaService {
 }
 
 impl QAServiceImpl {
-    // 验证token是否有效
-    // 返回登录时的token和expire_time过期时间
+    // 验证token是否有效，返回用户唯一标识openid
     fn check_token(&self, token: &str) -> Result<String, String> {
         if token.len() == 0 {
             return Err("token length invalid".to_string());
@@ -68,13 +67,17 @@ impl QAServiceImpl {
         }
         let payload = decrypted.unwrap();
         let arr = payload.split(":").collect::<Vec<&str>>();
-        let token = arr[0].to_string();
-        if token.len() != 32 {
+        if arr.len() != 3 {
+            return Err("token invalid".to_string());
+        }
+
+        let openid = arr[1].to_string();
+        if openid.len() != 32 {
             return Err("token length invalid".to_string());
         }
 
         // 判断token是否过期
-        let expired = arr[1].parse::<i64>();
+        let expired = arr[2].parse::<i64>();
         if let Err(err) = expired {
             return Err(format!("token expire_time parse error:{}", err));
         }
@@ -85,15 +88,15 @@ impl QAServiceImpl {
             return Err("token has expired".to_string());
         }
 
-        // 返回token
-        Ok(token)
+        // 返回openid
+        Ok(openid)
     }
 }
 
 /// 实现qa微服务对应的接口
 #[async_trait::async_trait]
 impl QaService for QAServiceImpl {
-    // 实现用户登录
+    // 实现用户登录，如果用户登录成功，返回登录唯一标识token,否则返回对应的错误信息
     #[autometrics]
     async fn user_login(
         &self,
@@ -121,7 +124,7 @@ impl QaService for QAServiceImpl {
                         );
                         Err(Status::new(
                             Code::Internal,
-                            format!("用户:{} 登录发生未知错误:{}", req.username, other),
+                            format!("用户:{}登录发生未知错误:{}", req.username, other),
                         ))
                     }
                 }
@@ -135,10 +138,30 @@ impl QaService for QAServiceImpl {
                     ));
                 }
 
+                // 判断是否已经登录过
+                let key = format!("user_login:{}", user.openid);
+                let res = self.user_session_repo.get(&key).await;
+                if res.is_ok() {
+                    return Err(Status::new(
+                        Code::AlreadyExists,
+                        format!("用户{}已经登录，请不要反复登录", &req.username),
+                    ));
+                }
+
                 // 登录成功，生成唯一标识token
-                // 并将token作为cache key，value是UserSessionEntity
+                // token=login_id:openid:expired字符串加密
+                let login_id = Uuid::new_v4().to_string().replace("-", "");
                 let login_time = Local::now();
                 let expired = login_time.timestamp() + 86400; // token过期时间
+                let payload = format!("{}:{}:{}", login_id, user.openid, expired);
+                // 返回payload加密字符串作为登录的唯一标识token
+                let token = self
+                    .aes_crypto
+                    .encrypt(&payload)
+                    .expect("failed to encrypt token");
+
+                // 设置登录session
+                // 将openid作为cache key，value是UserSessionEntity
                 let expire_time = Local.timestamp_opt(expired, 0).unwrap();
                 let user_session = UserSessionEntity {
                     uid: user.id,
@@ -147,18 +170,7 @@ impl QaService for QAServiceImpl {
                     login_time: login_time.format("%Y-%m-%d %H:%M:%S").to_string(),
                     expire_time: expire_time.format("%Y-%m-%d %H:%M:%S").to_string(),
                 };
-
-                // 生成登录的唯一标识token
-                let token = Uuid::new_v4().to_string().replace("-", "");
-                let key = format!("user_login:{}", token);
                 let _ = self.user_session_repo.set(&key, &user_session, 86400).await;
-                let payload = format!("{}:{}", token, expired); // token:expired字符串加密
-
-                // 返回payload加密字符串作为登录的唯一标识token
-                let token = self
-                    .aes_crypto
-                    .encrypt(&payload)
-                    .expect("failed to encrypt token");
                 let reply = Response::new(UserLoginReply { token });
                 Ok(reply)
             }
@@ -187,8 +199,8 @@ impl QaService for QAServiceImpl {
             ));
         }
 
-        let token = login_res.unwrap();
-        let key = format!("user_login:{}", token);
+        let openid = login_res.unwrap();
+        let key = format!("user_login:{}", openid);
         let res = self.user_session_repo.del(&key).await;
         if let Err(err) = res {
             return Err(Status::new(
@@ -272,8 +284,8 @@ impl QaService for QAServiceImpl {
             ));
         }
 
-        let token = login_res.unwrap();
-        let key = format!("user_login:{}", token);
+        let openid = login_res.unwrap();
+        let key = format!("user_login:{}", openid);
         let res = self.user_session_repo.get(&key).await;
         if res.is_err() {
             let err = res.err().unwrap();

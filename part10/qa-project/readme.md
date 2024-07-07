@@ -251,6 +251,17 @@ grpcurl -d '{"username":"daheige","password":"123456"}' -plaintext 127.0.0.1:500
  ```
 运行效果如下图所示：
 ![](grpc-tools.jpg)
+验证登录token
+```shell
+grpcurl -d '{"token":"jOffYGY9EvjIxLInJJp2QB1oAeVxbODasBq4i1Dh/7hAfb3JtsDEfbEfcQxR4gLZ","request_id":"JNf39MGchMNk7azPTTGR54bswkCAAkts"}' -plaintext 127.0.0.1:50051 qa.QAService.VerifyToken
+```
+返回结果：
+```json
+{
+  "state": "1",
+  "username": "daheige"
+}
+```
 
 # run grpc http gateway
 please crates/gateway/main.rs
