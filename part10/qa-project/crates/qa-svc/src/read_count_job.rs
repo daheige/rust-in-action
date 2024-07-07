@@ -15,12 +15,12 @@ mod config;
 mod domain;
 mod infrastructure;
 
+// 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
+// 启动方式：RUST_LOG=debug cargo run --bin qa-read_count-job
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     println!("hello,qa-read-count-job");
-    // 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
-    // 启动方式：RUST_LOG=debug cargo run --bin qa-svc
-    std::env::set_var("RUST_LOG", "debug");
+    // std::env::set_var("RUST_LOG", "debug");
     Logger::new().init(); // 使用默认方式初始化日志配置
     println!("current process pid:{}", process::id());
     // 平滑退出，stop用于消费者退出标识，它是一个引用计数且持有读写锁的bool类型的共享变量

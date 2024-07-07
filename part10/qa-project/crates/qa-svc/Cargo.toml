@@ -7,11 +7,11 @@ description.workspace = true
 
 # 定时任务脚本
 [[bin]]
-name = "qa-vote"
-path = "src/vote_job.rs.rs"
+name = "qa-vote-job"
+path = "src/vote_job.rs"
 
 [[bin]]
-name = "qa-read-count"
+name = "qa-read_count-job"
 path = "src/read_count_job.rs"
 
 [dependencies]

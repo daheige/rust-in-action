@@ -710,6 +710,41 @@ impl QaService for QAServiceImpl {
             ));
         }
 
+        // 判断是否点赞过
+        let is_voted = self
+            .vote_repo
+            .is_voted(req.id, "answer", &req.created_by)
+            .await
+            .unwrap_or(false);
+        if req.action == "up" {
+            if is_voted {
+                let reply = AnswerAgreeReply {
+                    state: 0,
+                    reason: "you already voted it".to_string(),
+                    agree_count: 0,
+                };
+                return Ok(Response::new(reply));
+            }
+        } else {
+            if !is_voted {
+                let reply = AnswerAgreeReply {
+                    state: 0,
+                    reason: "You didn't vote it,bad request".to_string(),
+                    agree_count: 0,
+                };
+                return Ok(Response::new(reply));
+            }
+        }
+
+        // 是否要返回点赞数，可根据实际业务场景决定
+        let mut agree_count = answer_res.unwrap().agree_count as i64;
+        if req.action == "up" {
+            agree_count += 1;
+        } else {
+            if agree_count >= 1 {
+                agree_count -= 1;
+            }
+        }
         let msg = VoteMessage {
             target_id: req.id,
             target_type: "answer".to_string(),
@@ -724,8 +759,6 @@ impl QaService for QAServiceImpl {
             ));
         }
 
-        let mut agree_count = answer_res.unwrap().agree_count as i64;
-        agree_count += 1;
         let reply = AnswerAgreeReply {
             state: 1,
             reason: "success".to_string(),
