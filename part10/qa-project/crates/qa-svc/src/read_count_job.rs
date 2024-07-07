@@ -4,6 +4,7 @@ use infras::{job_graceful_shutdown, Logger}; // 日志模块
 
 use crate::infrastructure::read_count;
 use crate::infrastructure::read_count::new_read_count_repo;
+use log::info;
 use std::io::Write;
 use std::process;
 use std::sync::{mpsc, Arc};
@@ -37,7 +38,8 @@ async fn main() -> anyhow::Result<()> {
     // create redis pool
     let redis_pool = xredis::pool(&APP_CONFIG.redis_conf).expect("redis pool init failed");
     let app_state = config::ReadCountJobAppState {
-        // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
+        // 这里等价于mysql_pool: mysql_pool
+        // 当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
         mysql_pool,
         // 这里等价于pulsar_client: pulsar_client
         redis_pool,
@@ -47,10 +49,19 @@ async fn main() -> anyhow::Result<()> {
     let read_count_repo = new_read_count_repo(app_state.redis_pool, app_state.mysql_pool);
     // 处理问题阅读数
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(Duration::from_millis(10));
-        loop{
+        let mut interval = tokio::time::interval(Duration::from_millis(500));
+        loop {
+            let exit = stop1.read().await;
+            if *exit {
+                info!("recv shutdown signal,consumer will stop...");
+                break;
+            }
+
             interval.tick().await;
-            let _ = read_count_repo.handler("question").await;
+            let res = read_count_repo.handler("question").await;
+            if let Err(err) = res{
+                info!("handler read_count error:{}",err);
+            }
         }
     });
 

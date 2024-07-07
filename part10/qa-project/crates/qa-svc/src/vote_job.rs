@@ -39,7 +39,8 @@ async fn main() -> anyhow::Result<()> {
         .expect("pulsar client init failed");
 
     let app_state = config::VoteJobAppState {
-        // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
+        // 这里等价于mysql_pool: mysql_pool
+        // 当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
         mysql_pool,
         // 这里等价于pulsar_client: pulsar_client
         pulsar_client,

@@ -238,7 +238,7 @@ impl UserVoteRepo for UserVoteRepoImpl {
             let exit = stop.read().await;
             if *exit {
                 info!("recv shutdown signal,consumer will stop...");
-                return Ok(());
+                break;
             }
 
             // 输出消息id

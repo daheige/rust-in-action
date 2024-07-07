@@ -7,8 +7,8 @@ description.workspace = true
 
 # 定时任务脚本
 [[bin]]
-name = "qa-job"
-path = "src/job.rs"
+name = "qa-vote"
+path = "src/vote_job.rs.rs"
 
 [[bin]]
 name = "qa-read-count"
