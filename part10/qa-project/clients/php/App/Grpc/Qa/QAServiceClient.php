@@ -63,6 +63,21 @@ class QAServiceClient extends \Grpc\BaseStub {
     }
 
     /**
+     * 验证登录的token是否有效
+     * @param \App\Grpc\Qa\VerifyTokenRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function VerifyToken(\App\Grpc\Qa\VerifyTokenRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/qa.QAService/VerifyToken',
+        $argument,
+        ['\App\Grpc\Qa\VerifyTokenReply', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
      * 发表问题
      * @param \App\Grpc\Qa\AddQuestionRequest $argument input argument
      * @param array $metadata metadata
@@ -198,7 +213,22 @@ class QAServiceClient extends \Grpc\BaseStub {
     }
 
     /**
-     * 用户点赞回答
+     * 查看答案详情
+     * @param \App\Grpc\Qa\AnswerDetailRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function AnswerDetail(\App\Grpc\Qa\AnswerDetailRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/qa.QAService/AnswerDetail',
+        $argument,
+        ['\App\Grpc\Qa\AnswerDetailReply', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
+     * 用户点赞回答和取消点赞
      * @param \App\Grpc\Qa\AnswerAgreeRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
@@ -209,21 +239,6 @@ class QAServiceClient extends \Grpc\BaseStub {
         return $this->_simpleRequest('/qa.QAService/AnswerAgree',
         $argument,
         ['\App\Grpc\Qa\AnswerAgreeReply', 'decode'],
-        $metadata, $options);
-    }
-
-    /**
-     * 问题阅读数
-     * @param \App\Grpc\Qa\QuestionReadCountRequest $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
-     * @return \Grpc\UnaryCall
-     */
-    public function QuestionReadCount(\App\Grpc\Qa\QuestionReadCountRequest $argument,
-      $metadata = [], $options = []) {
-        return $this->_simpleRequest('/qa.QAService/QuestionReadCount',
-        $argument,
-        ['\App\Grpc\Qa\QuestionReadCountReply', 'decode'],
         $metadata, $options);
     }
 

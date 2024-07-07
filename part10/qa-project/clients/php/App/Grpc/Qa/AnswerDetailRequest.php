@@ -9,19 +9,21 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * 问题阅读数请求信息
+ * 查看回答详情
  *
- * Generated from protobuf message <code>qa.QuestionReadCountRequest</code>
+ * Generated from protobuf message <code>qa.AnswerDetailRequest</code>
  */
-class QuestionReadCountRequest extends \Google\Protobuf\Internal\Message
+class AnswerDetailRequest extends \Google\Protobuf\Internal\Message
 {
     /**
-     * 问题id
+     * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      */
     protected $id = 0;
     /**
+     * 当前用户
+     *
      * Generated from protobuf field <code>string username = 2;</code>
      */
     protected $username = '';
@@ -33,8 +35,9 @@ class QuestionReadCountRequest extends \Google\Protobuf\Internal\Message
      *     Optional. Data for populating the Message object.
      *
      *     @type int|string $id
-     *           问题id
+     *           回答id
      *     @type string $username
+     *           当前用户
      * }
      */
     public function __construct($data = NULL) {
@@ -43,9 +46,9 @@ class QuestionReadCountRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * 问题id
+     * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @return int|string
      */
     public function getId()
@@ -54,21 +57,23 @@ class QuestionReadCountRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * 问题id
+     * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @param int|string $var
      * @return $this
      */
     public function setId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->id = $var;
 
         return $this;
     }
 
     /**
+     * 当前用户
+     *
      * Generated from protobuf field <code>string username = 2;</code>
      * @return string
      */
@@ -78,6 +83,8 @@ class QuestionReadCountRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     * 当前用户
+     *
      * Generated from protobuf field <code>string username = 2;</code>
      * @param string $var
      * @return $this

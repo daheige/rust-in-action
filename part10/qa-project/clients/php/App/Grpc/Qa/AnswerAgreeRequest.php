@@ -18,7 +18,7 @@ class AnswerAgreeRequest extends \Google\Protobuf\Internal\Message
     /**
      * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      */
     protected $id = 0;
     /**
@@ -27,6 +27,12 @@ class AnswerAgreeRequest extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>string created_by = 2;</code>
      */
     protected $created_by = '';
+    /**
+     * up表示点赞，cancel表示取消点赞
+     *
+     * Generated from protobuf field <code>string action = 3;</code>
+     */
+    protected $action = '';
 
     /**
      * Constructor.
@@ -38,6 +44,8 @@ class AnswerAgreeRequest extends \Google\Protobuf\Internal\Message
      *           回答id
      *     @type string $created_by
      *           用户名
+     *     @type string $action
+     *           up表示点赞，cancel表示取消点赞
      * }
      */
     public function __construct($data = NULL) {
@@ -48,7 +56,7 @@ class AnswerAgreeRequest extends \Google\Protobuf\Internal\Message
     /**
      * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @return int|string
      */
     public function getId()
@@ -59,13 +67,13 @@ class AnswerAgreeRequest extends \Google\Protobuf\Internal\Message
     /**
      * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @param int|string $var
      * @return $this
      */
     public function setId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->id = $var;
 
         return $this;
@@ -93,6 +101,32 @@ class AnswerAgreeRequest extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->created_by = $var;
+
+        return $this;
+    }
+
+    /**
+     * up表示点赞，cancel表示取消点赞
+     *
+     * Generated from protobuf field <code>string action = 3;</code>
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * up表示点赞，cancel表示取消点赞
+     *
+     * Generated from protobuf field <code>string action = 3;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setAction($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->action = $var;
 
         return $this;
     }

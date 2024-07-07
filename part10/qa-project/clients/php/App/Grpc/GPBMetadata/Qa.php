@@ -16,22 +16,30 @@ class Qa
         }
         $pool->internalAddGeneratedFile(
             '
-Ê
+÷
 qa.protoqa"6
 UserLoginRequest
 username (	
 password (	"
 UserLoginReply
-token (	"%
-UserLogoutRequest
-username (	" 
+token (	""
+UserLogoutRequest
+token (	" 
 UserLogoutReply
 state ("9
 UserRegisterRequest
 username (	
 password (	""
 UserRegisterReply
-state ("H
+state ("7
+VerifyTokenRequest
+token (	
+
+request_id (	"C
+VerifyTokenReply
+state (
+reason (	
+username (	"H
 AddQuestionRequest
 title (	
 content (	
@@ -39,16 +47,16 @@ class Qa
 created_by (	"
 AddQuestionReply
 
-id ("5
+id ("5
 DeleteQuestionRequest
 
-id (
+id (
 username (	"$
 DeleteQuestionReply
 state ("W
 UpdateQuestionRequest
 
-id (
+id (
 title (	
 content (	
 
@@ -57,89 +65,91 @@ updated_by (	"$
 state ("}
 AnswerEntity
 
-id (
-question_id (
+id (
+question_id (
 content (	
 
 created_by (	
-agree_count (
+agree_count (
 
 has_agreed ("4
 AddAnswerRequest 
 answer (2.qa.AnswerEntity"
 AddAnswerReply
 
-id ("3
+id ("3
 DeleteAnswerRequest
 
-id (
+id (
 username (	""
 DeleteAnswerReply
 state ("D
 UpdateAnswerRequest
 
-id (
+id (
 content (	
 username (	""
 UpdateAnswerReply
-state ("4
+state ("D
 AnswerAgreeRequest
 
-id (
+id (
 
-created_by (	"3
+created_by (	
+action (	"F
 AnswerAgreeReply
-
-id (
-agree_count ("8
-QuestionReadCountRequest
-
-id (
-username (	"8
-QuestionReadCountReply
-
-id (
-
-read_count ("5
+state (
+reason (	
+agree_count ("5
 QuestionDetailRequest
 
-id (
+id (
 username (	";
 QuestionDetailReply$
-question (2.qa.QuestionEntity"w
+question (2.qa.QuestionEntity"y
 QuestionEntity
 
-id (
+id (
 title (	
-content (	
-username (	
+content (	
 
-read_count (
-reply_count (";
+created_by (	
+
+read_count (
+reply_count ("J
 LatestQuestionsRequest
 username (	
-last_id ("h
+last_id (
+limit ("Y
 LatestQuestionsReply 
 list (2.qa.QuestionEntity
-last_id (
-limit (
-is_end ("W
+last_id (
+is_end ("W
 AnswerListRequest
-question_id (
-page (
-limit (
-username (	"d
+question_id (
+page (
+limit (
+username (	"ç
 AnswerListReply
 list (2.qa.AnswerEntity
-total (
+total (
 
-total_page (
-is_end (2ë
+total_page (
+	page_size (
+current_page (
+is_end ("3
+AnswerDetailRequest
+
+id (
+username (	"5
+AnswerDetailReply 
+answer (2.qa.AnswerEntity2ø
 	QAService5
 	UserLogin.qa.UserLoginRequest.qa.UserLoginReply8
 
 UserLogout.qa.UserLogoutRequest.qa.UserLogoutReply>
 UserRegister.qa.UserRegisterRequest.qa.UserRegisterReply;
+VerifyToken.qa.VerifyTokenRequest.qa.VerifyTokenReply;
 AddQuestion.qa.AddQuestionRequest.qa.AddQuestionReplyD
 DeleteQuestion.qa.DeleteQuestionRequest.qa.DeleteQuestionReplyD
 UpdateQuestion.qa.UpdateQuestionRequest.qa.UpdateQuestionReplyD
@@ -149,9 +159,9 @@ UserLogout.qa.UserLogoutRequest.qa.UserLogoutReply>
 AnswerList.qa.AnswerListRequest.qa.AnswerListReply5
 	AddAnswer.qa.AddAnswerRequest.qa.AddAnswerReply>
 DeleteAnswer.qa.DeleteAnswerRequest.qa.DeleteAnswerReply>
-UpdateAnswer.qa.UpdateAnswerRequest.qa.UpdateAnswerReply;
-AnswerAgree.qa.AnswerAgreeRequest.qa.AnswerAgreeReplyM
-QuestionReadCount.qa.QuestionReadCountRequest.qa.QuestionReadCountReplyB+Z.;pb App\\Grpc\\Qa‚App\\Grpc\\GPBMetadatabproto3'
+UpdateAnswer.qa.UpdateAnswerRequest.qa.UpdateAnswerReply>
+AnswerDetail.qa.AnswerDetailRequest.qa.AnswerDetailReply;
+AnswerAgree.qa.AnswerAgreeRequest.qa.AnswerAgreeReplyB+Z.;pb App\\Grpc\\Qa‚App\\Grpc\\GPBMetadatabproto3'
         , true);
 
         static::$is_initialized = true;

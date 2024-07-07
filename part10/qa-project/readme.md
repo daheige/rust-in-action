@@ -87,13 +87,13 @@ sh scripts/go-gen.sh
 ```
 执行效果如下图所示：
 ![](gen-go-code.jpg)
-运行客户端代码
+运行客户端代码，注册用户`daheige`
 ```shell
-go run clients/go/client.go daheige
+go run clients/go/client.go daheige 123456
 ```
 输出如下：
 ```
-2024/06/09 10:55:50 reply token:abc
+2024/07/07 20:36:11 res:  state:1
 ```
 
 - gen nodejs code
@@ -111,19 +111,22 @@ cd clients/nodejs && yarn install
 
 run node client
 ```shell
+# 用户登录
 node clients/nodejs/app.js
 ```
 output:
 ```
 {
-    wrappers_: null,
-    messageId_: undefined,
-    arrayIndexOffset_: -1,
-    array: [ 'abc' ],
-    pivot_: 1.7976931348623157e+308,
-    convertedPrimitiveFields_: {}
+  wrappers_: null,
+  messageId_: undefined,
+  arrayIndexOffset_: -1,
+  array: [
+    'vQokKYfAc5ZstQRhYaPMbMyk56JO5YOXUL5KinKwV1q7l1oT/cH3r6XDT5djOCun'
+  ],
+  pivot_: 1.7976931348623157e+308,
+  convertedPrimitiveFields_: {}
 }
-reply token:  abc
+reply token: vQokKYfAc5ZstQRhYaPMbMyk56JO5YOXUL5KinKwV1q7l1oT/cH3r6XDT5djOCun
 ```
 运行效果如下图所示：
 ![](node-client-run.jpg)
@@ -135,12 +138,13 @@ sh scripts/php-gen.sh
 run php client
 ```shell
 composer install
-php clients/php/qa.php daheige
+# 用户登录
+php clients/php/qa.php daheige 123456
 ```
 运行效果如下所示：
 ```
 status code: 0
-reply token: abc
+reply token: A1LqnrNsnyINFCxY6kSoHYnQCzX4IUbaCJpUn03HBJc03ZK9wMusAW7lQwE+zJX7
 ```
 
 # grpc grpcurl tools
@@ -155,9 +159,9 @@ reply token: abc
 brew install grpcurl
 ```
 如果你本地安装了golang，那可以直接运行如下命令，安装grpcurl工具
- ```shell
- go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
- ```
+```shell
+go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+```
 
 2. 验证rs-rpc service启动的效果
 ```shell
@@ -182,7 +186,7 @@ service QAService {
   rpc AddAnswer ( .qa.AddAnswerRequest ) returns ( .qa.AddAnswerReply );
   // 发表问题
   rpc AddQuestion ( .qa.AddQuestionRequest ) returns ( .qa.AddQuestionReply );
-  // 用户点赞回答
+  // 用户点赞回答和取消点赞
   rpc AnswerAgree ( .qa.AnswerAgreeRequest ) returns ( .qa.AnswerAgreeReply );
   // 查看答案详情
   rpc AnswerDetail ( .qa.AnswerDetailRequest ) returns ( .qa.AnswerDetailReply );
@@ -209,11 +213,11 @@ service QAService {
   // 验证登录的token是否有效
   rpc VerifyToken ( .qa.VerifyTokenRequest ) returns ( .qa.VerifyTokenReply );
 }
- ```
+```
 4. 查看请求qa.UserLoginRequest请求参数定义
- ```shell
- grpcurl -plaintext 127.0.0.1:50051 describe qa.UserLoginRequest
- ```
+```shell
+grpcurl -plaintext 127.0.0.1:50051 describe qa.UserLoginRequest
+```
 完整的HelloReq定义如下：
 ```
 qa.UserLoginRequest is a message:
@@ -236,13 +240,13 @@ message UserLoginReply {
 }
 ```
 6. 通过grpcurl调用rpc service method
- ```shell
- grpcurl -d '{"username":"daheige","password":"abc"}' -plaintext 127.0.0.1:50051 qa.QAService.UserLogin
- ```
+```shell
+grpcurl -d '{"username":"daheige","password":"123456"}' -plaintext 127.0.0.1:50051 qa.QAService.UserLogin
+```
 响应结果如下：
  ```json
 {
-  "token": "xxx"
+  "token": "jOffYGY9EvjIxLInJJp2QB1oAeVxbODasBq4i1Dh/7hAfb3JtsDEfbEfcQxR4gLZ"
 }
  ```
 运行效果如下图所示：
@@ -269,21 +273,22 @@ curl --location 'localhost:8090/api/user/login' \
 --header 'Content-Type: application/json' \
 --data '{
     "username":"daheige",
-    "password":"abc"
+    "password":"123456"
 }'
 ```
 output:
-```
+```json
 {
-    "code": 0,
-    "message": "ok",
-    "data": {
-        "token": "abc"
-    }
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "token": "9zKuiL3l/s3Ds8eZL02IPMRvd94P1SfVsdjGq6qCBWR9gg7VOKge5ZzuA9wbbrO3"
+  }
 }
 ```
-http gateway运行机制(图片来自grpc-ecosystem/grpc-gateway):
+# http gateway运行机制
 ![](http-gateway.jpg)
+图片来自grpc-ecosystem/grpc-gateway
 
 # logger level
 log和env_logger依赖：
@@ -336,6 +341,7 @@ pub async fn prometheus_init(port: u16) {
         .expect("prometheus metrics init failed");
 }
 ```
+
 2. 项目中使用方式
 例如：在gateway中接入metrics，main.rs代码片段如下：
 ```rust

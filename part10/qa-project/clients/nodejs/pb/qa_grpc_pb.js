@@ -312,6 +312,28 @@ function deserialize_qa_UserRegisterRequest(buffer_arg) {
   return qa_pb.UserRegisterRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_qa_VerifyTokenReply(arg) {
+  if (!(arg instanceof qa_pb.VerifyTokenReply)) {
+    throw new Error('Expected argument of type qa.VerifyTokenReply');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_qa_VerifyTokenReply(buffer_arg) {
+  return qa_pb.VerifyTokenReply.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_qa_VerifyTokenRequest(arg) {
+  if (!(arg instanceof qa_pb.VerifyTokenRequest)) {
+    throw new Error('Expected argument of type qa.VerifyTokenRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_qa_VerifyTokenRequest(buffer_arg) {
+  return qa_pb.VerifyTokenRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 
 // qa服务接口定义
 var QAServiceService = exports.QAServiceService = {
@@ -350,6 +372,18 @@ userRegister: {
     requestDeserialize: deserialize_qa_UserRegisterRequest,
     responseSerialize: serialize_qa_UserRegisterReply,
     responseDeserialize: deserialize_qa_UserRegisterReply,
+  },
+  // 验证登录的token是否有效
+verifyToken: {
+    path: '/qa.QAService/VerifyToken',
+    requestStream: false,
+    responseStream: false,
+    requestType: qa_pb.VerifyTokenRequest,
+    responseType: qa_pb.VerifyTokenReply,
+    requestSerialize: serialize_qa_VerifyTokenRequest,
+    requestDeserialize: deserialize_qa_VerifyTokenRequest,
+    responseSerialize: serialize_qa_VerifyTokenReply,
+    responseDeserialize: deserialize_qa_VerifyTokenReply,
   },
   // 发表问题
 addQuestion: {
@@ -471,7 +505,7 @@ answerDetail: {
     responseSerialize: serialize_qa_AnswerDetailReply,
     responseDeserialize: deserialize_qa_AnswerDetailReply,
   },
-  // 用户点赞回答
+  // 用户点赞回答和取消点赞
 answerAgree: {
     path: '/qa.QAService/AnswerAgree',
     requestStream: false,

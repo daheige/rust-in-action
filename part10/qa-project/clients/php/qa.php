@@ -3,7 +3,7 @@ require dirname(__FILE__) . '/vendor/autoload.php';
 
 const GRPC_ADDRESS = '127.0.0.1:50051';
 
-// php qa.php daheige
+// php qa.php daheige 123456
 function user_login($name,$pwd)
 {
     $client = new App\Grpc\Qa\QAServiceClient(GRPC_ADDRESS, [
@@ -30,5 +30,5 @@ function user_login($name,$pwd)
 }
 
 $name = !empty($argv[1]) ? $argv[1] : 'daheige';
-$pwd = !empty($argv[2]) ? $argv[2] : 'abc';
+$pwd = !empty($argv[2]) ? $argv[2] : '123456';
 user_login($name,$pwd);

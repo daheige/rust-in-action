@@ -9,26 +9,26 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * 更新回答基本信息
+ * 验证token返回结果
  *
- * Generated from protobuf message <code>qa.UpdateAnswerRequest</code>
+ * Generated from protobuf message <code>qa.VerifyTokenReply</code>
  */
-class UpdateAnswerRequest extends \Google\Protobuf\Internal\Message
+class VerifyTokenReply extends \Google\Protobuf\Internal\Message
 {
     /**
-     * 回答id
+     * 1表示验证成功，0验证失败
      *
-     * Generated from protobuf field <code>uint64 id = 1;</code>
+     * Generated from protobuf field <code>int64 state = 1;</code>
      */
-    protected $id = 0;
+    protected $state = 0;
     /**
-     * 回答内容
+     * 验证失败返回具体的提示信息
      *
-     * Generated from protobuf field <code>string content = 2;</code>
+     * Generated from protobuf field <code>string reason = 2;</code>
      */
-    protected $content = '';
+    protected $reason = '';
     /**
-     * 用户名
+     * 当前用户username
      *
      * Generated from protobuf field <code>string username = 3;</code>
      */
@@ -40,12 +40,12 @@ class UpdateAnswerRequest extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type int|string $id
-     *           回答id
-     *     @type string $content
-     *           回答内容
+     *     @type int|string $state
+     *           1表示验证成功，0验证失败
+     *     @type string $reason
+     *           验证失败返回具体的提示信息
      *     @type string $username
-     *           用户名
+     *           当前用户username
      * }
      */
     public function __construct($data = NULL) {
@@ -54,59 +54,59 @@ class UpdateAnswerRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * 回答id
+     * 1表示验证成功，0验证失败
      *
-     * Generated from protobuf field <code>uint64 id = 1;</code>
+     * Generated from protobuf field <code>int64 state = 1;</code>
      * @return int|string
      */
-    public function getId()
+    public function getState()
     {
-        return $this->id;
+        return $this->state;
     }
 
     /**
-     * 回答id
+     * 1表示验证成功，0验证失败
      *
-     * Generated from protobuf field <code>uint64 id = 1;</code>
+     * Generated from protobuf field <code>int64 state = 1;</code>
      * @param int|string $var
      * @return $this
      */
-    public function setId($var)
+    public function setState($var)
     {
-        GPBUtil::checkUint64($var);
-        $this->id = $var;
+        GPBUtil::checkInt64($var);
+        $this->state = $var;
 
         return $this;
     }
 
     /**
-     * 回答内容
+     * 验证失败返回具体的提示信息
      *
-     * Generated from protobuf field <code>string content = 2;</code>
+     * Generated from protobuf field <code>string reason = 2;</code>
      * @return string
      */
-    public function getContent()
+    public function getReason()
     {
-        return $this->content;
+        return $this->reason;
     }
 
     /**
-     * 回答内容
+     * 验证失败返回具体的提示信息
      *
-     * Generated from protobuf field <code>string content = 2;</code>
+     * Generated from protobuf field <code>string reason = 2;</code>
      * @param string $var
      * @return $this
      */
-    public function setContent($var)
+    public function setReason($var)
     {
         GPBUtil::checkString($var, True);
-        $this->content = $var;
+        $this->reason = $var;
 
         return $this;
     }
 
     /**
-     * 用户名
+     * 当前用户username
      *
      * Generated from protobuf field <code>string username = 3;</code>
      * @return string
@@ -117,7 +117,7 @@ class UpdateAnswerRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * 用户名
+     * 当前用户username
      *
      * Generated from protobuf field <code>string username = 3;</code>
      * @param string $var

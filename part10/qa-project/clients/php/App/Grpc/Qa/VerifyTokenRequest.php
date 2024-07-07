@@ -9,18 +9,24 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * 登录返回结果
+ * 验证登录token请求
  *
- * Generated from protobuf message <code>qa.UserLoginReply</code>
+ * Generated from protobuf message <code>qa.VerifyTokenRequest</code>
  */
-class UserLoginReply extends \Google\Protobuf\Internal\Message
+class VerifyTokenRequest extends \Google\Protobuf\Internal\Message
 {
     /**
-     * 登录成功返回的唯一标识token
+     * 登录成功后的token
      *
      * Generated from protobuf field <code>string token = 1;</code>
      */
     protected $token = '';
+    /**
+     * 请求id
+     *
+     * Generated from protobuf field <code>string request_id = 2;</code>
+     */
+    protected $request_id = '';
 
     /**
      * Constructor.
@@ -29,7 +35,9 @@ class UserLoginReply extends \Google\Protobuf\Internal\Message
      *     Optional. Data for populating the Message object.
      *
      *     @type string $token
-     *           登录成功返回的唯一标识token
+     *           登录成功后的token
+     *     @type string $request_id
+     *           请求id
      * }
      */
     public function __construct($data = NULL) {
@@ -38,7 +46,7 @@ class UserLoginReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * 登录成功返回的唯一标识token
+     * 登录成功后的token
      *
      * Generated from protobuf field <code>string token = 1;</code>
      * @return string
@@ -49,7 +57,7 @@ class UserLoginReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * 登录成功返回的唯一标识token
+     * 登录成功后的token
      *
      * Generated from protobuf field <code>string token = 1;</code>
      * @param string $var
@@ -59,6 +67,32 @@ class UserLoginReply extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkString($var, True);
         $this->token = $var;
+
+        return $this;
+    }
+
+    /**
+     * 请求id
+     *
+     * Generated from protobuf field <code>string request_id = 2;</code>
+     * @return string
+     */
+    public function getRequestId()
+    {
+        return $this->request_id;
+    }
+
+    /**
+     * 请求id
+     *
+     * Generated from protobuf field <code>string request_id = 2;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setRequestId($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->request_id = $var;
 
         return $this;
     }

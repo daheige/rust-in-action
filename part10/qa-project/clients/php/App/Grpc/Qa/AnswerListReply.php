@@ -20,15 +20,29 @@ class AnswerListReply extends \Google\Protobuf\Internal\Message
      */
     private $list;
     /**
-     * Generated from protobuf field <code>int64 total = 2;</code>
+     * Generated from protobuf field <code>uint64 total = 2;</code>
      */
     protected $total = 0;
     /**
-     * Generated from protobuf field <code>int64 total_page = 3;</code>
+     * Generated from protobuf field <code>uint64 total_page = 3;</code>
      */
     protected $total_page = 0;
     /**
-     * Generated from protobuf field <code>bool is_end = 4;</code>
+     * 每页显示个数
+     *
+     * Generated from protobuf field <code>uint64 page_size = 4;</code>
+     */
+    protected $page_size = 0;
+    /**
+     * 当前第几页
+     *
+     * Generated from protobuf field <code>uint64 current_page = 5;</code>
+     */
+    protected $current_page = 0;
+    /**
+     * 数据是否到底了
+     *
+     * Generated from protobuf field <code>bool is_end = 6;</code>
      */
     protected $is_end = false;
 
@@ -41,7 +55,12 @@ class AnswerListReply extends \Google\Protobuf\Internal\Message
      *     @type array<\App\Grpc\Qa\AnswerEntity>|\Google\Protobuf\Internal\RepeatedField $list
      *     @type int|string $total
      *     @type int|string $total_page
+     *     @type int|string $page_size
+     *           每页显示个数
+     *     @type int|string $current_page
+     *           当前第几页
      *     @type bool $is_end
+     *           数据是否到底了
      * }
      */
     public function __construct($data = NULL) {
@@ -72,7 +91,7 @@ class AnswerListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int64 total = 2;</code>
+     * Generated from protobuf field <code>uint64 total = 2;</code>
      * @return int|string
      */
     public function getTotal()
@@ -81,20 +100,20 @@ class AnswerListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int64 total = 2;</code>
+     * Generated from protobuf field <code>uint64 total = 2;</code>
      * @param int|string $var
      * @return $this
      */
     public function setTotal($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->total = $var;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>int64 total_page = 3;</code>
+     * Generated from protobuf field <code>uint64 total_page = 3;</code>
      * @return int|string
      */
     public function getTotalPage()
@@ -103,20 +122,74 @@ class AnswerListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int64 total_page = 3;</code>
+     * Generated from protobuf field <code>uint64 total_page = 3;</code>
      * @param int|string $var
      * @return $this
      */
     public function setTotalPage($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->total_page = $var;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>bool is_end = 4;</code>
+     * 每页显示个数
+     *
+     * Generated from protobuf field <code>uint64 page_size = 4;</code>
+     * @return int|string
+     */
+    public function getPageSize()
+    {
+        return $this->page_size;
+    }
+
+    /**
+     * 每页显示个数
+     *
+     * Generated from protobuf field <code>uint64 page_size = 4;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setPageSize($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->page_size = $var;
+
+        return $this;
+    }
+
+    /**
+     * 当前第几页
+     *
+     * Generated from protobuf field <code>uint64 current_page = 5;</code>
+     * @return int|string
+     */
+    public function getCurrentPage()
+    {
+        return $this->current_page;
+    }
+
+    /**
+     * 当前第几页
+     *
+     * Generated from protobuf field <code>uint64 current_page = 5;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setCurrentPage($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->current_page = $var;
+
+        return $this;
+    }
+
+    /**
+     * 数据是否到底了
+     *
+     * Generated from protobuf field <code>bool is_end = 6;</code>
      * @return bool
      */
     public function getIsEnd()
@@ -125,7 +198,9 @@ class AnswerListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>bool is_end = 4;</code>
+     * 数据是否到底了
+     *
+     * Generated from protobuf field <code>bool is_end = 6;</code>
      * @param bool $var
      * @return $this
      */

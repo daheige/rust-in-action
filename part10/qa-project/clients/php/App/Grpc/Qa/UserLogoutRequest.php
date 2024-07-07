@@ -9,18 +9,18 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * 用户退出请求，直接清理redis中的存放的 username =>{"login_time":"2024-06-05 12:01:00"}
+ * 用户退出请求，直接清理redis中的存放的数据
  *
  * Generated from protobuf message <code>qa.UserLogoutRequest</code>
  */
 class UserLogoutRequest extends \Google\Protobuf\Internal\Message
 {
     /**
-     * 用户名（这个在网关层解密token后的username）
+     * 唯一标识token
      *
-     * Generated from protobuf field <code>string username = 1;</code>
+     * Generated from protobuf field <code>string token = 1;</code>
      */
-    protected $username = '';
+    protected $token = '';
 
     /**
      * Constructor.
@@ -28,8 +28,8 @@ class UserLogoutRequest extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type string $username
-     *           用户名（这个在网关层解密token后的username）
+     *     @type string $token
+     *           唯一标识token
      * }
      */
     public function __construct($data = NULL) {
@@ -38,27 +38,27 @@ class UserLogoutRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * 用户名（这个在网关层解密token后的username）
+     * 唯一标识token
      *
-     * Generated from protobuf field <code>string username = 1;</code>
+     * Generated from protobuf field <code>string token = 1;</code>
      * @return string
      */
-    public function getUsername()
+    public function getToken()
     {
-        return $this->username;
+        return $this->token;
     }
 
     /**
-     * 用户名（这个在网关层解密token后的username）
+     * 唯一标识token
      *
-     * Generated from protobuf field <code>string username = 1;</code>
+     * Generated from protobuf field <code>string token = 1;</code>
      * @param string $var
      * @return $this
      */
-    public function setUsername($var)
+    public function setToken($var)
     {
         GPBUtil::checkString($var, True);
-        $this->username = $var;
+        $this->token = $var;
 
         return $this;
     }

@@ -22,19 +22,13 @@ class LatestQuestionsReply extends \Google\Protobuf\Internal\Message
     /**
      * 上一次的question_id
      *
-     * Generated from protobuf field <code>int64 last_id = 2;</code>
+     * Generated from protobuf field <code>uint64 last_id = 2;</code>
      */
     protected $last_id = 0;
     /**
-     * 每页展示条数
-     *
-     * Generated from protobuf field <code>int64 limit = 3;</code>
-     */
-    protected $limit = 0;
-    /**
      * 是否到底了
      *
-     * Generated from protobuf field <code>bool is_end = 4;</code>
+     * Generated from protobuf field <code>bool is_end = 3;</code>
      */
     protected $is_end = false;
 
@@ -47,8 +41,6 @@ class LatestQuestionsReply extends \Google\Protobuf\Internal\Message
      *     @type array<\App\Grpc\Qa\QuestionEntity>|\Google\Protobuf\Internal\RepeatedField $list
      *     @type int|string $last_id
      *           上一次的question_id
-     *     @type int|string $limit
-     *           每页展示条数
      *     @type bool $is_end
      *           是否到底了
      * }
@@ -83,7 +75,7 @@ class LatestQuestionsReply extends \Google\Protobuf\Internal\Message
     /**
      * 上一次的question_id
      *
-     * Generated from protobuf field <code>int64 last_id = 2;</code>
+     * Generated from protobuf field <code>uint64 last_id = 2;</code>
      * @return int|string
      */
     public function getLastId()
@@ -94,40 +86,14 @@ class LatestQuestionsReply extends \Google\Protobuf\Internal\Message
     /**
      * 上一次的question_id
      *
-     * Generated from protobuf field <code>int64 last_id = 2;</code>
+     * Generated from protobuf field <code>uint64 last_id = 2;</code>
      * @param int|string $var
      * @return $this
      */
     public function setLastId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->last_id = $var;
-
-        return $this;
-    }
-
-    /**
-     * 每页展示条数
-     *
-     * Generated from protobuf field <code>int64 limit = 3;</code>
-     * @return int|string
-     */
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    /**
-     * 每页展示条数
-     *
-     * Generated from protobuf field <code>int64 limit = 3;</code>
-     * @param int|string $var
-     * @return $this
-     */
-    public function setLimit($var)
-    {
-        GPBUtil::checkInt64($var);
-        $this->limit = $var;
 
         return $this;
     }
@@ -135,7 +101,7 @@ class LatestQuestionsReply extends \Google\Protobuf\Internal\Message
     /**
      * 是否到底了
      *
-     * Generated from protobuf field <code>bool is_end = 4;</code>
+     * Generated from protobuf field <code>bool is_end = 3;</code>
      * @return bool
      */
     public function getIsEnd()
@@ -146,7 +112,7 @@ class LatestQuestionsReply extends \Google\Protobuf\Internal\Message
     /**
      * 是否到底了
      *
-     * Generated from protobuf field <code>bool is_end = 4;</code>
+     * Generated from protobuf field <code>bool is_end = 3;</code>
      * @param bool $var
      * @return $this
      */

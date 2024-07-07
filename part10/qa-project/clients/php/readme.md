@@ -15,7 +15,7 @@ php qa.php daheige
 output:
 ```
 status code: 0
-reply token: abc
+reply token: A1LqnrNsnyINFCxY6kSoHYnQCzX4IUbaCJpUn03HBJc03ZK9wMusAW7lQwE+zJX7
 ```
 
 # About whether to use protobuf.so

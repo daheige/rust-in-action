@@ -18,13 +18,13 @@ class AnswerEntity extends \Google\Protobuf\Internal\Message
     /**
      * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      */
     protected $id = 0;
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 question_id = 2;</code>
+     * Generated from protobuf field <code>uint64 question_id = 2;</code>
      */
     protected $question_id = 0;
     /**
@@ -42,7 +42,7 @@ class AnswerEntity extends \Google\Protobuf\Internal\Message
     /**
      * 点赞数，添加时默认为0
      *
-     * Generated from protobuf field <code>int64 agree_count = 5;</code>
+     * Generated from protobuf field <code>uint64 agree_count = 5;</code>
      */
     protected $agree_count = 0;
     /**
@@ -80,7 +80,7 @@ class AnswerEntity extends \Google\Protobuf\Internal\Message
     /**
      * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @return int|string
      */
     public function getId()
@@ -91,13 +91,13 @@ class AnswerEntity extends \Google\Protobuf\Internal\Message
     /**
      * 回答id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @param int|string $var
      * @return $this
      */
     public function setId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->id = $var;
 
         return $this;
@@ -106,7 +106,7 @@ class AnswerEntity extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 question_id = 2;</code>
+     * Generated from protobuf field <code>uint64 question_id = 2;</code>
      * @return int|string
      */
     public function getQuestionId()
@@ -117,13 +117,13 @@ class AnswerEntity extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 question_id = 2;</code>
+     * Generated from protobuf field <code>uint64 question_id = 2;</code>
      * @param int|string $var
      * @return $this
      */
     public function setQuestionId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->question_id = $var;
 
         return $this;
@@ -184,7 +184,7 @@ class AnswerEntity extends \Google\Protobuf\Internal\Message
     /**
      * 点赞数，添加时默认为0
      *
-     * Generated from protobuf field <code>int64 agree_count = 5;</code>
+     * Generated from protobuf field <code>uint64 agree_count = 5;</code>
      * @return int|string
      */
     public function getAgreeCount()
@@ -195,13 +195,13 @@ class AnswerEntity extends \Google\Protobuf\Internal\Message
     /**
      * 点赞数，添加时默认为0
      *
-     * Generated from protobuf field <code>int64 agree_count = 5;</code>
+     * Generated from protobuf field <code>uint64 agree_count = 5;</code>
      * @param int|string $var
      * @return $this
      */
     public function setAgreeCount($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->agree_count = $var;
 
         return $this;

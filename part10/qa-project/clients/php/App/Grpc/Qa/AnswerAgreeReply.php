@@ -16,11 +16,23 @@ use Google\Protobuf\Internal\GPBUtil;
 class AnswerAgreeReply extends \Google\Protobuf\Internal\Message
 {
     /**
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * 操作成功
+     *
+     * Generated from protobuf field <code>int64 state = 1;</code>
      */
-    protected $id = 0;
+    protected $state = 0;
     /**
-     * Generated from protobuf field <code>int64 agree_count = 2;</code>
+     * 操作提示信息
+     *
+     * Generated from protobuf field <code>string reason = 2;</code>
+     */
+    protected $reason = '';
+    /**
+     * 这个点赞数相对来说是准确的，如果高并发场景下，它等于点赞增量数+点赞之前的数字
+     * 一般来说，点赞成功后，前端可以自行自增或自减
+     * 可以根据实际业务场景，看是否需要返回这个数字
+     *
+     * Generated from protobuf field <code>uint64 agree_count = 3;</code>
      */
     protected $agree_count = 0;
 
@@ -30,8 +42,14 @@ class AnswerAgreeReply extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type int|string $id
+     *     @type int|string $state
+     *           操作成功
+     *     @type string $reason
+     *           操作提示信息
      *     @type int|string $agree_count
+     *           这个点赞数相对来说是准确的，如果高并发场景下，它等于点赞增量数+点赞之前的数字
+     *           一般来说，点赞成功后，前端可以自行自增或自减
+     *           可以根据实际业务场景，看是否需要返回这个数字
      * }
      */
     public function __construct($data = NULL) {
@@ -40,29 +58,63 @@ class AnswerAgreeReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * 操作成功
+     *
+     * Generated from protobuf field <code>int64 state = 1;</code>
      * @return int|string
      */
-    public function getId()
+    public function getState()
     {
-        return $this->id;
+        return $this->state;
     }
 
     /**
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * 操作成功
+     *
+     * Generated from protobuf field <code>int64 state = 1;</code>
      * @param int|string $var
      * @return $this
      */
-    public function setId($var)
+    public function setState($var)
     {
         GPBUtil::checkInt64($var);
-        $this->id = $var;
+        $this->state = $var;
 
         return $this;
     }
 
     /**
-     * Generated from protobuf field <code>int64 agree_count = 2;</code>
+     * 操作提示信息
+     *
+     * Generated from protobuf field <code>string reason = 2;</code>
+     * @return string
+     */
+    public function getReason()
+    {
+        return $this->reason;
+    }
+
+    /**
+     * 操作提示信息
+     *
+     * Generated from protobuf field <code>string reason = 2;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setReason($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->reason = $var;
+
+        return $this;
+    }
+
+    /**
+     * 这个点赞数相对来说是准确的，如果高并发场景下，它等于点赞增量数+点赞之前的数字
+     * 一般来说，点赞成功后，前端可以自行自增或自减
+     * 可以根据实际业务场景，看是否需要返回这个数字
+     *
+     * Generated from protobuf field <code>uint64 agree_count = 3;</code>
      * @return int|string
      */
     public function getAgreeCount()
@@ -71,13 +123,17 @@ class AnswerAgreeReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>int64 agree_count = 2;</code>
+     * 这个点赞数相对来说是准确的，如果高并发场景下，它等于点赞增量数+点赞之前的数字
+     * 一般来说，点赞成功后，前端可以自行自增或自减
+     * 可以根据实际业务场景，看是否需要返回这个数字
+     *
+     * Generated from protobuf field <code>uint64 agree_count = 3;</code>
      * @param int|string $var
      * @return $this
      */
     public function setAgreeCount($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->agree_count = $var;
 
         return $this;

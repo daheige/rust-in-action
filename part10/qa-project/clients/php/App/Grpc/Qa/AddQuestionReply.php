@@ -18,7 +18,7 @@ class AddQuestionReply extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      */
     protected $id = 0;
 
@@ -40,7 +40,7 @@ class AddQuestionReply extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @return int|string
      */
     public function getId()
@@ -51,13 +51,13 @@ class AddQuestionReply extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @param int|string $var
      * @return $this
      */
     public function setId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->id = $var;
 
         return $this;

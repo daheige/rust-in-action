@@ -24,9 +24,13 @@ class LatestQuestionsRequest extends \Google\Protobuf\Internal\Message
     /**
      * 上一次的question_id，第一页默认为0
      *
-     * Generated from protobuf field <code>int64 last_id = 2;</code>
+     * Generated from protobuf field <code>uint64 last_id = 2;</code>
      */
     protected $last_id = 0;
+    /**
+     * Generated from protobuf field <code>uint64 limit = 3;</code>
+     */
+    protected $limit = 0;
 
     /**
      * Constructor.
@@ -38,6 +42,7 @@ class LatestQuestionsRequest extends \Google\Protobuf\Internal\Message
      *           用户名
      *     @type int|string $last_id
      *           上一次的question_id，第一页默认为0
+     *     @type int|string $limit
      * }
      */
     public function __construct($data = NULL) {
@@ -74,7 +79,7 @@ class LatestQuestionsRequest extends \Google\Protobuf\Internal\Message
     /**
      * 上一次的question_id，第一页默认为0
      *
-     * Generated from protobuf field <code>int64 last_id = 2;</code>
+     * Generated from protobuf field <code>uint64 last_id = 2;</code>
      * @return int|string
      */
     public function getLastId()
@@ -85,14 +90,36 @@ class LatestQuestionsRequest extends \Google\Protobuf\Internal\Message
     /**
      * 上一次的question_id，第一页默认为0
      *
-     * Generated from protobuf field <code>int64 last_id = 2;</code>
+     * Generated from protobuf field <code>uint64 last_id = 2;</code>
      * @param int|string $var
      * @return $this
      */
     public function setLastId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->last_id = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 limit = 3;</code>
+     * @return int|string
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint64 limit = 3;</code>
+     * @param int|string $var
+     * @return $this
+     */
+    public function setLimit($var)
+    {
+        GPBUtil::checkUint64($var);
+        $this->limit = $var;
 
         return $this;
     }

@@ -18,19 +18,19 @@ class AnswerListRequest extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 question_id = 1;</code>
+     * Generated from protobuf field <code>uint64 question_id = 1;</code>
      */
     protected $question_id = 0;
     /**
      * 当前页数
      *
-     * Generated from protobuf field <code>int64 page = 2;</code>
+     * Generated from protobuf field <code>uint64 page = 2;</code>
      */
     protected $page = 0;
     /**
      * 每页数据
      *
-     * Generated from protobuf field <code>int64 limit = 3;</code>
+     * Generated from protobuf field <code>uint64 limit = 3;</code>
      */
     protected $limit = 0;
     /**
@@ -64,7 +64,7 @@ class AnswerListRequest extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 question_id = 1;</code>
+     * Generated from protobuf field <code>uint64 question_id = 1;</code>
      * @return int|string
      */
     public function getQuestionId()
@@ -75,13 +75,13 @@ class AnswerListRequest extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 question_id = 1;</code>
+     * Generated from protobuf field <code>uint64 question_id = 1;</code>
      * @param int|string $var
      * @return $this
      */
     public function setQuestionId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->question_id = $var;
 
         return $this;
@@ -90,7 +90,7 @@ class AnswerListRequest extends \Google\Protobuf\Internal\Message
     /**
      * 当前页数
      *
-     * Generated from protobuf field <code>int64 page = 2;</code>
+     * Generated from protobuf field <code>uint64 page = 2;</code>
      * @return int|string
      */
     public function getPage()
@@ -101,13 +101,13 @@ class AnswerListRequest extends \Google\Protobuf\Internal\Message
     /**
      * 当前页数
      *
-     * Generated from protobuf field <code>int64 page = 2;</code>
+     * Generated from protobuf field <code>uint64 page = 2;</code>
      * @param int|string $var
      * @return $this
      */
     public function setPage($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->page = $var;
 
         return $this;
@@ -116,7 +116,7 @@ class AnswerListRequest extends \Google\Protobuf\Internal\Message
     /**
      * 每页数据
      *
-     * Generated from protobuf field <code>int64 limit = 3;</code>
+     * Generated from protobuf field <code>uint64 limit = 3;</code>
      * @return int|string
      */
     public function getLimit()
@@ -127,13 +127,13 @@ class AnswerListRequest extends \Google\Protobuf\Internal\Message
     /**
      * 每页数据
      *
-     * Generated from protobuf field <code>int64 limit = 3;</code>
+     * Generated from protobuf field <code>uint64 limit = 3;</code>
      * @param int|string $var
      * @return $this
      */
     public function setLimit($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->limit = $var;
 
         return $this;

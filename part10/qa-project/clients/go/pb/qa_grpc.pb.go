@@ -22,6 +22,7 @@ const (
 	QAService_UserLogin_FullMethodName       = "/qa.QAService/UserLogin"
 	QAService_UserLogout_FullMethodName      = "/qa.QAService/UserLogout"
 	QAService_UserRegister_FullMethodName    = "/qa.QAService/UserRegister"
+	QAService_VerifyToken_FullMethodName     = "/qa.QAService/VerifyToken"
 	QAService_AddQuestion_FullMethodName     = "/qa.QAService/AddQuestion"
 	QAService_DeleteQuestion_FullMethodName  = "/qa.QAService/DeleteQuestion"
 	QAService_UpdateQuestion_FullMethodName  = "/qa.QAService/UpdateQuestion"
@@ -45,6 +46,8 @@ type QAServiceClient interface {
 	UserLogout(ctx context.Context, in *UserLogoutRequest, opts ...grpc.CallOption) (*UserLogoutReply, error)
 	// 用户注册
 	UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterReply, error)
+	// 验证登录的token是否有效
+	VerifyToken(ctx context.Context, in *VerifyTokenRequest, opts ...grpc.CallOption) (*VerifyTokenReply, error)
 	// 发表问题
 	AddQuestion(ctx context.Context, in *AddQuestionRequest, opts ...grpc.CallOption) (*AddQuestionReply, error)
 	// 删除问题
@@ -65,7 +68,7 @@ type QAServiceClient interface {
 	UpdateAnswer(ctx context.Context, in *UpdateAnswerRequest, opts ...grpc.CallOption) (*UpdateAnswerReply, error)
 	// 查看答案详情
 	AnswerDetail(ctx context.Context, in *AnswerDetailRequest, opts ...grpc.CallOption) (*AnswerDetailReply, error)
-	// 用户点赞回答
+	// 用户点赞回答和取消点赞
 	AnswerAgree(ctx context.Context, in *AnswerAgreeRequest, opts ...grpc.CallOption) (*AnswerAgreeReply, error)
 }
 
@@ -98,6 +101,15 @@ func (c *qAServiceClient) UserLogout(ctx context.Context, in *UserLogoutRequest,
 func (c *qAServiceClient) UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterReply, error) {
 	out := new(UserRegisterReply)
 	err := c.cc.Invoke(ctx, QAService_UserRegister_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *qAServiceClient) VerifyToken(ctx context.Context, in *VerifyTokenRequest, opts ...grpc.CallOption) (*VerifyTokenReply, error) {
+	out := new(VerifyTokenReply)
+	err := c.cc.Invoke(ctx, QAService_VerifyToken_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -213,6 +225,8 @@ type QAServiceServer interface {
 	UserLogout(context.Context, *UserLogoutRequest) (*UserLogoutReply, error)
 	// 用户注册
 	UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterReply, error)
+	// 验证登录的token是否有效
+	VerifyToken(context.Context, *VerifyTokenRequest) (*VerifyTokenReply, error)
 	// 发表问题
 	AddQuestion(context.Context, *AddQuestionRequest) (*AddQuestionReply, error)
 	// 删除问题
@@ -233,7 +247,7 @@ type QAServiceServer interface {
 	UpdateAnswer(context.Context, *UpdateAnswerRequest) (*UpdateAnswerReply, error)
 	// 查看答案详情
 	AnswerDetail(context.Context, *AnswerDetailRequest) (*AnswerDetailReply, error)
-	// 用户点赞回答
+	// 用户点赞回答和取消点赞
 	AnswerAgree(context.Context, *AnswerAgreeRequest) (*AnswerAgreeReply, error)
 	mustEmbedUnimplementedQAServiceServer()
 }
@@ -250,6 +264,9 @@ func (UnimplementedQAServiceServer) UserLogout(context.Context, *UserLogoutReque
 }
 func (UnimplementedQAServiceServer) UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserRegister not implemented")
+}
+func (UnimplementedQAServiceServer) VerifyToken(context.Context, *VerifyTokenRequest) (*VerifyTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyToken not implemented")
 }
 func (UnimplementedQAServiceServer) AddQuestion(context.Context, *AddQuestionRequest) (*AddQuestionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddQuestion not implemented")
@@ -347,6 +364,24 @@ func _QAService_UserRegister_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QAServiceServer).UserRegister(ctx, req.(*UserRegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QAService_VerifyToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QAServiceServer).VerifyToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QAService_VerifyToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QAServiceServer).VerifyToken(ctx, req.(*VerifyTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -567,6 +602,10 @@ var QAService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserRegister",
 			Handler:    _QAService_UserRegister_Handler,
+		},
+		{
+			MethodName: "VerifyToken",
+			Handler:    _QAService_VerifyToken_Handler,
 		},
 		{
 			MethodName: "AddQuestion",

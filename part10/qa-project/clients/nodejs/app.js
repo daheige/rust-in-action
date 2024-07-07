@@ -5,7 +5,7 @@ let grpc = require('@grpc/grpc-js');
 // 创建请求对象
 let request = new messages.UserLoginRequest();
 request.setUsername('daheige');
-request.setPassword('abc123456');
+request.setPassword('123456');
 
 // 创建grpc client
 let client = new services.QAServiceClient(

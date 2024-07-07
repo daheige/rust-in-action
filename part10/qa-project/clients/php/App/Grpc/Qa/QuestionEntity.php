@@ -18,7 +18,7 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      */
     protected $id = 0;
     /**
@@ -34,21 +34,21 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
      */
     protected $content = '';
     /**
-     * 用户名
+     * 创建者
      *
-     * Generated from protobuf field <code>string username = 4;</code>
+     * Generated from protobuf field <code>string created_by = 4;</code>
      */
-    protected $username = '';
+    protected $created_by = '';
     /**
      * 问题阅读数
      *
-     * Generated from protobuf field <code>int64 read_count = 5;</code>
+     * Generated from protobuf field <code>uint64 read_count = 5;</code>
      */
     protected $read_count = 0;
     /**
      * 回答数量
      *
-     * Generated from protobuf field <code>int64 reply_count = 6;</code>
+     * Generated from protobuf field <code>uint64 reply_count = 6;</code>
      */
     protected $reply_count = 0;
 
@@ -64,8 +64,8 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
      *           问题标题
      *     @type string $content
      *           内容，这里只返回部分内容
-     *     @type string $username
-     *           用户名
+     *     @type string $created_by
+     *           创建者
      *     @type int|string $read_count
      *           问题阅读数
      *     @type int|string $reply_count
@@ -80,7 +80,7 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @return int|string
      */
     public function getId()
@@ -91,13 +91,13 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
     /**
      * 问题id
      *
-     * Generated from protobuf field <code>int64 id = 1;</code>
+     * Generated from protobuf field <code>uint64 id = 1;</code>
      * @param int|string $var
      * @return $this
      */
     public function setId($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->id = $var;
 
         return $this;
@@ -156,27 +156,27 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * 用户名
+     * 创建者
      *
-     * Generated from protobuf field <code>string username = 4;</code>
+     * Generated from protobuf field <code>string created_by = 4;</code>
      * @return string
      */
-    public function getUsername()
+    public function getCreatedBy()
     {
-        return $this->username;
+        return $this->created_by;
     }
 
     /**
-     * 用户名
+     * 创建者
      *
-     * Generated from protobuf field <code>string username = 4;</code>
+     * Generated from protobuf field <code>string created_by = 4;</code>
      * @param string $var
      * @return $this
      */
-    public function setUsername($var)
+    public function setCreatedBy($var)
     {
         GPBUtil::checkString($var, True);
-        $this->username = $var;
+        $this->created_by = $var;
 
         return $this;
     }
@@ -184,7 +184,7 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
     /**
      * 问题阅读数
      *
-     * Generated from protobuf field <code>int64 read_count = 5;</code>
+     * Generated from protobuf field <code>uint64 read_count = 5;</code>
      * @return int|string
      */
     public function getReadCount()
@@ -195,13 +195,13 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
     /**
      * 问题阅读数
      *
-     * Generated from protobuf field <code>int64 read_count = 5;</code>
+     * Generated from protobuf field <code>uint64 read_count = 5;</code>
      * @param int|string $var
      * @return $this
      */
     public function setReadCount($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->read_count = $var;
 
         return $this;
@@ -210,7 +210,7 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
     /**
      * 回答数量
      *
-     * Generated from protobuf field <code>int64 reply_count = 6;</code>
+     * Generated from protobuf field <code>uint64 reply_count = 6;</code>
      * @return int|string
      */
     public function getReplyCount()
@@ -221,13 +221,13 @@ class QuestionEntity extends \Google\Protobuf\Internal\Message
     /**
      * 回答数量
      *
-     * Generated from protobuf field <code>int64 reply_count = 6;</code>
+     * Generated from protobuf field <code>uint64 reply_count = 6;</code>
      * @param int|string $var
      * @return $this
      */
     public function setReplyCount($var)
     {
-        GPBUtil::checkInt64($var);
+        GPBUtil::checkUint64($var);
         $this->reply_count = $var;
 
         return $this;

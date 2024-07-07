@@ -710,8 +710,6 @@ impl QaService for QAServiceImpl {
             ));
         }
 
-        let mut agree_count = answer_res.unwrap().agree_count as i64;
-        agree_count += 1;
         let msg = VoteMessage {
             target_id: req.id,
             target_type: "answer".to_string(),
@@ -726,6 +724,8 @@ impl QaService for QAServiceImpl {
             ));
         }
 
+        let mut agree_count = answer_res.unwrap().agree_count as i64;
+        agree_count += 1;
         let reply = AnswerAgreeReply {
             state: 1,
             reason: "success".to_string(),

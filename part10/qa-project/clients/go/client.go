@@ -17,8 +17,7 @@ var (
 )
 
 /**
-% go run client.go daheige
-
+% go run client.go daheige 123456
 */
 
 func main() {
@@ -39,30 +38,34 @@ func main() {
 
 	// Contact the server and print out its response.
 	name := defaultUserName
+	password := "123456";
 	if len(os.Args) > 1 {
 		name = os.Args[1]
 	}
+    if len(os.Args) > 2{
+       password = os.Args[2]
+    }
 
 	ctx := context.Background()
-// 	res, err := c.UserLogin(ctx, &pb.UserLoginRequest{
-// 		Username: name,
-// 		Password: "abc",
-// 	})
-
-// if err != nil {
-// 		log.Fatalf("could not greet: %v", err)
-// 	}
-//
-// 	log.Printf("reply token:%s", res.Token)
-
     res, err := c.UserRegister(ctx, &pb.UserRegisterRequest{
             Username: name,
-            Password: "abc",
+            Password: password,
     })
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not greet: %v\n", err)
 	}
 
     log.Println("res: ",res)
-// 	log.Printf("reply token:%s", res.Token)
+
+    // mock login
+    // 	res, err := c.UserLogin(ctx, &pb.UserLoginRequest{
+    // 		Username: name,
+    // 		Password: "123456",
+    // 	})
+
+    // if err != nil {
+    // 		log.Fatalf("could not greet: %v", err)
+    // 	}
+    //
+    // 	log.Printf("reply token:%s", res.Token)
 }
