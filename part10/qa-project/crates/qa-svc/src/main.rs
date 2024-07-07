@@ -10,7 +10,6 @@ use log::info;
 use pb::qa::qa_service_server::QaServiceServer;
 use std::net::SocketAddr;
 use std::process;
-use std::sync::Arc;
 use std::time::Duration;
 use tonic::transport::Server;
 

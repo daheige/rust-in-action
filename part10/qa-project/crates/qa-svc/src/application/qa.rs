@@ -15,13 +15,8 @@ use infras::{AesCBCCrypto, AesKeySize};
 use log::info;
 use pb::qa::qa_service_server::QaService;
 use pb::qa::*;
-use sqlx::sqlx_macros::expand_query;
-use sqlx::types::chrono::NaiveDateTime;
-use sqlx::FromRow;
-use std::ops::Add;
-use std::process::exit;
+use std::collections::HashMap;
 use tonic::{Code, Request, Response, Status};
-use tracing_subscriber::fmt::format;
 use uuid::Uuid;
 
 /// 实现qa.proto 接口服务
@@ -262,7 +257,8 @@ impl QaService for QAServiceImpl {
         let req = request.into_inner();
         println!("request_id:{} encrypt token:{}", req.request_id, req.token);
         let login_res = self.check_token(&req.token);
-        if let Err(err) = login_res {
+        if login_res.is_err() {
+            let err = login_res.err().unwrap();
             if err.to_string().contains("token has expired") {
                 return Err(Status::new(
                     Code::Unauthenticated,
@@ -536,15 +532,25 @@ impl QaService for QAServiceImpl {
             return Ok(Response::new(reply));
         }
 
+        // 批量获取当前请求用户对这一批回答是否点赞
+        let ids: Vec<u64> = res.answers.iter().map(|item| item.id).collect();
+        let vote_map = self
+            .vote_repo
+            .is_batch_voted(&ids, "answer", &req.username)
+            .await
+            .unwrap_or(HashMap::default());
+        println!("vote_map:{:?}", vote_map);
+
         let mut answers = Vec::with_capacity(res.answers.len());
         for item in res.answers {
+            let has_agreed = vote_map.contains_key(&item.id);
             let answer = AnswerEntity {
                 id: item.id,
                 question_id: item.question_id,
                 content: item.content,
                 created_by: item.created_by,
                 agree_count: item.agree_count,
-                has_agreed: false,
+                has_agreed,
             };
             answers.push(answer);
         }
@@ -706,11 +712,11 @@ impl QaService for QAServiceImpl {
 
         let mut agree_count = answer_res.unwrap().agree_count as i64;
         agree_count += 1;
-        let msg = VoteMessage{
+        let msg = VoteMessage {
             target_id: req.id,
-            target_type:"answer".to_string(),
+            target_type: "answer".to_string(),
             created_by: req.created_by,
-            action:req.action,
+            action: req.action,
         };
         let res = self.vote_repo.publish(msg).await;
         if let Err(err) = res {
@@ -720,10 +726,10 @@ impl QaService for QAServiceImpl {
             ));
         }
 
-        let reply = AnswerAgreeReply{
-            state:1,
-            reason:"success".to_string(),
-            agree_count: agree_count as u64
+        let reply = AnswerAgreeReply {
+            state: 1,
+            reason: "success".to_string(),
+            agree_count: agree_count as u64,
         };
 
         Ok(Response::new(reply))

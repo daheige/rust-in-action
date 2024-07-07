@@ -3,7 +3,6 @@ use crate::domain::repository::ReadCountRepo;
 use log::info;
 use r2d2::Pool;
 use redis::Commands;
-use std::sync::Arc;
 
 struct ReadCountRepoImpl {
     redis_pool: Pool<redis::Client>,

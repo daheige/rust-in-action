@@ -1,4 +1,4 @@
-use crate::domain::entity::{AnswersEntity, UsersEntity, UsersVotesEntity, VoteMessage};
+use crate::domain::entity::{AnswersEntity, UsersVotesEntity, VoteMessage};
 use crate::domain::repository::UserVoteRepo;
 use chrono::Local;
 use futures::TryStreamExt;
@@ -204,7 +204,7 @@ impl UserVoteRepo for UserVoteRepoImpl {
 
         let sql = format!(
             r#"
-                select id from {} where target_id in ({})
+                select target_id from {} where target_id in ({})
                 and target_type = ? and created_by = ?
             "#,
             UsersVotesEntity::table_name(),
@@ -219,11 +219,14 @@ impl UserVoteRepo for UserVoteRepoImpl {
         }
 
         // 将查询结果集映射到Vec中
-        let records: Vec<(u64,)> = query.bind(target_type).bind(username)
-            .fetch_all(&self.mysql_pool).await?;
-        let mut m = HashMap::with_capacity(records.len()+1);
-        for item in records{
-            m.insert(item.0,true);
+        let records: Vec<(u64,)> = query
+            .bind(target_type)
+            .bind(username)
+            .fetch_all(&self.mysql_pool)
+            .await?;
+        let mut m = HashMap::with_capacity(records.len() + 1);
+        for item in records {
+            m.insert(item.0, true);
         }
 
         Ok(m)

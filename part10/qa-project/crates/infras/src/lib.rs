@@ -4,10 +4,10 @@ mod config;
 mod logger;
 mod metrics;
 mod shutdown;
+pub mod sql_utils;
 mod xmysql;
 mod xpulsar;
 mod xredis;
-pub mod sql_utils;
 
 // 使用use对模块重新导出
 pub use aes::{AesCBCCrypto, AesKeySize};

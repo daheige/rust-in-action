@@ -1,7 +1,7 @@
-use infras::sql_utils::gen_in_placeholder;
 use crate::domain::entity::UsersEntity;
 use crate::domain::repository::UserRepo;
 use chrono::Local;
+use infras::sql_utils::gen_in_placeholder;
 use uuid::Uuid;
 
 // UserRepo 具体实现
