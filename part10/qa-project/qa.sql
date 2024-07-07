@@ -14,7 +14,6 @@ CREATE TABLE `questions` (
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   `read_count` bigint unsigned NOT NULL DEFAULT '0' COMMENT '阅读数',
   `reply_count` bigint unsigned NOT NULL DEFAULT '0' COMMENT '回答数',
-  `is_deleted` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否删除，1表示删除，0表示正常',
   PRIMARY KEY (`id`),
   KEY `idx_created_by` (`created_by`),
   KEY `idx_created_at` (`created_at`)
@@ -29,7 +28,6 @@ CREATE TABLE `answers` (
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   `agree_count` bigint unsigned NOT NULL DEFAULT '0' COMMENT '点赞数',
-  `is_deleted` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否删除，1表示删除，0表示正常',
   PRIMARY KEY (`id`),
   KEY `idx_question_id` (`question_id`),
   KEY `idx_created_by` (`created_by`),

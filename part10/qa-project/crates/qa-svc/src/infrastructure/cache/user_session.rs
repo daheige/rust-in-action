@@ -19,10 +19,10 @@ impl UserSessionRepo for UserCacheRepoImpl {
         let res: RedisResult<String> = conn.get(key);
         if let Err(err) = res {
             let kind = err.kind();
-            match kind {
+            return match kind {
                 ErrorKind::TypeError => {
                     let err = RedisError::from((ErrorKind::TypeError, "user session not found"));
-                    return Err(anyhow::Error::from(err));
+                    Err(anyhow::Error::from(err))
                 }
                 _ => {
                     let err = RedisError::from((
@@ -30,9 +30,9 @@ impl UserSessionRepo for UserCacheRepoImpl {
                         "unknown error",
                         format!("{}", err),
                     ));
-                    return Err(anyhow::Error::from(err));
+                    Err(anyhow::Error::from(err))
                 }
-            }
+            };
         }
 
         let res = res.unwrap();

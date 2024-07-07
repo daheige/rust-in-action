@@ -95,7 +95,7 @@ impl QuestionRepo for QuestionRepoImpl {
 
     // 最新问题列表
     async fn latest_lists(&self, last_id: u64, limit: u64) -> anyhow::Result<LatestQuestionsReply> {
-        let mut questions: Vec<QuestionsEntity> = vec![];
+        let mut questions: Vec<QuestionsEntity> = Vec::with_capacity(limit as usize);
         if last_id > 0 {
             let sql = format!(
                 "select * from {} where id < ? order by id desc limit ?",

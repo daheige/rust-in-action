@@ -16,7 +16,6 @@ pub struct AnswersEntity {
     pub created_at: NaiveDateTime,
     pub updated_at: Option<NaiveDateTime>,
     pub agree_count: u64,
-    pub is_deleted: u8,
 }
 
 #[derive(Debug, Default)]

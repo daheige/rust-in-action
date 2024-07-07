@@ -91,16 +91,16 @@ pub struct AddQuestionRequest {
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct AddQuestionReply {
     /// 问题id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
 }
 /// 删除问题请求
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct DeleteQuestionRequest {
     /// 问题id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     #[prost(string, tag = "2")]
     pub username: ::prost::alloc::string::String,
 }
@@ -116,8 +116,8 @@ pub struct DeleteQuestionReply {
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct UpdateQuestionRequest {
     /// 问题id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 标题
     #[prost(string, tag = "2")]
     pub title: ::prost::alloc::string::String,
@@ -140,11 +140,11 @@ pub struct UpdateQuestionReply {
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct AnswerEntity {
     /// 回答id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 问题id
-    #[prost(int64, tag = "2")]
-    pub question_id: i64,
+    #[prost(uint64, tag = "2")]
+    pub question_id: u64,
     /// 回答内容
     #[prost(string, tag = "3")]
     pub content: ::prost::alloc::string::String,
@@ -152,8 +152,8 @@ pub struct AnswerEntity {
     #[prost(string, tag = "4")]
     pub created_by: ::prost::alloc::string::String,
     /// 点赞数，添加时默认为0
-    #[prost(int64, tag = "5")]
-    pub agree_count: i64,
+    #[prost(uint64, tag = "5")]
+    pub agree_count: u64,
     /// 当前用户是否点赞
     #[prost(bool, tag = "6")]
     pub has_agreed: bool,
@@ -170,16 +170,16 @@ pub struct AddAnswerRequest {
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct AddAnswerReply {
     /// 回答唯一标识
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
 }
 /// 删除回答
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct DeleteAnswerRequest {
     /// 回答id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 默认当前用户
     #[prost(string, tag = "2")]
     pub username: ::prost::alloc::string::String,
@@ -195,8 +195,9 @@ pub struct DeleteAnswerReply {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct UpdateAnswerRequest {
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    /// 回答id
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 回答内容
     #[prost(string, tag = "2")]
     pub content: ::prost::alloc::string::String,
@@ -216,29 +217,38 @@ pub struct UpdateAnswerReply {
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct AnswerAgreeRequest {
     /// 回答id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 用户名
     #[prost(string, tag = "2")]
     pub created_by: ::prost::alloc::string::String,
+    /// up表示点赞，cancel表示取消点赞
+    #[prost(string, tag = "3")]
+    pub action: ::prost::alloc::string::String,
 }
 /// 回答点赞返回结果
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct AnswerAgreeReply {
+    /// 操作成功
     #[prost(int64, tag = "1")]
-    pub id: i64,
+    pub state: i64,
+    /// 操作提示信息
+    #[prost(string, tag = "2")]
+    pub reason: ::prost::alloc::string::String,
     /// 这个点赞数相对来说是准确的，如果高并发场景下，它等于点赞增量数+点赞之前的数字
-    #[prost(int64, tag = "2")]
-    pub agree_count: i64,
+    /// 一般来说，点赞成功后，前端可以自行自增或自减
+    /// 可以根据实际业务场景，看是否需要返回这个数字
+    #[prost(uint64, tag = "3")]
+    pub agree_count: u64,
 }
 /// 问题详情请求
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct QuestionDetailRequest {
     /// 问题id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 当前用户
     #[prost(string, tag = "2")]
     pub username: ::prost::alloc::string::String,
@@ -255,23 +265,23 @@ pub struct QuestionDetailReply {
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct QuestionEntity {
     /// 问题id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 问题标题
     #[prost(string, tag = "2")]
     pub title: ::prost::alloc::string::String,
     /// 内容，这里只返回部分内容
     #[prost(string, tag = "3")]
     pub content: ::prost::alloc::string::String,
-    /// 用户名
+    /// 创建者
     #[prost(string, tag = "4")]
-    pub username: ::prost::alloc::string::String,
+    pub created_by: ::prost::alloc::string::String,
     /// 问题阅读数
-    #[prost(int64, tag = "5")]
-    pub read_count: i64,
+    #[prost(uint64, tag = "5")]
+    pub read_count: u64,
     /// 回答数量
-    #[prost(int64, tag = "6")]
-    pub reply_count: i64,
+    #[prost(uint64, tag = "6")]
+    pub reply_count: u64,
 }
 /// 最新问题列表
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -281,10 +291,10 @@ pub struct LatestQuestionsRequest {
     #[prost(string, tag = "1")]
     pub username: ::prost::alloc::string::String,
     /// 上一次的question_id，第一页默认为0
-    #[prost(int64, tag = "2")]
-    pub last_id: i64,
-    #[prost(int64, tag = "3")]
-    pub limit: i64,
+    #[prost(uint64, tag = "2")]
+    pub last_id: u64,
+    #[prost(uint64, tag = "3")]
+    pub limit: u64,
 }
 /// 最新问题列表返回结果
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -293,8 +303,8 @@ pub struct LatestQuestionsReply {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<QuestionEntity>,
     /// 上一次的question_id
-    #[prost(int64, tag = "2")]
-    pub last_id: i64,
+    #[prost(uint64, tag = "2")]
+    pub last_id: u64,
     /// 是否到底了
     #[prost(bool, tag = "3")]
     pub is_end: bool,
@@ -304,14 +314,14 @@ pub struct LatestQuestionsReply {
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct AnswerListRequest {
     /// 问题id
-    #[prost(int64, tag = "1")]
-    pub question_id: i64,
+    #[prost(uint64, tag = "1")]
+    pub question_id: u64,
     /// 当前页数
-    #[prost(int64, tag = "2")]
-    pub page: i64,
+    #[prost(uint64, tag = "2")]
+    pub page: u64,
     /// 每页数据
-    #[prost(int64, tag = "3")]
-    pub limit: i64,
+    #[prost(uint64, tag = "3")]
+    pub limit: u64,
     /// 当前用户
     #[prost(string, tag = "4")]
     pub username: ::prost::alloc::string::String,
@@ -322,16 +332,16 @@ pub struct AnswerListRequest {
 pub struct AnswerListReply {
     #[prost(message, repeated, tag = "1")]
     pub list: ::prost::alloc::vec::Vec<AnswerEntity>,
-    #[prost(int64, tag = "2")]
-    pub total: i64,
-    #[prost(int64, tag = "3")]
-    pub total_page: i64,
+    #[prost(uint64, tag = "2")]
+    pub total: u64,
+    #[prost(uint64, tag = "3")]
+    pub total_page: u64,
     /// 每页显示个数
-    #[prost(int64, tag = "4")]
-    pub page_size: i64,
+    #[prost(uint64, tag = "4")]
+    pub page_size: u64,
     /// 当前第几页
-    #[prost(int64, tag = "5")]
-    pub current_page: i64,
+    #[prost(uint64, tag = "5")]
+    pub current_page: u64,
     /// 数据是否到底了
     #[prost(bool, tag = "6")]
     pub is_end: bool,
@@ -340,13 +350,14 @@ pub struct AnswerListReply {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct AnswerDetailRequest {
-    /// 问题id
-    #[prost(int64, tag = "1")]
-    pub id: i64,
+    /// 回答id
+    #[prost(uint64, tag = "1")]
+    pub id: u64,
     /// 当前用户
     #[prost(string, tag = "2")]
     pub username: ::prost::alloc::string::String,
 }
+/// 回答详情结果
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message, serde::Serialize, serde::Deserialize)]
 pub struct AnswerDetailReply {
@@ -775,7 +786,7 @@ pub mod qa_service_client {
             req.extensions_mut().insert(GrpcMethod::new("qa.QAService", "AnswerDetail"));
             self.inner.unary(req, path, codec).await
         }
-        /// 用户点赞回答
+        /// 用户点赞回答和取消点赞
         pub async fn answer_agree(
             &mut self,
             request: impl tonic::IntoRequest<super::AnswerAgreeRequest>,
@@ -907,7 +918,7 @@ pub mod qa_service_server {
             tonic::Response<super::AnswerDetailReply>,
             tonic::Status,
         >;
-        /// 用户点赞回答
+        /// 用户点赞回答和取消点赞
         async fn answer_agree(
             &self,
             request: tonic::Request<super::AnswerAgreeRequest>,

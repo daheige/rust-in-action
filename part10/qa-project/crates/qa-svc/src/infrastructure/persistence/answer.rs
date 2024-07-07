@@ -12,7 +12,30 @@ pub fn new_answer_repo(mysql_pool: sqlx::MySqlPool) -> impl AnswerRepo {
 
 #[async_trait::async_trait]
 impl AnswerRepo for AnswerRepoImpl {
+    async fn check_answer_exist(&self, question_id: u64, created_by: &str) -> anyhow::Result<bool> {
+        let sql = format!(
+            "select id from {} where question_id = ? and created_by = ? limit 1",
+            AnswersEntity::table_name(),
+        );
+
+        // 将结果放入一个Result对应的元组中
+        let res: (u64,) = sqlx::query_as(&sql)
+            .bind(question_id)
+            .bind(created_by)
+            .fetch_one(&self.mysql_pool)
+            .await?;
+        Ok(res.0 > 0)
+    }
+
     async fn add(&self, answer: &AnswersEntity) -> anyhow::Result<u64> {
+        let res = self
+            .check_answer_exist(answer.question_id, &answer.created_by)
+            .await;
+        let exist = res.unwrap_or(false);
+        if exist {
+            return Err(anyhow::bail!("the current answer already exists"));
+        }
+
         let sql = format!(
             "insert into {} (question_id,content,created_by,created_at) value(?,?,?,?)",
             AnswersEntity::table_name()

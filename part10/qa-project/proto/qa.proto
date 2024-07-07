@@ -53,7 +53,7 @@ service QAService {
   // 查看答案详情
   rpc AnswerDetail(AnswerDetailRequest) returns(AnswerDetailReply);
 
-  // 用户点赞回答
+  // 用户点赞回答和取消点赞
   rpc AnswerAgree(AnswerAgreeRequest) returns(AnswerAgreeReply);
 }
 
@@ -111,12 +111,12 @@ message AddQuestionRequest {
 
 // 发表问题返回结果
 message AddQuestionReply {
-  int64 id = 1; // 问题id
+  uint64 id = 1; // 问题id
 }
 
 // 删除问题请求
 message DeleteQuestionRequest {
-  int64 id = 1; // 问题id
+  uint64 id = 1; // 问题id
   string username = 2;
 }
 
@@ -127,7 +127,7 @@ message DeleteQuestionReply {
 
 // 更新问题请求
 message UpdateQuestionRequest {
-  int64 id = 1; // 问题id
+  uint64 id = 1; // 问题id
   string title = 2; // 标题
   string content = 3; // 内容正文
   string updated_by = 4; // 更新者
@@ -140,11 +140,11 @@ message UpdateQuestionReply {
 
 // 答案实体
 message AnswerEntity {
-  int64 id = 1; // 回答id
-  int64 question_id = 2; // 问题id
+  uint64 id = 1; // 回答id
+  uint64 question_id = 2; // 问题id
   string content = 3; // 回答内容
   string created_by= 4; // 回答者
-  int64 agree_count = 5; // 点赞数，添加时默认为0
+  uint64 agree_count = 5; // 点赞数，添加时默认为0
   bool has_agreed = 6; // 当前用户是否点赞
 }
 
@@ -155,12 +155,12 @@ message AddAnswerRequest {
 
 // 添加回答返回结果
 message AddAnswerReply {
-  int64 id = 1; // 回答唯一标识
+  uint64 id = 1; // 回答唯一标识
 }
 
 // 删除回答
 message DeleteAnswerRequest {
-  int64  id = 1; // 回答id
+  uint64  id = 1; // 回答id
   string username = 2; // 默认当前用户
 }
 
@@ -171,7 +171,7 @@ message DeleteAnswerReply {
 
 // 更新回答基本信息
 message UpdateAnswerRequest {
-  int64  id = 1;
+  uint64  id = 1; // 回答id
   string content = 2; // 回答内容
   string username = 3; // 用户名
 }
@@ -183,21 +183,25 @@ message UpdateAnswerReply {
 
 // 回答点赞请求
 message AnswerAgreeRequest {
-  int64 id = 1; // 回答id
+  uint64 id = 1; // 回答id
   string created_by = 2; // 用户名
+  string action = 3; // up表示点赞，cancel表示取消点赞
 }
 
 // 回答点赞返回结果
 message AnswerAgreeReply {
-  int64 id = 1;
+  int64 state = 1; // 操作成功
+  string reason = 2; // 操作提示信息
 
   // 这个点赞数相对来说是准确的，如果高并发场景下，它等于点赞增量数+点赞之前的数字
-  int64 agree_count = 2;
+  // 一般来说，点赞成功后，前端可以自行自增或自减
+  // 可以根据实际业务场景，看是否需要返回这个数字
+  uint64 agree_count = 3;
 }
 
 // 问题详情请求
 message QuestionDetailRequest {
-  int64 id = 1; // 问题id
+  uint64 id = 1; // 问题id
   string username = 2; // 当前用户
 }
 
@@ -208,52 +212,53 @@ message QuestionDetailReply {
 
 // 问题实体
 message QuestionEntity {
-  int64 id = 1; // 问题id
+  uint64 id = 1; // 问题id
   string title = 2; // 问题标题
   string content = 3; // 内容，这里只返回部分内容
-  string username = 4; // 用户名
-  int64 read_count = 5; // 问题阅读数
-  int64 reply_count = 6; // 回答数量
+  string created_by = 4; // 创建者
+  uint64 read_count = 5; // 问题阅读数
+  uint64 reply_count = 6; // 回答数量
 }
 
 // 最新问题列表
 message LatestQuestionsRequest {
   string username = 1; // 用户名
-  int64 last_id = 2; // 上一次的question_id，第一页默认为0
-  int64 limit = 3;
+  uint64 last_id = 2; // 上一次的question_id，第一页默认为0
+  uint64 limit = 3;
 }
 
 // 最新问题列表返回结果
 message LatestQuestionsReply {
   repeated QuestionEntity list = 1;
-  int64 last_id = 2; // 上一次的question_id
+  uint64 last_id = 2; // 上一次的question_id
   bool is_end = 3; // 是否到底了
 }
 
 // 问题下的回答接口
 message AnswerListRequest {
-  int64 question_id = 1; // 问题id
-  int64 page = 2; // 当前页数
-  int64 limit = 3; // 每页数据
+  uint64 question_id = 1; // 问题id
+  uint64 page = 2; // 当前页数
+  uint64 limit = 3; // 每页数据
   string username = 4; // 当前用户
 }
 
 // 回答列表返回结果
 message AnswerListReply {
   repeated AnswerEntity list = 1;
-  int64 total = 2;
-  int64 total_page = 3;
-  int64 page_size = 4; // 每页显示个数
-  int64 current_page = 5; // 当前第几页
+  uint64 total = 2;
+  uint64 total_page = 3;
+  uint64 page_size = 4; // 每页显示个数
+  uint64 current_page = 5; // 当前第几页
   bool is_end = 6; // 数据是否到底了
 }
 
 // 查看回答详情
 message AnswerDetailRequest {
-  int64 id = 1; // 问题id
+  uint64 id = 1; // 回答id
   string username = 2; // 当前用户
 }
 
+// 回答详情结果
 message AnswerDetailReply {
   AnswerEntity answer = 1;
 }

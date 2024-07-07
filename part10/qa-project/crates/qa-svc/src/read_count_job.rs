@@ -59,8 +59,8 @@ async fn main() -> anyhow::Result<()> {
 
             interval.tick().await;
             let res = read_count_repo.handler("question").await;
-            if let Err(err) = res{
-                info!("handler read_count error:{}",err);
+            if let Err(err) = res {
+                info!("handler read_count error:{}", err);
             }
         }
     });

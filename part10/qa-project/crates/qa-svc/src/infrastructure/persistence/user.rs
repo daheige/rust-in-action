@@ -1,4 +1,4 @@
-use super::sql_utils::gen_in_placeholder;
+use infras::sql_utils::gen_in_placeholder;
 use crate::domain::entity::UsersEntity;
 use crate::domain::repository::UserRepo;
 use chrono::Local;
@@ -25,7 +25,7 @@ impl UserRepo for UserRepoImpl {
 
         // 将结果放入一个Result对应的元组中
         let res: (u64,) = sqlx::query_as(&sql)
-            .bind(username.to_string())
+            .bind(username)
             .fetch_one(&self.mysql_pool)
             .await?;
         Ok(res.0 > 0)
@@ -63,7 +63,7 @@ impl UserRepo for UserRepoImpl {
 
         // query_as将查询结果映射到结构体UserEntity中
         let user: UsersEntity = sqlx::query_as(&sql)
-            .bind(username.to_string())
+            .bind(username)
             .fetch_one(&self.mysql_pool)
             .await?;
         Ok(user)

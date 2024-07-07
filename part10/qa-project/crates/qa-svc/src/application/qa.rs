@@ -334,7 +334,7 @@ impl QaService for QAServiceImpl {
         }
 
         let id = res.unwrap();
-        let reply = AddQuestionReply { id: id as i64 };
+        let reply = AddQuestionReply { id };
         Ok(Response::new(reply))
     }
 
@@ -345,8 +345,7 @@ impl QaService for QAServiceImpl {
     ) -> Result<Response<DeleteQuestionReply>, Status> {
         let req = request.into_inner();
         info!("request question id:{} username:{}", req.id, req.username);
-        let id = req.id as u64;
-        let res = self.question_repo.delete(id, &req.username).await;
+        let res = self.question_repo.delete(req.id, &req.username).await;
         if let Err(err) = res {
             return Err(Status::new(
                 Code::Unknown,
@@ -368,7 +367,6 @@ impl QaService for QAServiceImpl {
             "request question id:{} updated_by:{}",
             req.id, req.updated_by
         );
-        let id = req.id as u64;
         let question = QuestionsEntity {
             title: req.title,
             content: req.content,
@@ -376,7 +374,7 @@ impl QaService for QAServiceImpl {
             ..Default::default()
         };
 
-        let res = self.question_repo.update(id, &question).await;
+        let res = self.question_repo.update(req.id, &question).await;
         if let Err(err) = res {
             return Err(Status::new(
                 Code::Unknown,
@@ -395,8 +393,7 @@ impl QaService for QAServiceImpl {
     ) -> Result<Response<QuestionDetailReply>, Status> {
         let req = request.into_inner();
         info!("request question id:{} username:{}", req.id, req.username);
-        let id = req.id as u64;
-        let res = self.question_repo.fetch_one(id).await;
+        let res = self.question_repo.fetch_one(req.id).await;
         if let Err(err) = res {
             let err = err.downcast().unwrap();
             match err {
@@ -407,7 +404,7 @@ impl QaService for QAServiceImpl {
                     ));
                 }
                 _ => {
-                    info!("failed to query question,error:{}", err);
+                    info!("failed to query question id:{},error:{}", req.id, err);
                 }
             }
 
@@ -435,15 +432,16 @@ impl QaService for QAServiceImpl {
             read_count += read_count_res.unwrap() as i64;
         }
 
+        let read_count = read_count as u64;
         println!("question read_count:{}", read_count);
 
         let question = QuestionEntity {
-            id: entry.id as i64,
+            id: entry.id,
             title: entry.title,
             content: entry.content,
-            username: entry.created_by,
-            read_count: read_count,
-            reply_count: entry.reply_count as i64,
+            created_by: entry.created_by,
+            read_count,
+            reply_count: entry.reply_count,
         };
         let reply = QuestionDetailReply {
             question: Some(question),
@@ -456,7 +454,52 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<LatestQuestionsRequest>,
     ) -> Result<Response<LatestQuestionsReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!(
+            "request username:{} limit:{} last_id:{}",
+            req.username, req.limit, req.last_id
+        );
+
+        let question_res = self
+            .question_repo
+            .latest_lists(req.last_id, req.limit)
+            .await;
+        if let Err(err) = question_res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to query questions,error:{}", err),
+            ));
+        }
+
+        let res = question_res.unwrap();
+        if res.questions.len() == 0 {
+            let reply = LatestQuestionsReply {
+                last_id: 0,
+                is_end: true,
+                list: vec![],
+            };
+            return Ok(Response::new(reply));
+        }
+
+        let mut questions = Vec::with_capacity(res.questions.len());
+        for item in res.questions {
+            let question = QuestionEntity {
+                id: item.id,
+                title: item.title,
+                content: item.content,
+                created_by: item.created_by,
+                read_count: item.read_count,
+                reply_count: item.reply_count,
+            };
+            questions.push(question);
+        }
+
+        let reply = LatestQuestionsReply {
+            last_id: res.last_id.unwrap_or(0),
+            is_end: res.is_end,
+            list: questions,
+        };
+        Ok(Response::new(reply))
     }
 
     // 答案列表
@@ -464,7 +507,58 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<AnswerListRequest>,
     ) -> Result<Response<AnswerListReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!(
+            "request username:{} question_id:{} limit:{} page:{}",
+            req.username, req.question_id, req.limit, req.page
+        );
+        let answer_res = self
+            .answer_repo
+            .lists(req.question_id, req.page, req.limit, "id desc")
+            .await;
+        if let Err(err) = answer_res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to query answers,error:{}", err),
+            ));
+        }
+
+        let res = answer_res.unwrap();
+        if res.total == 0 {
+            let reply = AnswerListReply {
+                list: vec![],
+                total: 0,
+                total_page: 0,
+                page_size: req.limit,
+                current_page: req.page,
+                is_end: true,
+            };
+            return Ok(Response::new(reply));
+        }
+
+        let mut answers = Vec::with_capacity(res.answers.len());
+        for item in res.answers {
+            let answer = AnswerEntity {
+                id: item.id,
+                question_id: item.question_id,
+                content: item.content,
+                created_by: item.created_by,
+                agree_count: item.agree_count,
+                has_agreed: false,
+            };
+            answers.push(answer);
+        }
+
+        let reply = AnswerListReply {
+            list: answers,
+            total: res.total,
+            total_page: res.total_page,
+            page_size: res.page_size,
+            current_page: res.current_page,
+            is_end: res.is_end,
+        };
+
+        Ok(Response::new(reply))
     }
 
     // 添加答案
@@ -472,7 +566,38 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<AddAnswerRequest>,
     ) -> Result<Response<AddAnswerReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        if req.answer.is_none() {
+            return Err(Status::new(
+                Code::InvalidArgument,
+                "answer field is empty".to_string(),
+            ));
+        }
+
+        let answer = req.answer.unwrap();
+        info!(
+            "request username:{} question_id:{}",
+            answer.created_by, answer.question_id,
+        );
+        let res = self
+            .answer_repo
+            .add(&AnswersEntity {
+                question_id: answer.question_id,
+                content: answer.content,
+                created_by: answer.created_by,
+                ..Default::default()
+            })
+            .await;
+        if let Err(err) = res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to add answer,error:{}", err),
+            ));
+        }
+
+        let id = res.unwrap_or(0);
+        let reply = AddAnswerReply { id };
+        Ok(Response::new(reply))
     }
 
     // 删除答案
@@ -480,7 +605,18 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<DeleteAnswerRequest>,
     ) -> Result<Response<DeleteAnswerReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!("request username:{} answer_id:{}", req.username, req.id);
+        let res = self.answer_repo.delete(req.id, &req.username).await;
+        if let Err(err) = res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to delete answer,error:{}", err),
+            ));
+        }
+
+        let reply = DeleteAnswerReply { state: 1 };
+        Ok(Response::new(reply))
     }
 
     // 更新答案
@@ -488,7 +624,21 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<UpdateAnswerRequest>,
     ) -> Result<Response<UpdateAnswerReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!("request username:{} answer_id:{}", req.username, req.id);
+        let res = self
+            .answer_repo
+            .update(req.id, &req.content, &req.username)
+            .await;
+        if let Err(err) = res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to update answer,error:{}", err),
+            ));
+        }
+
+        let reply = UpdateAnswerReply { state: 1 };
+        Ok(Response::new(reply))
     }
 
     // 回答详情
@@ -496,7 +646,47 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<AnswerDetailRequest>,
     ) -> Result<Response<AnswerDetailReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!("request username:{} answer_id:{}", req.username, req.id);
+        let res = self.answer_repo.fetch_one(req.id).await;
+        if let Err(err) = res {
+            let err = err.downcast().unwrap();
+            match err {
+                sqlx::Error::RowNotFound => {
+                    return Err(Status::new(
+                        Code::NotFound,
+                        "current answer not found".to_string(),
+                    ));
+                }
+                _ => {
+                    info!("failed to query answer id:{},error:{}", req.id, err);
+                }
+            }
+
+            return Err(Status::new(
+                Code::Unknown,
+                "failed to query answer".to_string(),
+            ));
+        }
+
+        let answer = res.unwrap();
+        let has_agreed = self
+            .vote_repo
+            .is_voted(req.id, "answer", &req.username)
+            .await
+            .unwrap_or(false);
+        let answer_entry = AnswerEntity {
+            id: answer.id,
+            question_id: answer.question_id,
+            content: answer.content,
+            created_by: answer.created_by,
+            agree_count: answer.agree_count,
+            has_agreed,
+        };
+        let reply = AnswerDetailReply {
+            answer: Some(answer_entry),
+        };
+        Ok(Response::new(reply))
     }
 
     // 回答点赞
@@ -504,6 +694,38 @@ impl QaService for QAServiceImpl {
         &self,
         request: Request<AnswerAgreeRequest>,
     ) -> Result<Response<AnswerAgreeReply>, Status> {
-        todo!()
+        let req = request.into_inner();
+        info!("request username:{} answer_id:{}", req.created_by, req.id);
+        let answer_res = self.answer_repo.fetch_one(req.id).await;
+        if let Err(err) = answer_res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to query answer,error:{}", err),
+            ));
+        }
+
+        let mut agree_count = answer_res.unwrap().agree_count as i64;
+        agree_count += 1;
+        let msg = VoteMessage{
+            target_id: req.id,
+            target_type:"answer".to_string(),
+            created_by: req.created_by,
+            action:req.action,
+        };
+        let res = self.vote_repo.publish(msg).await;
+        if let Err(err) = res {
+            return Err(Status::new(
+                Code::Unknown,
+                format!("failed to vote answer,error:{}", err),
+            ));
+        }
+
+        let reply = AnswerAgreeReply{
+            state:1,
+            reason:"success".to_string(),
+            agree_count: agree_count as u64
+        };
+
+        Ok(Response::new(reply))
     }
 }

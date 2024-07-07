@@ -1,9 +1,11 @@
-use crate::domain::entity::{AnswersEntity, UsersVotesEntity, VoteMessage};
+use crate::domain::entity::{AnswersEntity, UsersEntity, UsersVotesEntity, VoteMessage};
 use crate::domain::repository::UserVoteRepo;
 use chrono::Local;
 use futures::TryStreamExt;
+use infras::sql_utils::gen_in_placeholder;
 use log::{error, info};
 use pulsar::{producer, proto, Consumer, Pulsar, SubType, TokioExecutor};
+use std::collections::HashMap;
 use std::ops::DerefMut;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -72,16 +74,21 @@ impl UserVoteRepoImpl {
         Ok(true)
     }
 
-    // 当前用户是否对某个回答已点赞
-    async fn has_answer_voted(&self, id: u64, username: &str) -> anyhow::Result<bool> {
+    // 当前用户是否对某个实体对象已点赞
+    async fn has_voted(
+        &self,
+        target_id: u64,
+        target_type: &str,
+        created_by: &str,
+    ) -> anyhow::Result<bool> {
         let sql = format!(
             "select id from {} where target_id = ? and target_type = ? and created_by = ?",
             UsersVotesEntity::table_name(),
         );
         let res: (u64,) = sqlx::query_as(&sql)
-            .bind(id)
-            .bind("answer")
-            .bind(username)
+            .bind(target_id)
+            .bind(target_type)
+            .bind(created_by)
             .fetch_one(&self.mysql_pool)
             .await?;
         Ok(res.0 > 0)
@@ -147,45 +154,81 @@ impl UserVoteRepoImpl {
 
     async fn handler_answer_agree(
         &self,
-        id: u64,
-        username: &str,
+        target_id: u64,
+        created_by: &str,
         action: &str,
     ) -> anyhow::Result<bool> {
-        // 判断是否点赞
-        let res = self.has_answer_voted(id, username).await;
+        let res = self.is_voted(target_id, "answer", created_by).await;
         if action == "up" {
             if res.is_ok() {
                 // 已经点赞，直接返回即可
-                println!("user:{} has voted answer id:{}", username, id);
+                info!("user:{} has voted answer id:{}", created_by, target_id);
                 return Ok(false);
             }
 
-            return self.answer_vote(id, username).await;
-        }
-
-        // 取消点赞处理逻辑
-        if let Err(err) = res {
-            let err = err.downcast().unwrap();
-            match err {
-                sqlx::Error::RowNotFound => {
-                    // 未点赞
-                    println!("user:{} does not vote answer id:{}", username, id);
-                    Ok(false)
-                }
-                other => {
-                    // 其他未知错误
-                    println!("query user:{} answer vote error:{}", username, id);
-                    Err(anyhow::Error::from(other))
-                }
-            }
+            // 执行点赞操作
+            self.answer_vote(target_id, created_by).await
         } else {
-            self.cancel_answer_vote(id, username).await
+            // 取消点赞
+            let has_voted = res.unwrap_or(false);
+            if !has_voted {
+                // 未点赞
+                info!("user:{} does not vote answer id:{}", created_by, target_id);
+                return Ok(false);
+            }
+
+            self.cancel_answer_vote(target_id, created_by).await
         }
     }
 }
 
 #[async_trait::async_trait]
 impl UserVoteRepo for UserVoteRepoImpl {
+    async fn is_voted(
+        &self,
+        target_id: u64,
+        target_type: &str,
+        username: &str,
+    ) -> anyhow::Result<bool> {
+        self.has_voted(target_id, target_type, username).await
+    }
+
+    async fn is_batch_voted(
+        &self,
+        target_ids: &Vec<u64>,
+        target_type: &str,
+        username: &str,
+    ) -> anyhow::Result<HashMap<u64, bool>> {
+        // 将参数转换为(?,?)格式
+        let parameters = gen_in_placeholder(target_ids.len());
+
+        let sql = format!(
+            r#"
+                select id from {} where target_id in ({})
+                and target_type = ? and created_by = ?
+            "#,
+            UsersVotesEntity::table_name(),
+            parameters,
+        );
+
+        println!("exec batch voted sql:{}", sql);
+        let mut query = sqlx::query_as(&sql);
+        // 绑定参数
+        for id in target_ids {
+            query = query.bind(id);
+        }
+
+        // 将查询结果集映射到Vec中
+        let records: Vec<(u64,)> = query.bind(target_type).bind(username)
+            .fetch_all(&self.mysql_pool).await?;
+        let mut m = HashMap::with_capacity(records.len()+1);
+        for item in records{
+            m.insert(item.0,true);
+        }
+
+        Ok(m)
+    }
+
     // 发送用户点赞消息
     async fn publish(&self, message: VoteMessage) -> anyhow::Result<bool> {
         // 消息主题topic
@@ -252,10 +295,11 @@ impl UserVoteRepo for UserVoteRepoImpl {
                 }
             };
 
-            // 消费消息逻辑,这里需要将用户点赞明细落地到数据库DB中，并更新回答点赞数
+            // 消费消息逻辑,这里需要将用户点赞明细落地到数据库DB中，并更新实体点赞数
             info!("got message data:{:?}", data);
 
             if target_type == "answer" {
+                // 处理回答点赞和取消点赞操作
                 let reply = self
                     .handler_answer_agree(data.target_id, &data.created_by, &data.action)
                     .await;
@@ -266,6 +310,13 @@ impl UserVoteRepo for UserVoteRepoImpl {
                     );
                     continue;
                 }
+            } else {
+                // 其他实体的点赞，可以在这里添加业务逻辑处理
+                // ...
+                info!(
+                    "target_id:{} target_type:{} created_by:{} action:{}",
+                    data.target_id, data.target_type, data.created_by, data.action
+                )
             }
 
             // 提交消息ack确认

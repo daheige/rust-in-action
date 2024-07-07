@@ -17,7 +17,6 @@ pub struct QuestionsEntity {
     pub updated_at: Option<NaiveDateTime>,
     pub read_count: u64,
     pub reply_count: u64,
-    pub is_deleted: u8,
 }
 
 // 最新问题列表返回结果

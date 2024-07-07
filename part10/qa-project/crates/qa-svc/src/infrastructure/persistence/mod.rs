@@ -1,6 +1,5 @@
 mod answer;
 mod question;
-mod sql_utils;
 mod user;
 
 pub use answer::new_answer_repo;
