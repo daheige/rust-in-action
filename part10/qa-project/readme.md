@@ -1,5 +1,10 @@
 # qa-project
     综合型项目：QA问答系统
+# 整体架构
+![](qa-arch.jpg)
+核心模块如下：
+![](qa-module.jpg)
+
 # grpc client support
 - rust grpc微服务使用的crates: tokio,tonic,tonic-build,prost代码生成
 - 支持rust/go/nodejs/php等不同客户端代码自动生成
