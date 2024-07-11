@@ -1,6 +1,10 @@
 # rust-in-action
 Rust practical project development《rust实战项目开发》
 
+# Author
+- 大黑哥，资深GO开发者（布道者）、资深PHP架构师、资深JS/Nodejs开发者、Lua爱好者、Rust语言布道者。
+- 具有10多年一线开发经验，先后从事千万级电商平台、海量邮件群发、游戏、金融、Sass等不同行业的开发和架构设计。
+- 在微服务、敏捷开发、项目管理、代码管理、架构设计、GO项目开发、MySQL性能优化、Redis分布式缓存、Kafka和Pulsar消息队列、DDD领域驱动设计、Rust系统编程等不同领域，具有深入的研究和丰富的实战经验。
 # Summary
 主要包含如下内容：
 - 第1章 rust语言简介
