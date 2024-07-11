@@ -16,5 +16,5 @@ Rust practical project development《rust实战项目开发》
 
 本书具体内容查看：[目录](SUMMARY.md)
 
-# 进度
+# Current progress
 截止到2024-07-11日，本书目前已经全部写完，进入出版社流程中，预计2024年年初出版，各位Rust爱好者，尽请期待～
