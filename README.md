@@ -1,5 +1,5 @@
-# rust-in-action
-Rust practical project development《rust实战项目开发》
+# Rust practical project development
+书名：《rust实战项目开发》
 
 # Author
 - 大黑哥，资深GO开发者（布道者）、资深PHP架构师、资深JS/Nodejs开发者、Lua爱好者、Rust语言布道者。
