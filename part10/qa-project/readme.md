@@ -5,6 +5,16 @@
 核心模块如下：
 ![](qa-module.jpg)
 
+# layout分层
+整个项目采用rust workspace工作空间模式的方式组织代码，放在crates目录中。
+- qa-svc用于实现QA系统grpc微服务以及阅读数job和点赞数job，分别对应三个二进制应用程序。
+- infras负责整个项目的基础设施层，它是一个library库，其中包含MySQL、Redis、Pulsar以及config、logger、metrics、shutdown等模块的封装。
+- pb存放protoc工具自动生成的rust代码，它是一个library库，通过tonic-build工具读取proto/qa.proto文件并生成rust代码。
+- gateway是grpc http gateway，它是一个二进制应用程序，接收外部http请求并将json数据格式转换为pb Message请求下游qa-svc中对应的grpc服务。
+
+layout分层，如下图所示：
+![](qa-layout.jpg)
+
 # grpc client support
 - rust grpc微服务使用的crates: tokio,tonic,tonic-build,prost代码生成
 - 支持rust/go/nodejs/php等不同客户端代码自动生成
