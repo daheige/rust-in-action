@@ -29,10 +29,6 @@ serde_yaml = { workspace = true }
 log = {workspace = true}
 env_logger = { workspace = true }
 
-# tracing追踪
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true, features = ["env-filter"] }
-
 # chrono用于时间处理
 chrono = { workspace = true }
 

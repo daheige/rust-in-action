@@ -57,6 +57,16 @@ sudo ln -s /usr/local/protobuf/bin/protoc /usr/bin/protoc
 sudo chmod +x /usr/bin/protoc
 ```
 
+# ubuntu install protoc
+```shell
+# 安装相关依赖
+sudo apt-get install gcc cmake make libtool
+# 安装protobuf工具包
+sudo apt-get install libprotobuf-dev protocbuf-compiler
+# 查看安装版本
+protoc --version
+```
+
 # mac install protoc
 ```shell
 brew install automake
