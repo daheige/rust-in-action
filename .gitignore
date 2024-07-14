@@ -15,3 +15,4 @@ Cargo.lock
 .idea/
 *.log
 .DS_Store
+rpc_descriptor.bin

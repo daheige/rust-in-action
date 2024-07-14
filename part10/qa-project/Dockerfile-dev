@@ -1,0 +1,48 @@
+FROM rust:1.78.0-bullseye
+
+LABEL authors="heige"
+
+# 设置环境变量
+ENV LANG C.UTF-8
+
+# 设置nodejs和go版本
+ENV NODEJS_VERSION=20 \
+    GO_VERSION=1.20.12 \
+    GOPATH=/go \
+    GOROOT=/usr/local/go \
+    CGO_ENABLED=0 \
+    GOPROXY=https://goproxy.cn,direct \
+    RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static \
+    RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup \
+    PATH=$PATH:/go/bin:/usr/local/go/bin
+
+RUN echo "deb http://mirrors.aliyun.com/debian bullseye main" > /etc/apt/sources.list &&  \
+    echo "deb http://mirrors.aliyun.com/debian-security bullseye-security main" >> /etc/apt/sources.list &&  \
+    echo "deb http://mirrors.aliyun.com/debian bullseye-updates main" >> /etc/apt/sources.list &&  \
+    apt-get update && apt-get install -y ca-certificates gcc cmake make libtool vim bash curl libc6-dev wget  \
+    git net-tools protobuf-compiler apt-transport-https python3-dev python3-pip &&  \
+    echo "#replace source" >> /usr/local/cargo/config.toml &&  \
+    echo "replace-with = 'ustc'" >> /usr/local/cargo/config.toml &&  \
+    echo "[source.crates-io]" >> /usr/local/cargo/config.toml &&  \
+    echo "registry = \"https://github.com/rust-lang/crates.io-index\"" >> /usr/local/cargo/config.toml &&  \
+    echo "[source.ustc]" >> /usr/local/cargo/config.toml &&  \
+    echo "registry = \"https://mirrors.ustc.edu.cn/crates.io-index\"" >> /usr/local/cargo/config.toml &&  \
+    echo "[source.tuna]" >> /usr/local/cargo/config.toml &&  \
+    echo "registry = \"https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git\"" >> /usr/local/cargo/config.toml &&  \
+    echo "[source.aliyun]" >> /usr/local/cargo/config.toml &&  \
+    echo "registry = \"https://code.aliyun.com/rustcc/crates.io-index\"" >> /usr/local/cargo/config.toml &&  \
+    echo "[net]" >> /usr/local/cargo/config.toml &&  \
+    echo "git-fetch-with-cli=true" >> /usr/local/cargo/config.toml &&  \
+    echo "[http]" >> /usr/local/cargo/config.toml &&  \
+    echo "check-revoke = false" >> /usr/local/cargo/config.toml && \
+    curl -fsSL https://deb.nodesource.com/setup_$NODEJS_VERSION.x -o nodesource_setup.sh && \
+    chmod +x ./nodesource_setup.sh && \
+    ./nodesource_setup.sh && apt-get install nodejs -y && \
+    cd /usr/local && wget https://golang.google.cn/dl/go$GO_VERSION.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz && \
+    mkdir -p /go/bin && mkdir -p /go/pkg && mkdir -p /go/src && \
+    ln -s /usr/local/go/bin/go /usr/bin/go &&  \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# 设置默认命令
+CMD ["bash"]

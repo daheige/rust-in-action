@@ -1,0 +1,14 @@
+{
+  "name": "grpc/grpc-demo",
+  "description": "gRPC example for PHP",
+  "require": {
+    "php": ">=5.6.0",
+    "grpc/grpc": "^v1.39"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\Grpc\\GPBMetadata\\": ["App/Grpc/GPBMetadata/"],
+      "App\\Grpc\\Qa\\": "App/Grpc/Qa/"
+    }
+  }
+}

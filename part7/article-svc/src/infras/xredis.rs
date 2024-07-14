@@ -89,7 +89,7 @@ impl<'a> RedisService<'a> {
             )));
         }
 
-        // 这里需要对cluster_nodes克隆得到一个新的Option<Vec<String>>
+        // 这里需要对cluster_nodes克隆得到一个新的Option<Vec<&str>>
         let nodes = self.cluster_nodes.clone().unwrap();
         let client = ClusterClient::new(nodes);
         client

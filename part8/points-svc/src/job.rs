@@ -91,8 +91,7 @@ async fn consumer_message(exit: Arc<RwLock<bool>>) -> anyhow::Result<()> {
             return Ok(());
         }
 
-        println!("metadata:{:?}", msg.message_id());
-        println!("id:{:?}", msg.message_id());
+        println!("message id:{:?}", msg.message_id());
         let data = match msg.deserialize() {
             Ok(data) => data,
             Err(err) => {
@@ -168,7 +167,7 @@ async fn add_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
         r#"update {} set points = points + ?,updated_at = ? where openid = ?"#,
         MembersEntity::table_name(),
     );
-    println!("insert sql:{}", sql);
+    println!("update user points sql:{}", sql);
     let affect_res = sqlx::query(&sql)
         .bind(msg.points)
         .bind(NaiveDateTime::parse_from_str(&created_at, fmt).unwrap())
@@ -185,9 +184,12 @@ async fn add_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
 // 积分扣减操作
 async fn sub_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<(), sqlx::Error> {
     // 先查询用户积分
-    let sql = "select * from members where openid = ?";
+    let sql = format!(
+        "select * from {} where openid = ?",
+        MembersEntity::table_name()
+    );
     // query_as将其映射到结构体MembersEntity中
-    let member: MembersEntity = sqlx::query_as(sql)
+    let member: MembersEntity = sqlx::query_as(&sql)
         .bind(&msg.openid)
         .fetch_one(mysql_pool)
         .await?;
@@ -239,7 +241,7 @@ async fn sub_points(msg: PointsMessage, mysql_pool: &sqlx::MySqlPool) -> Result<
         r#"update {} set points = points - ?,used_points = used_points + ?,updated_at = ? where openid = ?;"#,
         MembersEntity::table_name(),
     );
-    println!("update sql:{}", sql);
+    println!("update user points sql:{}", sql);
     let affect_res = sqlx::query(&sql)
         .bind(points)
         .bind(points)

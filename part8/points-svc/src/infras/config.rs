@@ -12,6 +12,7 @@ pub trait ConfigTrait {
 }
 
 // Config impl config trait
+// AppConfig 项目配置信息
 pub struct Config {
     filepath: String,
     sections: String,
