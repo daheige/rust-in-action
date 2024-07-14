@@ -16,6 +16,7 @@ mod domain;
 mod infrastructure;
 
 // 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
+// 日志level 优先级  error > warn > info > debug > trace
 // 启动方式：RUST_LOG=debug cargo run --bin qa-read_count-job
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
