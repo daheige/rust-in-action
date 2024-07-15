@@ -4,11 +4,13 @@ use log::info;
 use r2d2::Pool;
 use redis::Commands;
 
+// ReadCountRepoImpl实现ReadCountRepo trait的具体数据类型
 struct ReadCountRepoImpl {
     redis_pool: Pool<redis::Client>,
     mysql_pool: sqlx::MySqlPool,
 }
 
+// 创建一个ReadCountRepo实例对象
 pub fn new_read_count_repo(
     redis_pool: Pool<redis::Client>,
     mysql_pool: sqlx::MySqlPool,
@@ -93,7 +95,7 @@ impl ReadCountRepo for ReadCountRepoImpl {
 
     async fn handler(&self, target_type: &str) -> anyhow::Result<()> {
         // 读取redis hash记录
-        let hash_key = format!("qa_sys:{}:read_count:hash", target_type);
+        let hash_key = self.get_hash_key(target_type);
         let mut conn = self.redis_pool.get().expect("get redis connection failed");
 
         // 返回对应的key val key val...格式，对应的是id read_count增量计数器的字符串格式
