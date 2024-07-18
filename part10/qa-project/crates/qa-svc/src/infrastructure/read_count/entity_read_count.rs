@@ -124,6 +124,10 @@ impl ReadCountRepo for ReadCountRepoImpl {
             );
             self.update_read_count(target_id, target_type, increment)
                 .await;
+            println!(
+                "handler target_id:{} target_type:{}read_count increment:{} success",
+                target_id, target_type, increment
+            );
         }
 
         Ok(())

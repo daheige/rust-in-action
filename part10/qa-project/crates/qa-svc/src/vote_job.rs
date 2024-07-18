@@ -5,7 +5,7 @@ use infras::{job_graceful_shutdown, Logger}; // 日志模块
 
 use std::io::Write;
 use std::process;
-use std::sync::{mpsc, Arc};
+use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::RwLock;
 
@@ -22,12 +22,6 @@ async fn main() -> anyhow::Result<()> {
     // std::env::set_var("RUST_LOG", "debug");
     Logger::new().init(); // 使用默认方式初始化日志配置
     println!("current process pid:{}", process::id());
-    // 平滑退出，stop用于消费者退出标识，它是一个引用计数且持有读写锁的bool类型的共享变量
-    let stop = Arc::new(RwLock::new(false));
-    let (send, recv) = mpsc::channel();
-    tokio::spawn(async move {
-        job_graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time), send).await;
-    });
 
     // create mysql pool
     let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf)
@@ -47,19 +41,25 @@ async fn main() -> anyhow::Result<()> {
         pulsar_client,
     };
 
+    // 平滑退出stop标识，用于消费者退出标识
+    // 它是一个引用计数bool类型的异步读写锁
+    let stop = Arc::new(RwLock::new(false));
     let stop1 = stop.clone();
-    let vote_repo = new_vote_repo(app_state.mysql_pool.clone(), app_state.pulsar_client);
-
-    // 回答点赞消息处理
+    let vote_repo = new_vote_repo(app_state.mysql_pool, app_state.pulsar_client);
     // 通过tokio::spawn异步执行消息实时消费
     tokio::spawn(async move {
+        println!("run answer vote job...");
+        // 回答点赞消息处理
         let _ = vote_repo.consumer("answer", stop1).await;
     });
 
-    // 当接收到退出信号量时候，更新stop为true
-    println!("recv data:{:?}", recv.recv().unwrap());
-    let mut stop = stop.write().await;
-    *stop = true;
-    println!("shutdown success");
+    // 等待退出信号量的到来
+    let handler = tokio::spawn(async move {
+        job_graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time), stop).await;
+    });
+
+    // 这里会阻塞，只有接收到退出信号量，才会执行退出操作
+    handler.await.unwrap();
+    println!("vote job shutdown success");
     Ok(())
 }

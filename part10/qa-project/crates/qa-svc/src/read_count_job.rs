@@ -2,7 +2,7 @@ use crate::config::{mysql, xpulsar, xredis, APP_CONFIG};
 use crate::domain::repository::{ReadCountRepo, UserVoteRepo};
 use infras::{job_graceful_shutdown, Logger}; // 日志模块
 
-use crate::infrastructure::read_count;
+// 引入实体阅读数对应的模块new_read_count_repo
 use crate::infrastructure::read_count::new_read_count_repo;
 use log::info;
 use std::io::Write;
@@ -11,6 +11,7 @@ use std::sync::{mpsc, Arc};
 use std::time::Duration;
 use tokio::sync::RwLock;
 
+// 定义模块
 mod config;
 mod domain;
 mod infrastructure;
@@ -24,12 +25,6 @@ async fn main() -> anyhow::Result<()> {
     // std::env::set_var("RUST_LOG", "debug");
     Logger::new().init(); // 使用默认方式初始化日志配置
     println!("current process pid:{}", process::id());
-    // 平滑退出，stop用于消费者退出标识，它是一个引用计数且持有读写锁的bool类型的共享变量
-    let stop = Arc::new(RwLock::new(false));
-    let (send, recv) = mpsc::channel();
-    tokio::spawn(async move {
-        job_graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time), send).await;
-    });
 
     // create mysql pool
     let mysql_pool = mysql::pool(&APP_CONFIG.mysql_conf)
@@ -46,11 +41,15 @@ async fn main() -> anyhow::Result<()> {
         redis_pool,
     };
 
+    // 平滑退出stop标识，用于消费者退出标识
+    // 它是一个引用计数bool类型的异步读写锁
+    let stop = Arc::new(RwLock::new(false));
     let stop1 = stop.clone();
     let read_count_repo = new_read_count_repo(app_state.redis_pool, app_state.mysql_pool);
     // 处理问题阅读数
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(Duration::from_millis(500));
+        // 每隔2s执行依次
+        let mut interval = tokio::time::interval(Duration::from_secs(2));
         loop {
             let exit = stop1.read().await;
             if *exit {
@@ -59,6 +58,7 @@ async fn main() -> anyhow::Result<()> {
             }
 
             interval.tick().await;
+            // println!("handler question read_count");
             let res = read_count_repo.handler("question").await;
             if let Err(err) = res {
                 info!("handler read_count error:{}", err);
@@ -66,10 +66,13 @@ async fn main() -> anyhow::Result<()> {
         }
     });
 
-    // 当接收到退出信号量时候，更新stop为true
-    info!("recv data:{:?}", recv.recv().unwrap());
-    let mut stop = stop.write().await;
-    *stop = true;
-    info!("read_count job shutdown success");
+    // 等待退出信号量的到来
+    let handler = tokio::spawn(async move {
+        job_graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time), stop).await;
+    });
+
+    // 这里会阻塞，只有接收到退出信号量，才会执行退出操作
+    handler.await.unwrap();
+    println!("read_count job shutdown success");
     Ok(())
 }

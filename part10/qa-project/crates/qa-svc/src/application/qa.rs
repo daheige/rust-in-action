@@ -423,7 +423,7 @@ impl QaService for QAServiceImpl {
         }
 
         let entry = res.unwrap();
-        // 增加问题浏览数
+        // 增加问题阅读数
         let data = EntityReadCountData {
             target_id: entry.id,
             target_type: "question".to_string(),
@@ -437,12 +437,14 @@ impl QaService for QAServiceImpl {
                 entry.id, err
             );
         } else {
+            // 当前阅读数=问题原有阅读数+计数器增量数
             read_count += read_count_res.unwrap() as i64;
         }
 
         let read_count = read_count as u64;
         println!("question read_count:{}", read_count);
 
+        // 返回问题基本信息
         let question = QuestionEntity {
             id: entry.id,
             title: entry.title,
