@@ -7,7 +7,7 @@ use crate::infrastructure::read_count::new_read_count_repo;
 use log::info;
 use std::io::Write;
 use std::process;
-use std::sync::{mpsc, Arc};
+use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::RwLock;
 
