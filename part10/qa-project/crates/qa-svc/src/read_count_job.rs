@@ -48,7 +48,7 @@ async fn main() -> anyhow::Result<()> {
     let read_count_repo = new_read_count_repo(app_state.redis_pool, app_state.mysql_pool);
     // 处理问题阅读数
     tokio::spawn(async move {
-        // 每隔2s执行依次
+        // 每隔2s执行一次
         let mut interval = tokio::time::interval(Duration::from_secs(2));
         loop {
             let exit = stop1.read().await;
