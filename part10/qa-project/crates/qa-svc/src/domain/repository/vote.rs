@@ -1,4 +1,7 @@
+// 引入点赞消息模块
 use crate::domain::entity::VoteMessage;
+
+// 引入标准库模块
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;

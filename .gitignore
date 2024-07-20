@@ -17,4 +17,4 @@ Cargo.lock
 .DS_Store
 rpc_descriptor.bin
 *.pdf
-
+*.dio

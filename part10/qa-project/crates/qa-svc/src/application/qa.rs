@@ -442,7 +442,7 @@ impl QaService for QAServiceImpl {
         }
 
         let read_count = read_count as u64;
-        println!("question read_count:{}", read_count);
+        println!("question_id:{} read_count:{}", req.id,read_count);
 
         // 返回问题基本信息
         let question = QuestionEntity {

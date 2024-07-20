@@ -1,6 +1,6 @@
 use crate::config::{mysql, xpulsar, xredis, APP_CONFIG};
 use crate::domain::repository::{ReadCountRepo, UserVoteRepo};
-use infras::{job_graceful_shutdown, Logger}; // 日志模块
+use infras::{graceful_shutdown, Logger}; // 日志模块
 
 // 引入实体阅读数对应的模块new_read_count_repo
 use crate::infrastructure::read_count::new_read_count_repo;
@@ -41,11 +41,12 @@ async fn main() -> anyhow::Result<()> {
         redis_pool,
     };
 
-    // 平滑退出stop标识，用于消费者退出标识
+    // 平滑退出stop标识，用于消费者退出标识，
     // 它是一个引用计数bool类型的异步读写锁
     let stop = Arc::new(RwLock::new(false));
     let stop1 = stop.clone();
     let read_count_repo = new_read_count_repo(app_state.redis_pool, app_state.mysql_pool);
+    println!("run read_count job...");
     // 处理问题阅读数
     tokio::spawn(async move {
         // 每隔2s执行一次
@@ -68,11 +69,15 @@ async fn main() -> anyhow::Result<()> {
 
     // 等待退出信号量的到来
     let handler = tokio::spawn(async move {
-        job_graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time), stop).await;
+        graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)).await;
     });
 
     // 这里会阻塞，只有接收到退出信号量，才会执行退出操作
     handler.await.unwrap();
+
+    // 当接收到退出信号量时，就将stop的值设置为true
+    let mut exit = stop.write().await;
+    *exit = true;
     println!("read_count job shutdown success");
     Ok(())
 }

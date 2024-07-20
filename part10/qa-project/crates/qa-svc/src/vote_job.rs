@@ -1,7 +1,7 @@
 use crate::config::{mysql, xpulsar, APP_CONFIG};
 use crate::domain::repository::UserVoteRepo;
 use crate::infrastructure::vote::new_vote_repo;
-use infras::{job_graceful_shutdown, Logger}; // 日志模块
+use infras::{graceful_shutdown, Logger}; // 日志模块
 
 use std::io::Write;
 use std::process;
@@ -56,11 +56,16 @@ async fn main() -> anyhow::Result<()> {
 
     // 等待退出信号量的到来
     let handler = tokio::spawn(async move {
-        job_graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time), stop).await;
+        graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)).await;
     });
 
     // 这里会阻塞，只有接收到退出信号量，才会执行退出操作
     handler.await.unwrap();
+
+    // 当接收到退出信号量时，就将stop的值设置为true
+    let mut exit = stop.write().await;
+    *exit = true;
+
     println!("vote job shutdown success");
     Ok(())
 }

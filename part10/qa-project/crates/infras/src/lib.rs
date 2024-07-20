@@ -14,7 +14,7 @@ pub use aes::{AesCBCCrypto, AesKeySize};
 pub use config::{Config, ConfigTrait};
 pub use logger::Logger;
 pub use metrics::prometheus_init;
-pub use shutdown::{graceful_shutdown, job_graceful_shutdown};
+pub use shutdown::graceful_shutdown;
 pub use xmysql::MysqlService;
 pub use xpulsar::PulsarService;
 pub use xredis::RedisService;
