@@ -5,11 +5,12 @@ edition.workspace = true
 authors.workspace = true
 description.workspace = true
 
-# 定时任务脚本
+# 点赞job定时任务脚本
 [[bin]]
 name = "qa-vote-job"
 path = "src/vote_job.rs"
 
+# 阅读数job
 [[bin]]
 name = "qa-read_count-job"
 path = "src/read_count_job.rs"

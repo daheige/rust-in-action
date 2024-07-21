@@ -743,7 +743,7 @@ impl QaService for QAServiceImpl {
             if !is_voted {
                 let reply = AnswerAgreeReply {
                     state: 0,
-                    reason: "You didn't vote it,bad request".to_string(),
+                    reason: "You didn't cancel vote,bad request".to_string(),
                     agree_count: 0,
                 };
                 return Ok(Response::new(reply));
