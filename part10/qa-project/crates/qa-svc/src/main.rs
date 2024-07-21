@@ -28,7 +28,7 @@ async fn main() -> anyhow::Result<()> {
     Logger::new().init(); // 使用默认方式初始化日志配置
 
     // 自定义方式初始化日志配置
-    // Logger::new().with_custom(true).init();
+    // Logger::new().with_custom().init();
 
     info!("app_debug:{:?}", APP_CONFIG.app_debug);
     info!("current process pid:{}", process::id());

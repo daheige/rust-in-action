@@ -1,4 +1,6 @@
+// 引入了chrono::Local模块，主要用于日志记录时间格式的自定义
 use chrono::Local;
+// 引入Write trait，主要用于env_logger自定义日志写入格式
 use std::io::Write;
 
 pub struct Logger {
@@ -10,8 +12,8 @@ impl Logger {
         Self { is_custom: None }
     }
 
-    pub fn with_custom(mut self, is_custom: bool) -> Self {
-        self.is_custom = Some(is_custom);
+    pub fn with_custom(mut self) -> Self {
+        self.is_custom = Some(true);
         self
     }
 
@@ -40,7 +42,7 @@ impl Logger {
                     level,                                    // 日志级别
                     record.module_path().unwrap_or("unnamed"), // 模块名
                     record.line().unwrap_or(0),               // 行号
-                    &record.args()                            // 格式化参数
+                    &record.args()                            // 日志message body内容
                 )
             })
             .init();
