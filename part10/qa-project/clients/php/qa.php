@@ -25,8 +25,10 @@ function user_login($name,$pwd)
         print_r($status->metadata);
     }
 
-    echo "reply token: ".$reply->getToken();
-    echo PHP_EOL;
+    if ($status->code == 0) {
+         echo "reply token: ".$reply->getToken();
+         echo PHP_EOL;
+    }
 }
 
 $name = !empty($argv[1]) ? $argv[1] : 'daheige';

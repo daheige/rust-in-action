@@ -3,7 +3,7 @@
         'name' => 'grpc/grpc-demo',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'bc09a1188ac7f1173904fc234b058d1758144d59',
+        'reference' => 'c4c8b28502b6f68db9720227e53d23f189259c7a',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'grpc/grpc-demo' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'bc09a1188ac7f1173904fc234b058d1758144d59',
+            'reference' => 'c4c8b28502b6f68db9720227e53d23f189259c7a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
