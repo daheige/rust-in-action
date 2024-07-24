@@ -32,9 +32,6 @@ env_logger = { workspace = true }
 # chrono用于时间处理
 chrono = { workspace = true }
 
-# anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
-anyhow = { workspace = true }
-
 # 项目自定义的crates
 infras = { path = "../infras" }
 pb = { path = "../pb" }
@@ -46,7 +43,6 @@ uuid = { workspace = true, features = ["serde", "v4"] }
 validator = { workspace = true, features = ["derive"] }
 
 async-trait = { workspace = true }
-thiserror = { workspace = true }
 
 # body util
 http-body-util = { workspace = true }

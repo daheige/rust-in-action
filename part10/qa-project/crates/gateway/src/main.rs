@@ -22,7 +22,7 @@ use pb::qa::qa_service_client::QaServiceClient;
 use tokio::net::TcpListener;
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() {
     // 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
     // 日志level 优先级  error > warn > info > debug > trace
     // 启动方式：RUST_LOG=debug cargo run --bin gateway
@@ -54,7 +54,6 @@ async fn main() -> anyhow::Result<()> {
     // start http gateway and metrics service
     let _ = tokio::try_join!(gateway_handler, metrics_handler)
         .expect("failed to start http gateway and metrics service");
-    Ok(())
 }
 
 async fn gateway_server(conf: AppConfig) {
