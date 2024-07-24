@@ -9,9 +9,12 @@ use axum::{
 
 use crate::utils::get_header;
 use http_body_util::BodyExt; // body output
+use log::info;
 use std::ops::Sub;
 use std::time::Instant;
 use uuid::Uuid;
+
+const PRINT_BODY_RESPONSE: bool = true;
 
 /// request access log
 pub async fn access_log(
@@ -32,7 +35,7 @@ pub async fn access_log(
     let start_time = Instant::now();
 
     // println!("request:{:?}", req);
-    println!(
+    info!(
         "exec begin,method:{} uri:{} path:{} query:{:?} ua:{} request_id:{}",
         method, uri, path, query, ua, request_id,
     );
@@ -44,10 +47,7 @@ pub async fn access_log(
     // print request body
     let bytes = buffer_and_print(request_id, "request", body).await?;
 
-    // parts
-    //     .headers
-    //     .insert("x-request-id", request_id.parse().unwrap());
-
+    // add request_id into header["x-request-id"]
     parts
         .headers
         .insert("x-request-id", HeaderValue::from_str(request_id).unwrap());
@@ -60,7 +60,7 @@ pub async fn access_log(
 
     // exec request end
     let end_time = Instant::now();
-    println!(
+    info!(
         "exec end,request_id:{},exec_time:{}ms",
         request_id,
         end_time.sub(start_time).as_millis(),
@@ -73,9 +73,11 @@ pub async fn access_log(
 
     // output response body
     // 是否要输出response body根据实际情况决定
-    let (parts, body) = response.into_parts();
-    let bytes = buffer_and_print(request_id, "response", body).await?;
-    let response = Response::from_parts(parts, Body::from(bytes));
+    if PRINT_BODY_RESPONSE {
+        let (parts, body) = response.into_parts();
+        let bytes = buffer_and_print(request_id, "response", body).await?;
+        response = Response::from_parts(parts, Body::from(bytes));
+    }
 
     Ok(response)
 }
@@ -103,7 +105,7 @@ where
     };
 
     if let Ok(body) = std::str::from_utf8(&bytes) {
-        println!("request_id:{} {} body = {:?}", request_id, prefix, body);
+        info!("request_id:{} {} body = {:?}", request_id, prefix, body);
     }
 
     Ok(bytes)

@@ -27,6 +27,7 @@ where
             .and_then(|value| value.to_str().ok())
             .unwrap_or("");
 
+        // 如果是json格式，将其反序列化处理和验证请求字段是否合法
         if content_type.starts_with("application/json") {
             let Json(payload) = req
                 .extract_with_state(state)
@@ -49,6 +50,7 @@ where
             return Ok(Self(payload));
         }
 
+        // form表单格式
         if content_type.starts_with("application/x-www-form-urlencoded") {
             let Form(payload) = req
                 .extract_with_state(state)
