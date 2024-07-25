@@ -9,8 +9,8 @@ use tonic::Request;
 
 use crate::handlers::custom_validate::validate_required;
 use autometrics::autometrics;
-use pb::qa::{UserLoginRequest, UserLogoutReply, UserLogoutRequest};
-use validator::{Validate, ValidationError};
+use pb::qa::{UserLoginRequest, UserLogoutRequest};
+use validator::Validate;
 
 // basic handler that responds with a static string
 #[autometrics]
