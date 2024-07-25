@@ -24,6 +24,7 @@ serde_json = { workspace = true }
 
 # 配置文件读取以及用于消息序列化和反序列化处理
 serde_yaml = { workspace = true }
+once_cell = { workspace = true }
 
 # 操作日志
 log = {workspace = true}

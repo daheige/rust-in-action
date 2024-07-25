@@ -2,6 +2,7 @@ use super::json_or_form::JsonOrForm;
 use crate::config::AppState;
 use axum::extract::State;
 use axum::{http::StatusCode, response::IntoResponse, Json};
+use log::info;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tonic::Request;
@@ -48,7 +49,7 @@ pub async fn user_login(
         password: payload.password,
     });
     let response = state.grpc_client.clone().user_login(req).await;
-    println!("response:{:?}", response);
+    info!("response:{:?}", response);
     match response {
         Ok(res) => {
             let res = res.into_inner();

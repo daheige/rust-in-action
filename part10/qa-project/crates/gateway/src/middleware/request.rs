@@ -7,14 +7,13 @@ use axum::{
     response::{IntoResponse, Response},
 };
 
+use crate::config::APP_CONFIG;
 use crate::utils::get_header;
 use http_body_util::BodyExt; // body output
 use log::info;
 use std::ops::Sub;
 use std::time::Instant;
 use uuid::Uuid;
-
-const PRINT_BODY_RESPONSE: bool = true;
 
 /// request access log
 pub async fn access_log(
@@ -73,7 +72,7 @@ pub async fn access_log(
 
     // output response body
     // 是否要输出response body根据实际情况决定
-    if PRINT_BODY_RESPONSE {
+    if APP_CONFIG.app_debug {
         let (parts, body) = response.into_parts();
         let bytes = buffer_and_print(request_id, "response", body).await?;
         response = Response::from_parts(parts, Body::from(bytes));
