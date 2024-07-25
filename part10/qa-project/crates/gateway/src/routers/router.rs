@@ -19,6 +19,7 @@ pub fn api_router(state: Arc<AppState>) -> Router {
         .route("/home", get(handlers::qa::root))
         .route("/hello", get(handlers::qa::hello))
         .route("/user/login", post(handlers::qa::user_login))
+        .route("/user/logout", post(handlers::qa::user_logout))
         .with_state(state)
         .fallback(api_not_found);
 

@@ -6,7 +6,7 @@ use axum::{
     Form, Json, RequestExt,
 };
 use serde::de::DeserializeOwned;
-use validator::Validate;
+use validator::{Validate, ValidationError};
 
 // json or form handler
 pub struct JsonOrForm<T>(pub T);

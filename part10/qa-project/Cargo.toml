@@ -75,8 +75,9 @@ md5 = "0.7.0"
 
 #validator
 validator = { version = "0.18.1", features = ["derive"] }
+
+# async trait
 async-trait = "0.1.80"
-thiserror = "1.0.61"
 
 # body util
 http-body-util = "0.1.1"

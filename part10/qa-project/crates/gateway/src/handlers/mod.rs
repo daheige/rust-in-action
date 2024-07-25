@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+pub mod custom_validate;
 pub mod json_or_form;
 pub mod qa;
 
