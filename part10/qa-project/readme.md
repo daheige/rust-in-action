@@ -2,7 +2,8 @@
     综合型项目：QA问答系统
 # 整体架构
 ![](qa-arch.jpg)
-核心模块如下：
+
+# 核心模块
 ![](qa-module.jpg)
 
 # layout分层
