@@ -18,17 +18,17 @@ description = "a highly concurrent question answering system"
 
 [workspace.dependencies]
 # grpc微服务相关组件
-tonic = "0.11.0"
-prost = "0.12.6"
+tonic = "0.12.1"
+prost = "0.13.1"
 tokio = {version = "1.38.0",features = ["full"]}
 
 # tonic-reflection主要用于grpcurl工具查看grpc微服务接口协议定义
 # note: Must be the same as the tonic version
-tonic-reflection = "0.11.0"
+tonic-reflection = "0.12.1"
 
 # tonic-build包用于构建grpc代码
 # note: Must be the same as the tonic version
-tonic-build = "0.11.0"
+tonic-build = "0.12.1"
 
 # 网关使用axum http框架接入
 axum = { version = "0.7.5"}
@@ -67,13 +67,13 @@ r2d2 = "0.8.10"
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
 anyhow = "1.0.86"
 
-#uuid
+# uuid
 uuid = { version = "1.8.0", features = ["serde", "v4"] }
 
-#md5
+# md5
 md5 = "0.7.0"
 
-#validator
+# validator
 validator = { version = "0.18.1", features = ["derive"] }
 
 # async trait
@@ -89,3 +89,6 @@ base64 = "0.22.1"
 
 # autometrics-rs 用于自动prometheus metrics服务可观测性
 autometrics = {version = "1.0.1",features = ["prometheus-exporter"]}
+
+# 用于将grpc服务和http服务运行在一个端口上面
+tower = { version = "0.4.13", features = ["steer"] }

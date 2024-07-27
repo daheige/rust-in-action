@@ -15,6 +15,11 @@ path = "src/vote_job.rs"
 name = "qa-read_count-job"
 path = "src/read_count_job.rs"
 
+# 将 grpc和http 服务运行在一个端口上面
+[[bin]]
+name = "qa-multiplex-svc"
+path = "src/multiplex_service.rs"
+
 [dependencies]
 # grpc相关组件
 tonic = { workspace = true }
@@ -64,6 +69,9 @@ pb = { path = "../pb" }
 autometrics = { workspace = true }
 # metrics run on axum http framework
 axum = { workspace = true }
+
+# run multiplex server
+tower = { workspace = true, features = ["steer"] }
 
 [build-dependencies]
 # note: Must be the same as the tonic version
