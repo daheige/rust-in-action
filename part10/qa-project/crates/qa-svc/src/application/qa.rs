@@ -10,6 +10,7 @@ use crate::infrastructure::persistence::{new_answer_repo, new_question_repo, new
 use crate::infrastructure::read_count::new_read_count_repo;
 use crate::infrastructure::vote::new_vote_repo;
 use autometrics::autometrics;
+use autometrics::objectives::{Objective, ObjectiveLatency, ObjectivePercentile};
 use chrono::{Local, TimeZone};
 use infras::{AesCBCCrypto, AesKeySize};
 use log::info;
@@ -18,6 +19,15 @@ use pb::qa::*;
 use std::collections::HashMap;
 use tonic::{Code, Request, Response, Status};
 use uuid::Uuid;
+
+// Add autometrics Service-Level Objectives (SLOs)
+// https://docs.autometrics.dev/rust/adding-alerts-and-slos
+// Define SLO service level targets for grpc requests, such as success rate, request time.
+const API_SLO: Objective = Objective::new("grpc")
+    // We expect 99.9% of all requests to succeed.
+    .success_rate(ObjectivePercentile::P99_9)
+    // We expect 99% of all latencies to be below 750ms.
+    .latency(ObjectiveLatency::Ms750, ObjectivePercentile::P99);
 
 /// 实现qa.proto 接口服务
 struct QAServiceImpl {
@@ -97,7 +107,9 @@ impl QAServiceImpl {
 #[async_trait::async_trait]
 impl QaService for QAServiceImpl {
     // 实现用户登录，如果用户登录成功，返回登录唯一标识token,否则返回对应的错误信息
-    #[autometrics]
+    #[autometrics(objective = API_SLO)]
+    // 也可以使用下面的方式，简单处理
+    // #[autometrics]
     async fn user_login(
         &self,
         request: Request<UserLoginRequest>,
@@ -214,6 +226,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 注册用户
+    #[autometrics(objective = API_SLO)]
     async fn user_register(
         &self,
         request: Request<UserRegisterRequest>,
@@ -322,6 +335,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 发表问题
+    #[autometrics(objective = API_SLO)]
     async fn add_question(
         &self,
         request: Request<AddQuestionRequest>,

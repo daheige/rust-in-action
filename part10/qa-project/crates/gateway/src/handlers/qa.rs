@@ -9,8 +9,19 @@ use tonic::Request;
 
 use crate::handlers::custom_validate::validate_required;
 use autometrics::autometrics;
+use autometrics::objectives::{Objective, ObjectiveLatency, ObjectivePercentile};
 use pb::qa::{UserLoginRequest, UserLogoutRequest};
 use validator::Validate;
+
+// Add autometrics Service-Level Objectives (SLOs)
+// https://docs.autometrics.dev/rust/adding-alerts-and-slos
+// Define SLO service level targets for api requests, such as success rate, request time.
+// We expect 99.9% of all requests to succeed.
+// We expect 99% of all latencies to be below 1000ms.
+// Autometrics raises an alert whenever any of the SLO objectives fail.
+const API_SLO: Objective = Objective::new("gateway_api")
+    .success_rate(ObjectivePercentile::P99_9)
+    .latency(ObjectiveLatency::Ms1000, ObjectivePercentile::P99);
 
 // basic handler that responds with a static string
 #[autometrics]
@@ -42,7 +53,7 @@ pub struct LoginReply {
 }
 
 // 将请求反序列化到UserLoginRequest，然后调用grpc service
-#[autometrics]
+#[autometrics(objective = API_SLO)]
 pub async fn user_login(
     State(state): State<Arc<AppState>>,
     JsonOrForm(payload): JsonOrForm<LoginRequest>,
@@ -89,6 +100,7 @@ pub struct LogoutReply {
 }
 
 // 用户退出登录
+#[autometrics]
 pub async fn user_logout(
     State(state): State<Arc<AppState>>,
     JsonOrForm(payload): JsonOrForm<LogoutRequest>,

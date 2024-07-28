@@ -6,7 +6,7 @@ use std::net::SocketAddr;
 use std::time::Duration;
 use tokio::net::TcpListener;
 
-// prometheus init
+// prometheus metrics初始化配置
 pub async fn prometheus_init(port: u16) {
     // Set up prometheus metrics exporter
     prometheus_exporter::init();
