@@ -2,7 +2,7 @@ use std::{thread, time};
 
 fn main() {
     let handler1 = thread::spawn(|| {
-        for i in 'a'..'z' {
+        for i in 'a'..='z' {
             thread::sleep(time::Duration::from_millis(100));
             print!("{} ", i);
         }
@@ -10,7 +10,7 @@ fn main() {
         println!("");
     });
     let handler2 = thread::spawn(|| {
-        for i in 1..10 {
+        for i in 1..=9 {
             thread::sleep(time::Duration::from_millis(100));
             print!("{} ", i);
         }
