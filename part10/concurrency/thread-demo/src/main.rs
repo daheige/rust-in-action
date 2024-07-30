@@ -2,9 +2,9 @@ use std::{thread, time};
 
 fn main() {
     let handler1 = thread::spawn(|| {
-        for i in 'a'..='z' {
+        for c in 'a'..='z' {
             thread::sleep(time::Duration::from_millis(100));
-            print!("{} ", i);
+            print!("{} ", c);
         }
 
         println!("");
