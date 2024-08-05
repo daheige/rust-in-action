@@ -1,4 +1,4 @@
-app_debug: true # 是否开启调试模式
+app_debug: false # 是否开启调试模式
 app_port: 50051 # grpc service运行端口
 metrics_port: 2338 # prometheus metrics port
 graceful_wait_time: 3 # 平滑退出等待时间，单位s
@@ -15,9 +15,13 @@ pulsar_conf:
   token: "" # pulsar auth token
 
 redis_conf:
-  dsn: "redis://:@192.168.1.3/0"   # redis dsn信息，用于连接redis
+  dsn: "redis://:@192.168.1.3:6379/0"   # redis dsn信息，用于连接redis
   max_size: 300                       # 最大连接个数，默认为300
   min_idle: 3                         # 最小空闲数，默认为3
   max_lifetime: 1800                  # 过期时间，默认为1800s
   idle_timeout: 300                   # 连接池最大生存期，默认为300s
   connection_timeout: 10              # 连接超时时间，默认为10s
+
+# aes加解密配置
+aes_key: "YiBX0z9WnJjsS5aNXmi0AeT1yTPZZJYa"
+aes_iv: "3ZQEpwP9DbK4h1Z0"

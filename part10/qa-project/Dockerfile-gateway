@@ -19,8 +19,8 @@ FROM debian:bullseye-slim
 
 WORKDIR /app
 
+# 配置文件目录
 ENV QA_CONFIG_DIR=/app/config
-
 VOLUME ${QA_CONFIG_DIR}
 
 # http gateway端口和metrics端口

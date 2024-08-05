@@ -6,7 +6,7 @@ LABEL authors="heige"
 ENV RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 ENV RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 
-# 设置环境变量
+# 设置环境变量LANG
 ENV LANG C.UTF-8
 
 WORKDIR /app
@@ -20,8 +20,8 @@ FROM debian:bullseye-slim
 
 WORKDIR /app
 
+# 配置文件目录
 ENV QA_CONFIG_DIR=/app/config
-
 VOLUME ${QA_CONFIG_DIR}
 
 # grpc服务端口和metrics端口

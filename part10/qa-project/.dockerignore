@@ -11,3 +11,5 @@ scripts/docker-cargo-build.sh
 scripts/docker-rust-dev.sh
 Dockerfile
 Dockerfile-dev
+Dockerfile-gateway
+config/*.yaml
