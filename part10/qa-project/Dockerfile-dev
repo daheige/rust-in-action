@@ -16,6 +16,7 @@ ENV NODEJS_VERSION=20 \
     RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup \
     PATH=$PATH:/go/bin:/usr/local/go/bin
 
+# 设置deb镜像源，这里我使用aliyun的镜像
 RUN echo "deb http://mirrors.aliyun.com/debian bullseye main" > /etc/apt/sources.list &&  \
     echo "deb http://mirrors.aliyun.com/debian-security bullseye-security main" >> /etc/apt/sources.list &&  \
     echo "deb http://mirrors.aliyun.com/debian bullseye-updates main" >> /etc/apt/sources.list &&  \
