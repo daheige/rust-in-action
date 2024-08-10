@@ -1,0 +1,7 @@
+[package]
+name = "tokio-spawn-demo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.38.0", features = ["full"] }

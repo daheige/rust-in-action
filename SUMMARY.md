@@ -4,27 +4,27 @@
 - 内容摘要
 - 作者简介
 - 前言
-- 第1章 rust语言简介
+- 第1章 Rust语言简介
     - 1.1 rust基本介绍
         - 1.1.1 rust是什么
         - 1.1.2 为什么需要rust
         - 1.1.3 rust应用领域
         - 1.1.4 rust未来发展
-    - 1.2 rust初步体验
+    - 1.2 Rust初步体验
         - 1.2.1 rust安装
         - 1.2.2 rust镜像源配置
         - 1.2.3 快速创建一个rust应用
         - 1.2.4 编写单元测试、集成测试和基准测试
-    - 1.3 rust工具链选择
+    - 1.3 Rust工具链选择
         - 1.3.1 rust编辑器选择
         - 1.3.2 cargo工具使用
         - 1.3.3 rustup版本更新
-    - 1.4 rust程序交叉编译
+    - 1.4 Rust程序交叉编译
         - 1.4.1 通过cargo-xwin实现windows静态编译
         - 1.4.2 通过musl工具实现linux交叉编译
         - 1.4.3 通过cross工具实现交叉编译
 
-- 第2章 rust模块化编程实战
+- 第2章 Rust模块化编程实战
     - 2.1 rust中的模块化编程简介
     - 2.2 package包
         - 2.2.1 二进制类型的包
@@ -44,7 +44,7 @@
         - 2.5.3 编写一个终端输出变色的例子
         - 2.5.4 编写一个自定义crate包与发布
 
-- 第3章 rust json实战
+- 第3章 Rust json实战
     - 3.1 json基础简介
         - 3.1.1 json基本数据类型
         - 3.1.2 json序列化与反序列化
@@ -56,7 +56,7 @@
         - 3.4.3 serde_json自定义转换与字段忽略
         - 3.4.4 编写一个json配置文件读写案例
 
-- 第4章 rust web编程实战
+- 第4章 Rust web编程实战
     - 4.1 web编程简介
         - 4.1.1 tcp协议
         - 4.1.2 http协议
@@ -70,7 +70,7 @@
         - 4.4.2 axum库使用
         - 4.4.3 编写一个简单的短链服务
 
-- 第5章 rust 命令行cli实战
+- 第5章 Rust 命令行cli实战
     - 5.1 命令行cli简介
         - 5.1.1 什么是命令行cli
         - 5.1.2 命令行cli使用场景
@@ -82,7 +82,7 @@
         - 5.3.2 使用clap库处理cli参数解析
         - 5.3.3 编写一个mysql表结构转换为rust结构体的工具
 
-- 第6章 rust cron实战
+- 第6章 Rust cron实战
     - 6.1 crontab简介
         - 6.1.1 crontab是什么
         - 6.1.2 crontab使用场景
@@ -95,7 +95,7 @@
         - 6.3.2 rcron与crontab区别
         - 6.3.3 编写一个自动切割日志的cron案例
 
-- 第7章 rust中数据库和缓存实战
+- 第7章 Rust中数据库和缓存实战
     - 7.1 数据库和缓存简介
     - 7.2 mysql
         - 7.2.1 mysql下载和安装
@@ -109,7 +109,7 @@
         - 7.4.2 使用redis-rs库操作redis
         - 7.4.3 编写一个增量同步的阅读数服务
 
-- 第8章 rust中消息队列MQ实战
+- 第8章 Rust中消息队列MQ实战
     - 8.1 消息队列MQ简介
     - 8.2 kafka基础
         - 8.2.1 kafka安装
@@ -122,7 +122,7 @@
         - 8.4.2 使用pulsar client库操作pulsar
         - 8.4.3 编写一个简单的积分系统
 
-- 第9章 rust ffi调用实战
+- 第9章 Rust ffi调用实战
     - 9.1 rust安全性和不安全性
     - 9.2 rust ffi调用简介
         - 9.2.1 ffi调用的安全性与不安全性
@@ -171,7 +171,7 @@
         - 10.8.3 采用rust docker镜像构建与发布
 
 - 附录
-    - A rust edition版本演化
-    - B rust tokio运行时调度机制
-    - C rust vs go生态对比
-    - D rust 参考文献
+    - A Rust edition版本演化
+    - B Rust tokio运行时调度机制
+    - C Rust和Go对比
+    - D Rust 参考文献
