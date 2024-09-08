@@ -1,4 +1,4 @@
--- 创建数据库
+-- 创建积分系统数据库
 create database points_sys charset=utf8mb4;
 
 -- 选择数据库
