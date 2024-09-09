@@ -59,7 +59,7 @@ async fn foo()-> impl IntoResponse{
     };
 
     // Json在axum底层实际类型：pub struct Json<T>(pub T);
-    // 它实现了IntoResponse trait，所以这里可以直接返回
+    // 它实现了IntoResponse trait，所以这里可以直接使用Json(cat)返回结果
     Json(cat)
 }
 
