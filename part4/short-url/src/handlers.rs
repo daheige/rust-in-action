@@ -13,11 +13,11 @@ use tokio::signal; // 用于signal平滑退出
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 
-// empty object,like {}
+// 定义空对象{}数据类型
 #[derive(Deserialize, Serialize, Debug)]
 pub struct EmptyObject {}
 
-// 根据短链接url获取原始的长url
+// short_url函数，根据短链接url获取原始的长url
 // eg:your_domain/43KClC 格式的短链请求
 pub async fn short_url(Path(key): Path<String>, State(state): State<Arc<AppState>>) -> Response {
     println!("request short url:{}", key);
