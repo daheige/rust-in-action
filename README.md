@@ -18,14 +18,15 @@ zhuwei313@hotmail.com
 
 - 第1章 Rust语言简介
 - 第2章 Rust模块化编程实战
-- 第3章 Rust json实战
-- 第4章 Rust web编程实战
-- 第5章 Rust 命令行cli实战
+- 第3章 Rust JSON实战
+- 第4章 Rust Web编程实战
+- 第5章 Rust 命令行CLI实战
 - 第6章 Rust cron实战
 - 第7章 Rust中数据库和缓存实战
 - 第8章 Rust中消息队列MQ实战
 - 第9章 Rust FFI调用实战
-- 第10章 综合应用：构建一个高并发QA问答系统实战
+- 第10章 Rust并发编程与异步编程实战
+- 第11章 构建一个高并发的QA问答系统实战
 
 本书具体内容查看：[目录](SUMMARY.md)
 

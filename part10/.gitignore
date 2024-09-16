@@ -1,4 +1,2 @@
 *.dio
 *.log
-rpc_descriptor.bin
-node_modules

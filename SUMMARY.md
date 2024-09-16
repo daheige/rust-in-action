@@ -44,66 +44,61 @@
         - 2.5.3 编写一个终端输出变色的例子
         - 2.5.4 编写一个自定义crate包与发布
 
-- 第3章 Rust json实战
-    - 3.1 json基础简介
-        - 3.1.1 json基本数据类型
-        - 3.1.2 json序列化与反序列化
+- 第3章 Rust JSON实战
+    - 3.1 JSON基础简介
+        - 3.1.1 JSON基本数据类型
+        - 3.1.2 JSON序列化与反序列化
     - 3.2 serde和serde_json简介
-    - 3.3 serde_json Value类型
-    - 3.4 serde_json序列化与反序列化
-        - 3.4.1 将json字符串解析到数据结构
-        - 3.4.2 将数据结构序列化成json字符串
-        - 3.4.3 serde_json自定义转换与字段忽略
-        - 3.4.4 编写一个json配置文件读写案例
+    - 3.3 serde_json序列化与反序列化
+        - 3.3.1 将JSON字符串解析到数据结构
+        - 3.3.2 将数据结构序列化成JSON字符串
+        - 3.3.3 serde_json自定义转换与字段忽略
+        - 3.3.4 编写一个JSON配置文件读写案例
 
-- 第4章 Rust web编程实战
-    - 4.1 web编程简介
+- 第4章 Rust Web编程实战
+    - 4.1 Web编程简介
         - 4.1.1 TCP协议
         - 4.1.2 HTTP协议
-    - 4.2 Rust中的web应用
-    - 4.3 web server服务
-        - 4.3.1 创建一个简单的单线程web server
-        - 4.3.2 将单线程server重构为多线程server
-        - 4.3.3 web服务平滑退出
-    - 4.4 web编程第三方库操作
-        - 4.4.1 tide库使用
-        - 4.4.2 axum库使用
-        - 4.4.3 编写一个简单的短链服务
+    - 4.2 使用Rust构建Web Server
+        - 4.2.1 创建一个简单的单线程Web Server
+        - 4.2.2 将单线程Server重构为多线程Server
+        - 4.2.3 Web服务平滑退出
+    - 4.3 Rust Web编程第三方库操作
+        - 4.3.1 tide库使用
+        - 4.3.2 axum库使用
+        - 4.3.3 编写一个简单的短链服务
 
-- 第5章 Rust命令行cli实战
-    - 5.1 命令行cli简介
-        - 5.1.1 什么是命令行cli
-        - 5.1.2 命令行cli使用场景
+- 第5章 Rust命令行CLI实战
+    - 5.1 命令行CLI简介
+        - 5.1.1 什么是命令行CLI
+        - 5.1.2 命令行CLI使用场景
     - 5.2 Rust命令行参数解析
-        - 5.2.1 从终端获取cli参数
-        - 5.2.2 cli参数类型转换
-    - 5.3 第三方cli命令行库操作
-        - 5.3.1 使用structOpt库处理cli参数解析
-        - 5.3.2 使用clap库处理cli参数解析
-        - 5.3.3 编写一个mysql表结构转换为Rust结构体的工具
+        - 5.2.1 从终端获取CLI参数
+        - 5.2.2 CLI参数类型转换
+    - 5.3 第三方CLI命令行库操作
+        - 5.3.1 使用structopt库处理CLI参数解析
+        - 5.3.2 使用clap库处理CLI参数解析
+        - 5.3.3 编写一个MySQL表结构转换为Rust结构体的工具
 
 - 第6章 Rust cron实战
     - 6.1 crontab简介
         - 6.1.1 crontab是什么
-        - 6.1.2 crontab使用场景
-        - 6.1.3 crontab基本语法
+        - 6.1.2 crontab基本语法
     - 6.2 使用crontab时需要注意的事项
         - 6.2.1 crontab命令执行路径问题
         - 6.2.2 环境变量设置问题
     - 6.3 Rust中cron操作
         - 6.3.1 第三方库rcron使用
-        - 6.3.2 第三方库rcron与crontab的区别
-        - 6.3.3 编写一个日志文件自动切割的案例
+        - 6.3.2 编写一个日志文件自动切割的案例
 
 - 第7章 Rust中数据库和缓存实战
     - 7.1 数据库和缓存简介
     - 7.2 MySQL
         - 7.2.1 MySQL下载和安装
-        - 7.2.2 MySQL基础使用
+        - 7.2.2 MySQL基本使用
     - 7.3 Redis
         - 7.3.1 Redis下载和安装
-        - 7.3.2 Redis基本数据结构
-        - 7.3.3 Redis基本命令操作
+        - 7.3.2 Redis基本数据类型
     - 7.4 Rust中MySQL和Redis操作
         - 7.4.1 使用sqlx库操作MySQL
         - 7.4.2 使用redis-rs库操作Redis
@@ -111,15 +106,15 @@
 
 - 第8章 Rust中消息队列MQ实战
     - 8.1 消息队列MQ简介
-    - 8.2 kafka基础
-        - 8.2.1 kafka安装
-        - 8.2.2 kafka基本概念
-    - 8.3 pulsar基础
-        - 8.3.1 pulsar安装
-        - 8.3.2 pulsar基本概念
-    - 8.4 Rust中kafka和pulsar操作
-        - 8.4.1 使用kafka client库操作kafka
-        - 8.4.2 使用pulsar client库操作pulsar
+    - 8.2 Kafka基础
+        - 8.2.1 Kafka安装
+        - 8.2.2 Kafka基本概念
+    - 8.3 Pulsar基础
+        - 8.3.1 Pulsar安装
+        - 8.3.2 Pulsar基本概念
+    - 8.4 Rust中Kafka和Pulsar操作
+        - 8.4.1 使用kafka client库操作Kafka
+        - 8.4.2 使用pulsar client库操作Pulsar
         - 8.4.3 编写一个简单的积分系统
 
 - 第9章 Rust FFI调用实战
@@ -127,9 +122,9 @@
     - 9.2 Rust FFI调用简介
         - 9.2.1 FFI调用的安全性与不安全性
         - 9.2.2 FFI调用的注意事项
-    - 9.3 Rust qt绑定
-        - 9.3.1 qt简介
-        - 9.3.2 Rust qt相关绑定库简介
+    - 9.3 Rust Qt绑定
+        - 9.3.1 Qt简介
+        - 9.3.2 Rust Qt相关绑定库简介
         - 9.3.3 使用cxx-qt编写一个桌面应用程序
         - 9.3.4 使用qmetaobject编写一个桌面应用程序
     - 9.4 Rust和其他语言交互
@@ -137,7 +132,7 @@
         - 9.4.2 使用neon库为Nodejs编写原生拓展
         - 9.4.3 使用PyO3库为Python编写拓展
 
-- 第10章 综合应用：构建一个高并发QA问答系统实战
+- 第10章 Rust并发编程与异步编程实战
     - 10.1 并发与并行
     - 10.2 Rust并发编程
         - 10.2.1 使用spawn创建线程
@@ -149,26 +144,27 @@
         - 10.3.2 async/await基础
         - 10.3.3 async中move关键字使用
         - 10.3.4 tokio运行时
-    - 10.4 QA问答系统架构设计
-        - 10.4.1 功能分析
-        - 10.4.2 架构设计
-        - 10.4.3 pb协议定义
-    - 10.5 QA问答系统layout分层
-    - 10.6 QA问答系统技术实现
-        - 10.6.1 使用tonic库编写gRPC微服务接口
-        - 10.6.2 使用serde_yaml读取配置文件
-        - 10.6.3 使用redis计数器实现问题阅读数功能
-        - 10.6.4 使用pulsar实现回答点赞功能
-        - 10.6.5 使用log和env_logger记录日志
-        - 10.6.6 gRPC HTTP网关层
-    - 10.7 QA问答系统的服务可观测性
-        - 10.7.1 metrics接入
-        - 10.7.2 prometheus部署与接入
-        - 10.7.3 grafana部署与接入
-    - 10.8 QA问答系统的部署方式选择
-        - 10.8.1 常用的部署方式简介
-        - 10.8.2 采用supervisor工具部署二进制文件
-        - 10.8.3 采用Rust docker镜像构建与发布
+- 第11章 构建一个高并发的QA问答系统实战
+    - 11.1 QA问答系统架构设计
+        - 11.4.1 功能分析
+        - 11.4.2 架构设计
+        - 11.4.3 pb协议定义
+    - 11.2 QA问答系统layout分层
+    - 11.3 QA问答系统技术实现
+        - 11.3.1 使用tonic库编写gRPC微服务接口
+        - 11.3.2 使用serde_yaml读取配置文件
+        - 11.3.3 使用Redis计数器实现问题阅读数功能
+        - 11.3.4 使用Pulsar实现回答点赞功能
+        - 11.3.5 使用log和env_logger记录日志
+        - 11.3.6 gRPC HTTP网关层
+    - 11.4 QA问答系统的服务可观测性
+        - 11.4.1 metrics接入
+        - 11.4.2 prometheus部署与接入
+        - 11.4.3 grafana部署与接入
+    - 11.5 QA问答系统的部署方式选择
+        - 11.5.1 常见的部署方式简介
+        - 11.5.2 使用supervisor工具部署二进制文件
+        - 11.5.3 使用Rust docker镜像构建与发布
 
 - 附录
     - A Rust edition版本演化

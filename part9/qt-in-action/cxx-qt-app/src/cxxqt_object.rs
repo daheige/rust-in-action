@@ -70,7 +70,7 @@ impl qobject::Hello {
 }
 
 impl qobject::RandObj {
-    // 生成指定返回内的随机数
+    // 生成指定范围内的随机数
     fn gen_number(&self,m:i32,n:i32) -> i32 {
         println!("call gen_number from rust");
         // 这个gen_range方法生成的数字是一个半开区间，也就说[1,101)不包含101，它是1-100之间的数字
