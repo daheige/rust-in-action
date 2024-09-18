@@ -11,22 +11,21 @@ pub mod qobject {
     // 引入c++ cxx_qt_lib 包中的rust QString
     unsafe extern "C++" {
         include!("cxx-qt-lib/qstring.h");
-        /// An alias to the QString type
-        /// 在cxx-qt来说，QString是未知的。
+        /// 对于cxx-qt来说，QString是未知的。
         /// 幸运的是cxx_qt_lib crate已经为我们包装了许多Qt类型
         /// 因此这里直接通过include!宏导入对应的头文件，然后通过type别名的方式设置为QString
         /// 这个QString类型就可以在rust代码中使用
         type QString = cxx_qt_lib::QString;
     }
 
-    // 定义ffi数据类型
+    // 定义FFI调用的数据类型
     // QObject对应的数据类型定义
     unsafe extern "RustQt" {
         // Hello 类型定义
         #[qobject]
         #[qml_element]
         #[qproperty(QString, plain)] // qml文件中的Hello.plain字段类型为QString
-        type Hello = super::HelloRust; // 这个qml文件的中类型名字不能和rust数据类型名字一样
+        type Hello = super::HelloRust; // qml文件的中类型名字不能和rust数据类型名字一样
 
         // RandObj 类型定义
         #[qobject]
@@ -37,14 +36,14 @@ pub mod qobject {
     }
 
     // 定义ffi外部函数
-    unsafe extern "RustQt"{
+    unsafe extern "RustQt" {
         // say_hello函数返回值是字符串类型QString
         #[qinvokable]
         fn say_hello(self: &Hello) -> QString;
 
         // gen_number函数返回值是i32类型，对于i32, cxx-qt库对应的就是32位的数字
         #[qinvokable]
-        fn gen_number(self:&RandObj,m:i32,n:i32) -> i32;
+        fn gen_number(self: &RandObj, m: i32, n: i32) -> i32;
     }
 }
 
@@ -52,13 +51,13 @@ pub mod qobject {
 #[derive(Default)]
 pub struct HelloRust {
     // plain字符串类型，必须要使用cxx-qt-lib/qstring.h中的QString类型
-    plain: QString
+    plain: QString,
 }
 
 #[derive(Default)]
 pub struct RandObjRust {
-    number:i32,
-    number2:i32
+    number: i32,
+    number2: i32,
 }
 
 // 为 Hello 实现say_hello方法
@@ -71,10 +70,10 @@ impl qobject::Hello {
 
 impl qobject::RandObj {
     // 生成指定范围内的随机数
-    fn gen_number(&self,m:i32,n:i32) -> i32 {
+    fn gen_number(&self, m: i32, n: i32) -> i32 {
         println!("call gen_number from rust");
         // 这个gen_range方法生成的数字是一个半开区间，也就说[1,101)不包含101，它是1-100之间的数字
-        let rnd : i32 = rand::thread_rng().gen_range(m..n); // 随机生成一个数字
+        let rnd: i32 = rand::thread_rng().gen_range(m..n); // 随机生成一个数字
         rnd
     }
 }
