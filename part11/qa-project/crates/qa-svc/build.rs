@@ -5,7 +5,6 @@ use std::path::{Path, PathBuf};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 推荐下面的方式生成grpc rust代码
-    // 完成下面的步骤后，在main.rs中添加 mod rust_grpc;
     // 1.读取proto目录下的*.proto
     let proto_dir: PathBuf = "../../proto".into(); // proto文件所在目录
     let mut file_list = Vec::new(); // 存放proto文件名
@@ -17,7 +16,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let out_dir = Path::new("../pb/src"); // 存放grpc rust代码生成的目录
-                                          // let _ = fs::remove_dir_all(out_dir); // 删除原来的pb目录，可以根据实际情况打开注释
+
+    // let _ = fs::remove_dir_all(out_dir); // 删除原来的pb目录，可以根据实际情况打开注释
     let _ = fs::create_dir_all(out_dir); // 创建目录
 
     // grpc reflection 描述信息这是一个二进制文件，主要用于协议描述
