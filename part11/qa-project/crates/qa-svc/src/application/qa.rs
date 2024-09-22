@@ -161,7 +161,7 @@ impl QaService for QAServiceImpl {
                 }
 
                 // 登录成功，生成唯一标识token
-                // token=login_id:openid:expired字符串加密
+                // token格式：login_id:openid:expired字符串加密
                 let login_id = Uuid::new_v4().to_string().replace("-", "");
                 let login_time = Local::now();
                 let expired = login_time.timestamp() + 86400; // token过期时间
@@ -172,8 +172,7 @@ impl QaService for QAServiceImpl {
                     .encrypt(&payload)
                     .expect("failed to encrypt token");
 
-                // 设置登录session
-                // 将openid作为cache key，value是UserSessionEntity
+                // 设置登录session，将openid作为cache key，value是UserSessionEntity
                 let expire_time = Local.timestamp_opt(expired, 0).unwrap();
                 let user_session = UserSessionEntity {
                     uid: user.id,
