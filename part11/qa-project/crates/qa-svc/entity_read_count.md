@@ -399,7 +399,10 @@ grpcurl -d '{"id":1,"username":"daheige"}' -plaintext 127.0.0.1:50051 qa.QAServi
 
 运行效果，如下图所示：
 ![](read_count_job.jpg)
+
 从上图中看出，当我们通过grpcurl请求问题详情时，就会返回当前问题的阅读数。同时，qa-read_count-job脚本会将阅读数增量同步到数据库表questions表中，效果如下图所示：
+
 ![](question_read_count.jpg)
 为了验证qa-read_count-job平滑退出功能点，我们可以同时按住Ctrl+C两个键，然后观察程序退出效果，如下图所示：
+
 ![](read_count_graceful.jpg)
