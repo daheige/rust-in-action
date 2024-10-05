@@ -21,13 +21,13 @@ name = "qa-multiplex-svc"
 path = "src/multiplex_service.rs"
 
 [dependencies]
-# grpc相关组件
+# grpc相关依赖包
 tonic = { workspace = true }
 prost = { workspace = true }
 tokio = { workspace = true }
 # note: Must be the same as the tonic version
 tonic-reflection = { workspace = true }
-async-trait = { workspace = true}
+async-trait = { workspace = true }
 
 # json序列化处理
 serde = { workspace = true }
@@ -52,7 +52,7 @@ futures = { workspace = true }
 pulsar = { workspace = true }
 
 # redis操作库
-redis = { workspace = true, features = ["r2d2","tokio-comp","cluster","cluster-async","json"] }
+redis = { workspace = true, features = ["r2d2", "tokio-comp", "cluster", "cluster-async", "json"] }
 # r2d2用于redis连接池管理
 r2d2 = { workspace = true }
 

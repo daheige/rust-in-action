@@ -9,7 +9,6 @@ mod utils;
 use config::{AppState, APP_CONFIG};
 use infras::{graceful_shutdown, prometheus_init, Logger};
 
-// serde序列化处理
 use log::info;
 use pb::qa::qa_service_client::QaServiceClient;
 use std::net::SocketAddr;
@@ -44,7 +43,7 @@ async fn main() {
             .await
             .expect("failed to connect grpc service");
 
-        // 通过arc引用计数的方式传递state
+        // 通过Arc原子引用的方式传递state
         let app_state = Arc::new(AppState { grpc_client });
 
         let address: SocketAddr = format!("0.0.0.0:{}", APP_CONFIG.app_port).parse().unwrap();
