@@ -35,7 +35,7 @@
         - 2.3.3 使用use绑定模块成员
         - 2.3.4 使用super与self简化模块路径
         - 2.3.5 使用pub use重新导出
-    - 2.4 项目目录层次结构
+    - 2.4 模块层次结构划分
         - 2.4.1 将模块映射到文件
         - 2.4.2 将模块映射到目录
     - 2.5 crate包管理
@@ -169,5 +169,8 @@
 - 附录
     - A Rust edition版本演化
     - B Rust tokio运行时调度机制
-    - C Rust和Go对比
-    - D Rust参考文献
+    - C Docker中Kafka和Pulsar基本操作
+    - D MacOS系统安装Qt工具
+    - E QA问答系统相关内容
+    - F Rust和Go语言对比
+    - G Rust参考文献

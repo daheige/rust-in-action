@@ -21,7 +21,7 @@ pub async fn prometheus_init(port: u16) {
     let listener = TcpListener::bind(address).await.unwrap();
     println!("prometheus at:{}/metrics", address);
 
-    // start http service
+    // Start http service
     axum::serve(listener, router)
         .with_graceful_shutdown(graceful_shutdown(Duration::from_secs(5)))
         .await
