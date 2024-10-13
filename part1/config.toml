@@ -1,0 +1,31 @@
+# 指定镜像
+replace-with = 'tuna'
+
+# crates-io镜像
+[source.crates-io]
+registry = "https://github.com/rust-lang/crates.io-index"
+
+# 清华大学镜像
+[source.tuna]
+registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"
+
+# 中国科学技术大学镜像
+[source.ustc]
+registry = "https://mirrors.ustc.edu.cn/crates.io-index"
+#registry = "git://mirrors.ustc.edu.cn/crates.io-index"
+
+# 上海交通大学镜像
+[source.sjtu]
+registry = "https://mirrors.sjtug.sjtu.edu.cn/git/crates.io-index"
+
+# rustcc社区镜像
+[source.rustcc]
+registry = "git://crates.rustcc.cn/crates.io-index"
+
+# aliyun镜像
+[source.aliyun]
+registry = "https://code.aliyun.com/rustcc/crates.io-index"
+[net]
+git-fetch-with-cli = true
+[http]
+check-revoke = false
