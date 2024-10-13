@@ -7,6 +7,7 @@ pub fn factorial(n:u32)->u32{
     n *factorial(n-1)
 }
 
+// 单元测试
 #[cfg(test)]
 mod tests {
     use super::*;
