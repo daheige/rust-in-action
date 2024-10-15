@@ -20,9 +20,9 @@
         - 1.3.2 cargo工具使用
         - 1.3.3 rustup版本更新
     - 1.4 Rust交叉编译
-        - 1.4.1 在MacOS上实现交叉编译
-        - 1.4.3 在Windows上实现交叉编译
-        - 1.4.4 通过cross实现跨平台交叉编译
+        - 1.4.1 在MacOS上实现Windows和Linux交叉编译
+        - 1.4.2 在Windows上实现Linux和MacOS交叉编译
+        - 1.4.3 通过cross实现跨平台交叉编译
 
 - 第2章 Rust模块化编程实战
     - 2.1 Rust中的模块化编程简介
