@@ -6,5 +6,5 @@ pub use feed::edit;
 pub use feed::show;
 
 pub fn summary() {
-    println!("summary");
+    println!("called summary function");
 }
