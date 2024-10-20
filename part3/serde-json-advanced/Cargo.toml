@@ -1,15 +1,12 @@
 [package]
-name = "serde-custom"
+name = "serde-json-advanced"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-#[[bin]]
-#name = "serde-custom-app"
-#path = "src/app.rs"
 
 [dependencies]
 #用于serde序列化功能
 serde = { version = "1.0.193", features = ["derive"] }
 #用于json序列化处理
 serde_json = "1.0.108"
+#用于将枚举转换为数字类型
+serde_repr = "0.1.19"

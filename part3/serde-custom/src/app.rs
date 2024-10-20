@@ -1,5 +1,5 @@
 // 引入serde库
-use serde::de::{self,MapAccess, SeqAccess, Visitor};
+use serde::de::{self, MapAccess, SeqAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
 
@@ -22,11 +22,11 @@ struct Person {
 }
 
 // 地址信息
-#[derive(Serialize,Debug)]
+#[derive(Serialize, Debug)]
 struct Address {
     city: String,
     street: String,
-    post_code: i32,
+    post_code: String,
 }
 
 // 为结构体Address自定义deserialize方法
@@ -46,8 +46,8 @@ impl<'de> Deserialize<'de> for Address {
 
         impl<'de> Deserialize<'de> for Field {
             fn deserialize<D>(deserializer: D) -> Result<Field, D::Error>
-                where
-                    D: Deserializer<'de>,
+            where
+                D: Deserializer<'de>,
             {
                 struct FieldVisitor;
 
@@ -59,8 +59,8 @@ impl<'de> Deserialize<'de> for Address {
                     }
 
                     fn visit_str<E>(self, value: &str) -> Result<Field, E>
-                        where
-                            E: de::Error,
+                    where
+                        E: de::Error,
                     {
                         match value {
                             "city" => Ok(Field::City),
@@ -84,31 +84,34 @@ impl<'de> Deserialize<'de> for Address {
             }
 
             fn visit_seq<V>(self, mut seq: V) -> Result<Address, V::Error>
-                where
-                    V: SeqAccess<'de>,
+            where
+                V: SeqAccess<'de>,
             {
-                let city = seq.next_element()?
+                let city = seq
+                    .next_element()?
                     .ok_or_else(|| de::Error::invalid_length(0, &self))?;
-                let street = seq.next_element()?
+                let street = seq
+                    .next_element()?
                     .ok_or_else(|| de::Error::invalid_length(1, &self))?;
-                let post_code = seq.next_element()?
+                let post_code = seq
+                    .next_element()?
                     .ok_or_else(|| de::Error::invalid_length(2, &self))?;
-                Ok(Address{
-                    city:city,
-                    street:street,
-                    post_code:post_code,
+                Ok(Address {
+                    city: city,
+                    street: street,
+                    post_code: post_code,
                 })
             }
 
             fn visit_map<V>(self, mut map: V) -> Result<Address, V::Error>
-                where
-                    V: MapAccess<'de>,
+            where
+                V: MapAccess<'de>,
             {
                 let mut city = None;
                 let mut street = None;
                 let mut post_code = None;
                 while let Some(key) = map.next_key()? {
-                    println!("key: {:?}",key);
+                    println!("key: {:?}", key);
                     match key {
                         Field::City => {
                             if city.is_some() {
@@ -134,17 +137,16 @@ impl<'de> Deserialize<'de> for Address {
                 let city = city.ok_or_else(|| de::Error::missing_field("city"))?;
                 let street = street.ok_or_else(|| de::Error::missing_field("street"))?;
                 let post_code = post_code.ok_or_else(|| de::Error::missing_field("street"))?;
-                Ok(Address{
-                    city:city,
-                    street:street,
-                    post_code:post_code,
+                Ok(Address {
+                    city: city,
+                    street: street,
+                    post_code: post_code,
                 })
             }
         }
 
-        const FIELDS: &'static [&'static str] = &["city", "street","post_code"];
+        const FIELDS: &'static [&'static str] = &["city", "street", "post_code"];
         deserializer.deserialize_struct("Address", FIELDS, AddressVisitor)
-
     }
 }
 
@@ -179,13 +181,19 @@ fn main() {
         address: Address {
             city: "shenzhen".to_string(),
             street: "guangming".to_string(),
-            post_code: 518000,
+            post_code: "518000".to_string(),
         },
     };
+
+    // 将Person结构体对象序列化为JSON字符串
     let s = serde_json::to_string(&p).unwrap();
     println!("json encode person encode to str: {}", s);
 
+    // 将JSON字符串序列化为Person结构体对象p
     let p: Person = serde_json::from_str(&s).unwrap();
     println!("json decode person:{:?}", p);
-    println!("person id:{},name:{} hobbies:{:?},city:{}", p.id, p.name, p.hobbies,p.address.city);
+    println!(
+        "person id:{},name:{} hobbies:{:?},city:{}",
+        p.id, p.name, p.hobbies, p.address.city
+    );
 }

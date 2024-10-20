@@ -3,8 +3,8 @@ mod config;
 
 use config::Config;
 use config::ConfigTrait;
-
 use serde::{Deserialize, Serialize};
+
 #[derive(Debug, PartialEq, Serialize, Deserialize, Default)]
 struct AppConfig {
     app_debug: bool,
