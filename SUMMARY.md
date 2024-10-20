@@ -45,14 +45,14 @@
         - 2.5.4 编写一个自定义crate包与发布
 
 - 第3章 Rust JSON实战
-    - 3.1 JSON基础简介
+    - 3.1 JSON基础
         - 3.1.1 JSON基本数据类型
-        - 3.1.2 JSON序列化与反序列化
-    - 3.2 serde和serde_json简介
-    - 3.3 serde_json序列化与反序列化
-        - 3.3.1 将JSON字符串解析到数据结构
-        - 3.3.2 将数据结构序列化成JSON字符串
-        - 3.3.3 serde_json自定义转换与字段忽略
+        - 3.1.2 JSON序列化与反序列化基础
+    - 3.2 serde基本简介
+    - 3.3 Rust中serde_json基本操作
+        - 3.3.1 serde_json实现JSON序列化和反序列化
+        - 3.3.2 serde_json自定义序列化和反序列化
+        - 3.3.3 serde_json其他高级特性
         - 3.3.4 编写一个JSON配置文件读写案例
 
 - 第4章 Rust Web编程实战
