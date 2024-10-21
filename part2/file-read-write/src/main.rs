@@ -14,7 +14,7 @@ fn main() -> aResult<()> {
     Ok(())
 }
 
-// 使用标注库的Result
+// 将内容写入文件中，返回值是标注库的Result
 fn write_file<P: AsRef<Path>>(path: P, content: String) -> Result<String, io::Error> {
     let mut file = fs::OpenOptions::new().write(true).create(true).open(path)?;
     file.write(format!("{}", content).as_bytes())?;
