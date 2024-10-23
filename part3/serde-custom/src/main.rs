@@ -1,4 +1,4 @@
-// 引入serde库
+mod app; // 引入serde库
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 // 实现hobbies序列化处理，返回值是一个Result类型

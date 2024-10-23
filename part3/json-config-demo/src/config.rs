@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize}; // 引入serde库
-use std::io::Write;
 use std::path::Path;
 use std::{fs, io};
 
@@ -12,8 +11,7 @@ fn read_file<P: AsRef<Path>>(path: P) -> Result<String, io::Error> {
 
 // 将内容写入文件中，返回值是标注库的Result
 pub fn write_config<P: AsRef<Path>>(path: P, content: String) -> Result<String, io::Error> {
-    let mut file = fs::OpenOptions::new().write(true).create(true).open(path)?;
-    file.write(format!("{}", content).as_bytes())?;
+    fs::write(path, content)?;
     Ok("write success".to_string())
 }
 
@@ -24,9 +22,10 @@ pub struct AppConfig {
     #[serde(default = "default_app_debug")]
     pub app_debug: bool,
 
-    // #[serde(default）注解设置默认值
-    #[serde(default)]
     pub app_name: String,
+
+    #[serde(default = "default_app_env")]
+    pub app_env: String,
 
     // 调用函数设置默认值
     #[serde(default = "default_app_port")]
@@ -34,6 +33,10 @@ pub struct AppConfig {
 
     #[serde(default)]
     pub token: String,
+}
+
+fn default_app_env() -> String {
+    "development".to_string()
 }
 
 fn default_app_debug() -> bool {
