@@ -37,6 +37,8 @@ fn main() {
 
     // 将数据结构转换为JSON字符串
     let s = serde_json::to_string(&p).unwrap();
+    // 或者使用下面的方式
+    // let s = serde_json::to_string(&p).expect("failed to encode Person to json");
     println!("person encode to str: {}", s);
 
     // 将JSON字符串转换为Person结构体对象
@@ -54,7 +56,18 @@ fn main() {
           }
         }
     "##;
-    let p: Person = serde_json::from_str(&s).unwrap();
-    println!("person:{:?}", p);
-    println!("person id:{},name:{} hobbies:{:?}", p.id, p.name, p.hobbies);
+    // from_str函数返回值是一个Result<T>类型，在这里T是Person结构体
+    let res: serde_json::Result<Person> = serde_json::from_str(&s);
+    match res {
+        Ok(p) => {
+            println!("person:{:?}", p);
+            println!("person id:{},name:{} hobbies:{:?}", p.id, p.name, p.hobbies);
+        }
+        Err(err) => println!("failed to decode s to Person,err:{}", err),
+    }
+
+    // 或者使用下面的方式，直接反序列化为Person结构体对象
+    // let p: Person = serde_json::from_str(&s).expect("failed to decode s to Person");
+    // println!("person:{:?}", p);
+    // println!("person id:{},name:{} hobbies:{:?}", p.id, p.name, p.hobbies);
 }
