@@ -49,10 +49,10 @@
         - 3.1.1 JSON基本数据类型
         - 3.1.2 JSON序列化与反序列化
     - 3.2 serde基本简介
-    - 3.3 Rust中serde_json基本操作
-        - 3.3.1 serde_json基本用法
-        - 3.3.2 serde_json中的json宏基本用法
-        - 3.3.3 serde_json自定义序列化和反序列化
+    - 3.3 serde_json基本操作
+        - 3.3.1 serde_json序列化与反序列化
+        - 3.3.2 serde_json自定义序列化和反序列化
+        - 3.3.3 serde_json中的json宏
         - 3.3.4 serde_json其他高级特性
         - 3.3.5 编写一个JSON配置文件读写案例
 
