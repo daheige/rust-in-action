@@ -237,6 +237,8 @@ impl Engine {
 
     fn get_no_null_fields(&self) -> Vec<String> {
         let v = vec![
+            "i8".to_string(),
+            "i16".to_string(),
             "i32".to_string(),
             "i64".to_string(),
             "f64".to_string(),
