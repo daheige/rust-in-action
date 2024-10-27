@@ -10,16 +10,16 @@ fn main() {
         println!("index:{} arg:{}", index, arg);
     }
 
-    // 这里通过下标获取args每个参数
-    if args.len() >= 3 {
-        let name: String = args[0].parse().unwrap();
-        println!("name: {}", name);
-        let first_num_str: String = args[1].parse().unwrap();
-        println!("first_num_str: {}", first_num_str);
-
-        let second_num_str: String = args[2].parse().unwrap();
-        println!("second_num_str: {}", second_num_str);
-    }
+    // // 这里通过下标获取args每个参数
+    // if args.len() >= 3 {
+    //     let name: String = args[0].parse().unwrap();
+    //     println!("name: {}", name);
+    //     let first_num_str: String = args[1].parse().unwrap();
+    //     println!("first_num_str: {}", first_num_str);
+    //
+    //     let second_num_str: String = args[2].parse().unwrap();
+    //     println!("second_num_str: {}", second_num_str);
+    // }
 
     // 参数转换，使用parse函数实现，在Rust底层调用的是FromStr::from_str关联函数实现类型转换。
     // 只要对目标类型实现了FromStr trait，就可以用parse把字符串转换成目标类型。

@@ -30,7 +30,8 @@ fn main() {
 
     let n: i32 = 11;
     let f: f64 = 11.0;
-    // 比较这两个数字时候，使用as强制转换为f64
+    // 使用as将n强制转换为f64后，
+    // 再比较这两个数字
     if n as f64 == f {
         println!("two number is same");
     }

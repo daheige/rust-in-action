@@ -66,6 +66,7 @@ pub struct Users {
     pub pagination: Pagination,
 }
 
+// 使用#[repr(u8)]属性是告诉Rust编译器使用C语言的内存模型，将枚举转换数字类型
 #[derive(Serialize_repr, Deserialize_repr, PartialEq, Debug)]
 #[repr(u8)]
 pub enum Day {
