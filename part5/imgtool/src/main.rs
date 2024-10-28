@@ -82,19 +82,19 @@ fn main() {
     println!("params:{:#?}", p);
     match p.action {
         0 => {
-            // 压缩图片
+            // 图片压缩
             println!("compress image begin");
             utils::compress_image(p.input_path, p.out_path, p.quality);
             println!("compress image end");
         }
         1 => {
-            // 裁剪图片
+            // 图片裁剪
             println!("crop image begin");
             utils::crop_image(p.input_path, p.out_path, (p.x, p.y), p.width, p.height);
             println!("crop image end");
         }
         2 => {
-            // 图片翻转90度
+            // 图片顺时针旋转
             println!("rotate image begin");
             utils::rotate_image(p.input_path, p.out_path, p.rotate_degrees);
             println!("rotate image end");
