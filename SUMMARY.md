@@ -79,13 +79,14 @@
     - 5.3 第三方CLI命令行库操作
         - 5.3.1 使用structopt库处理CLI参数解析
         - 5.3.2 使用clap库处理CLI参数解析
-        - 5.3.3 编写一个MySQL表结构转换为Rust结构体的工具
+        - 5.3.3 编写一个图片压缩、裁剪和旋转的工具
+        - 5.3.4 编写一个MySQL表结构转换为Rust结构体的工具
 
 - 第6章 Rust cron实战
     - 6.1 crontab简介
         - 6.1.1 crontab是什么
         - 6.1.2 crontab基本语法
-    - 6.2 使用crontab时需要注意的事项
+    - 6.2 crontab注意事项
         - 6.2.1 crontab命令执行路径问题
         - 6.2.2 环境变量设置问题
     - 6.3 Rust中cron操作
