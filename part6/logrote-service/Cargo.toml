@@ -5,6 +5,10 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "systime-output"
+path = "src/systime-output.rs"
+
 [dependencies]
 rcron = "1.2.2"
 chrono = "0.4.34"

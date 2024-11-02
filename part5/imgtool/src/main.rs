@@ -25,7 +25,7 @@ struct Params {
     )]
     out_path: String,
 
-    // 图片压缩、裁剪、翻转三种操作，分别对应0,1,2，默认压缩图片
+    // 图片压缩、裁剪、旋转三种操作，分别对应0,1,2，默认压缩图片
     #[structopt(
         short = "a",
         long,
