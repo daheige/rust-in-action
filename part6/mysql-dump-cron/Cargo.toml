@@ -1,0 +1,12 @@
+[package]
+name = "mysql-dump-cron"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# dotenv用于读取.env配置文件
+dotenv = "0.15.0"
+# tokio用于异步运行时
+tokio = { version = "1.36.0", features = ["full"] }
+chrono = "0.4.38"
+
