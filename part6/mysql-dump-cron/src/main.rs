@@ -9,7 +9,7 @@ fn main() {
     println!("backup mysql database...");
     // 读取.env配置文件
     dotenv().ok();
-    mysql::backup_database();
+    // mysql::backup_database();
 
     // 创建一个rcron job实例
     let mut sched = JobScheduler::new();
