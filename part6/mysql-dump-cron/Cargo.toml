@@ -4,9 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# dotenv用于读取.env配置文件
+# dotenv 用于读取.env配置文件
 dotenv = "0.15.0"
-# tokio用于异步运行时
-tokio = { version = "1.36.0", features = ["full"] }
+# chrono 用于时间相关的操作
 chrono = "0.4.38"
+# anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
+anyhow = "1.0.81"
 
