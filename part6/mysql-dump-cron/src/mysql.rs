@@ -1,6 +1,5 @@
 use chrono::Local;
 use std::fmt::Debug;
-use std::io::Write;
 use std::path::Path;
 use std::process::Command;
 use std::time::{Duration, SystemTime};
@@ -24,10 +23,18 @@ pub fn backup_database() {
     fs::create_dir_all(&backup_dir).expect("failed to create backup dir");
 
     // 清理过期的文件
-    let res = clear_expired_file(&backup_dir, expired_days);
+    let res = clear_expired_files(&backup_dir, expired_days);
     if let Err(err) = res {
         println!("failed to clear expired sql file,error:{}", err);
     }
+
+    // 定义备份文件名称
+    let fmt = "%Y%m%d%H%M%S";
+    let timestamp = Local::now().format(fmt).to_string();
+    let backup_file = format!("{}_{}.sql", &db_name, timestamp);
+    let backup_path = Path::new(&backup_dir).join(&backup_file);
+    // 创建数据库备份文件
+    fs::File::create(&backup_path).expect("failed to create mysql backup file");
 
     // 定义mysqldump命令执行的参数选项
     let mut cmd = Command::new("mysqldump");
@@ -42,12 +49,14 @@ pub fn backup_database() {
         // 但是这个不能保证MyISAM表和MEMORY表的数据一致性。
         .arg("--single-transaction") // 确保数据一致性
         // mysql导出时加 --set-gtid-purged=OFF，导入新数据库时，会触发记录到新数据库的binlog日志。
-        // 如果不加，则新数据库不记录binlog日志。
+        // 如果不加，则导入新数据库不记录binlog日志。
         // 因此，当主从时用了gtid时，用mysqldump备份时就要加--set-gtid-purged=OFF，
         // 否则在主上导入恢复了数据，主没有了binlog日志，同步则不会被同步。
         .arg("--set-gtid-purged=OFF") // 关闭GTID，避免与新版本MySQL不兼容的问题
         .arg(format!("-p{}", db_password))
-        .arg(&db_name);
+        .arg(&db_name)
+        .arg("-r")
+        .arg(&backup_path);
 
     // println!("cmd:{:?}", cmd);
 
@@ -60,20 +69,7 @@ pub fn backup_database() {
         }
         Ok(output) => {
             if output.status.success() {
-                // 定义备份文件名称
-                let fmt = "%Y%m%d%H%M%S";
-                let timestamp = Local::now().format(fmt).to_string();
-                let backup_file = format!("{}_{}.sql", &db_name, timestamp);
-                let backup_path = Path::new(&backup_dir).join(&backup_file);
-
-                // 创建数据库备份文件
-                let mut file =
-                    fs::File::create(&backup_path).expect("failed to create mysql backup file");
-
-                // 将命令执行结果写入到文件中
-                file.write_all(&output.stdout)
-                    .expect("failed to write backup file");
-
+                println!("backup database {} to {:?} success", &db_name, &backup_path);
                 // 这里可以根据实际情况发送邮件或短信通知...
                 mock_send_email(&db_name, &backup_file);
             }
@@ -81,12 +77,13 @@ pub fn backup_database() {
     }
 }
 
+// 模拟邮件发送
 fn mock_send_email(db_name: &str, backup_file: &str) {
-    println!("backup database {} to {} success", db_name, backup_file);
+    println!("backup db:{} to {}", db_name, backup_file);
     // 省略定义发送邮件的业务代码...
 }
 
-fn clear_expired_file<P: AsRef<Path> + Debug>(dir: P, expired_days: u64) -> anyhow::Result<()> {
+fn clear_expired_files<P: AsRef<Path> + Debug>(dir: P, expired_days: u64) -> anyhow::Result<()> {
     // 尝试读取目录中的文件，将过期的文件删除
     let entries = fs::read_dir(dir)?;
     for entry in entries {
@@ -108,7 +105,7 @@ fn clear_expired_file<P: AsRef<Path> + Debug>(dir: P, expired_days: u64) -> anyh
             println!("interval:{:?}", interval);
             if interval > Duration::from_secs(expired_days * 86400) {
                 println!("remove expired file:{:?} begin", path);
-                // 尝试删除文件，捕获并打印错误
+                // 尝试删除文件
                 fs::remove_file(&path)?;
                 println!("remove expired file:{:?} success", path);
             }

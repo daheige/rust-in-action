@@ -8,9 +8,10 @@ use std::time::Duration;
 fn main() {
     println!("backup mysql database...");
     // 读取.env配置文件
-    dotenv().ok();
-    // mysql::backup_database();
+    dotenv().expect("failed to load .env file");
+    mysql::backup_database(); // 演示
 
+    println!("backup mysql database action...");
     // 创建一个rcron job实例
     let mut sched = JobScheduler::new();
     // 每天凌晨1点执行数据库备份操作
