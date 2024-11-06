@@ -8,6 +8,7 @@ edition = "2021"
 name = "web-server-thread"
 path = "src/server.rs"
 
+# 通过线程池的方式处理请求
 [[bin]]
 name = "web-server-multiple"
 path = "src/multi_server.rs"

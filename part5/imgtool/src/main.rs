@@ -43,7 +43,7 @@ struct Params {
     )]
     quality: u8,
 
-    // 图片裁剪的坐标起始位置x,y
+    // 图片裁剪的起始位置(x,y)，单位px
     #[structopt(
         short = "x",
         long,
@@ -60,7 +60,7 @@ struct Params {
     )]
     y: u32,
 
-    // 图片裁剪的宽度和高度
+    // 图片裁剪的宽度和高度，单位px
     #[structopt(short = "w", long, default_value = "100", help = "crop width")]
     width: u32,
 
