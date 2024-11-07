@@ -1,6 +1,7 @@
 use tide::Request;
 use tide::log;
 
+// 指定async_std异步运行时
 #[async_std::main]
 async fn main() -> tide::Result<()>{
     // 启动日志组件
@@ -23,9 +24,8 @@ async fn main() -> tide::Result<()>{
     Ok(())
 }
 
-// 请求参数Request，并返回tide::Result
-// 由于不需要接收请求参数，所以这个Request提取数据为()空元组
+// 该路由处理器函数的请求参数是tide::Request类型，返回结果是tide::Result类型，
+// 由于不需要接收请求参数，所以这个Request提取数据为()空元组。
 async fn hello(_req: Request<()>)->tide::Result{
     Ok("hello,world".into())
 }
-
