@@ -1,3 +1,4 @@
+// 自定义数据类型Number
 #[derive(Debug)]
 struct Number {
     value: i32,
