@@ -1,5 +1,5 @@
-use futures::Future;
 use futures::executor::block_on;
+use futures::Future;
 
 // async fn 中使用async块
 async fn blocks() {
@@ -13,7 +13,7 @@ async fn blocks() {
         println!("{greet}");
     };
 
-    // 运行这2个futures等待它们执行完成，会连续输出两次"hello,world"
+    // 运行这2个futures并等待它们执行完成，程序将输出两次"hello,world"字符串
     let ((), ()) = futures::join!(future_one, future_two);
 }
 

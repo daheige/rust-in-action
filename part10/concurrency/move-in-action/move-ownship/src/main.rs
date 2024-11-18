@@ -8,5 +8,6 @@ fn main() {
     });
 
     // println!("data:{:?}", data);
+    // 调用join方法等待线程执行完毕
     handle.join().unwrap();
 }

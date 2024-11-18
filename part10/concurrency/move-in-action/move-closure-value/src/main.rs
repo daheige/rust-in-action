@@ -2,7 +2,7 @@ fn main() {
     // 声明一个整数类型的向量
     let data = vec![1, 2, 3, 4, 5];
     let handle = std::thread::spawn(move || {
-        // 在闭包中获取data的不可变引用
+        // 在闭包中获取data变量的不可变引用，然后遍历data每个元素
         for i in &data {
             println!("{}", i);
         }

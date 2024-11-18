@@ -88,6 +88,9 @@ async fn handler_read_count() {
     while i < len {
         let id: i64 = records.get(i).unwrap().parse().unwrap(); // 当前文章id
         let increment: i64 = records.get(i + 1).unwrap().parse().unwrap(); // 当前文章增量计数器
+
+        // 当我们使用Redis hscan游标匹配数据时，
+        // 第一个元素是field，第二个元素是field对应的value值。
         i += 2; // 这里i的值第一次迭代时 i = 0，第二次迭代 i = 2,依次类推
         if increment == 0 || id <= 0 {
             continue;

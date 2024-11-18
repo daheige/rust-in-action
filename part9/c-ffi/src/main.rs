@@ -1,6 +1,6 @@
 use std::ffi::c_double; // 64位的浮点数
 
-// c_int 相当于C的signed int (int)类型。
+// 这里的c_int 相当于C的signed int (int)类型，
 // 这个类型几乎总是i32，但在一些系统上可能会有所不同。
 // 从技术上讲，C标准只要求该类型是一个有符号整数，至少是一个short，
 // 在有些系统下将其定义为i16。
