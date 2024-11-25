@@ -18,3 +18,4 @@ Cargo.lock
 rpc_descriptor.bin
 *.pdf
 *.dio
+images/*
