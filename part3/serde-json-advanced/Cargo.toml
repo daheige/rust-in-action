@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 #用于serde序列化功能
-serde = { version = "1.0.193", features = ["derive"] }
+serde = { version = "1.0.215", features = ["derive"] }
 #用于json序列化处理
-serde_json = "1.0.108"
+serde_json = "1.0.133"
 #用于将枚举转换为数字类型
 serde_repr = "0.1.19"
