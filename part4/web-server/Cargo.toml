@@ -14,4 +14,4 @@ name = "web-server-multiple"
 path = "src/multi_server.rs"
 
 [dependencies]
-ctrlc = "3.4.1"
+ctrlc = "3.4.5"

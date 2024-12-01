@@ -90,7 +90,10 @@ fn handler_connection(mut stream: TcpStream) {
         content,
     );
 
-    println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
+    // 如果请求地址非/favicon.ico开头，就输出对应的请求日志
+    if !buffer.starts_with(b"GET /favicon.ico HTTP/1.1\r\n") {
+        println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
+    }
 
     stream.write(response.as_bytes()).unwrap();
     stream.flush().unwrap();
