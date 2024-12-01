@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# 使用相对路径，程序将无法正常运行
+#log_file="./test.log"
+
 # 定义日志文件路径，使用绝对路径
 log_file=$(cd "$(dirname "$0")";pwd)"/test.log"
 

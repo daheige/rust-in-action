@@ -6,7 +6,8 @@ use std::time::Duration;
 
 fn main() {
     let mut sched = JobScheduler::new();
-    sched.add(Job::new("0 */1 * * * *".parse().unwrap(), || {
+    // 每3秒运行一次
+    sched.add(Job::new("*/3 * * * * *".parse().unwrap(), || {
         print_current_time();
     }));
 
