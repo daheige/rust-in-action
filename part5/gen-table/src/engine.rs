@@ -200,6 +200,7 @@ impl Engine {
             fields
         );
 
+        // println!("sql:{}", sql);
         let mut rows = sqlx::query(&sql).bind(table).fetch(pool);
         let mut records = Vec::new();
         while let Some(row) = rows.try_next().await? {

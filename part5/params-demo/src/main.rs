@@ -10,7 +10,7 @@ fn main() {
         println!("index:{} arg:{}", index, arg);
     }
 
-    // // 这里通过下标获取args每个参数
+    // 这里通过下标获取args每个参数
     // if args.len() >= 3 {
     //     let name: String = args[0].parse().unwrap();
     //     println!("name: {}", name);
