@@ -22,7 +22,7 @@ fn main() {
 fn mock_user_request() {
     for _i in 1..=10000 {
         println!("{}", "hello,world");
-        // 时间格式，eg:2023-01-01 09:09:09
+        // 时间格式，eg:2024-12-01 09:09:09
         let fmt = "%Y-%m-%d %H:%M:%S";
         // 获取当前时间
         let now: DateTime<Local> = Local::now();

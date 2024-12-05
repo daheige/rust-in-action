@@ -10,6 +10,6 @@ name = "systime-output"
 path = "src/systime-output.rs"
 
 [dependencies]
-rcron = "1.2.2"
-chrono = "0.4.34"
+rcron = "1.2.3"
+chrono = "0.4.38"
 filesize = "0.2.0"

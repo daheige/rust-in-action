@@ -9,7 +9,7 @@ fn main() {
     println!("backup mysql database...");
     // 读取.env配置文件
     dotenv().expect("failed to load .env file");
-    mysql::backup_database(); // 演示
+    mysql::backup_database(); // 演示操作
 
     println!("backup mysql database action...");
     // 创建一个rcron job实例

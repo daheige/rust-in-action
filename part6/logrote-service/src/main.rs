@@ -10,7 +10,7 @@ use std::time::Duration;
 fn main() {
     //  启动一个rcron JobScheduler 实现日志切割功能
     let mut sched = JobScheduler::new();
-    sched.add(Job::new("0 */1 * * * *".parse().unwrap(), || {
+    sched.add(Job::new("*/30 * * * * *".parse().unwrap(), || {
         let file_path = Path::new("./test.log"); // 日志文件
         rote_file(file_path).unwrap(); // 日志切割操作
     }));

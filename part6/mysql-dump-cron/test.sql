@@ -21,5 +21,5 @@ CREATE TABLE `articles` (
 
 -- 插入数据
 insert into articles (title,content,author,created_at) values
-   ("rust程序设计基本介绍","这是一篇讲解rust基础知识的文章","daheige","2023-03-24 10:00:00"),
-   ("rust项目实战","rust项目实战的文章","daheige","2023-03-24 10:01:01");
+   ("rust程序设计基本介绍","这是一篇讲解rust基础知识的文章","daheige","2024-12-01 23:24:01"),
+   ("rust项目实战","rust项目实战的文章","daheige","2024-12-01 23:24:10");
