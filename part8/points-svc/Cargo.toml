@@ -10,12 +10,12 @@ path = "src/job.rs"
 
 [dependencies]
 # tokio异步运行时
-tokio = { version = "1.38.0", features = ["full"] }
-futures = "0.3.30"
+tokio = { version = "1.42.0", features = ["full"] }
+futures = "0.3.31"
 pulsar = "6.3.0"
 
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
-anyhow = "1.0.86"
+anyhow = "1.0.94"
 
 # chrono用于时间处理
 chrono = "0.4.38"
@@ -23,15 +23,15 @@ sqlx = { version = "0.7.4", features = ["runtime-tokio-rustls", "mysql", "chrono
 
 # 配置文件读取以及用于消息序列化和反序列化处理
 serde_yaml = "0.9.33"
-once_cell = "1.19.0"
+once_cell = "1.20.2"
 
 # serde序列化处理
-serde = { version = "1.0.203", features = ["derive"] }
-serde_json = "1.0.117"
+serde = { version = "1.0.215", features = ["derive"] }
+serde_json = "1.0.133"
 
 # axum http框架
-axum = "0.7.5"
+axum = "0.7.9"
 
 # 操作日志
-log = "0.4.21"
-env_logger = "0.11.3"
+log = "0.4.22"
+env_logger = "0.11.5"

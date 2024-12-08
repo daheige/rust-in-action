@@ -33,7 +33,7 @@ async fn main() -> anyhow::Result<()> {
         .await
         .expect("pulsar client init failed");
 
-    // 通过arc引用计数的方式传递state
+    // 通过Arc原子引用计数的方式传递state
     let app_state = Arc::new(config::AppState {
         // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
         mysql_pool,
@@ -41,20 +41,21 @@ async fn main() -> anyhow::Result<()> {
         pulsar_client,
     });
 
-    // Create axum router
+    // 创建axum router
     let router = routers::api_router(app_state);
 
-    // Create a `TcpListener` using tokio.
+    // 通过tokio模块提供的TcpListener::bind函数创建listener对象
     let listener = TcpListener::bind(address).await?.into();
 
-    // Run the server with graceful shutdown
+    // 启动HTTP服务
     axum::serve(listener, router)
         .with_graceful_shutdown(graceful_shutdown())
         .await?;
     Ok(())
 }
 
-// 平滑退出信号量处理
+// 平滑退出函数
+// 当接收信号量后，服务将平滑退出
 async fn graceful_shutdown() {
     let ctrl_c = async {
         signal::ctrl_c()

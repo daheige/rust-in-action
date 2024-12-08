@@ -48,12 +48,13 @@ async fn main() -> Result<(), PulsarError> {
         };
         info!("sent msg:{:?}", msg);
         // 发送消息
-        producer.send(msg).await?;
+        producer.send_non_blocking(msg).await?;
 
         counter += 1;
         info!("publish message count:{}", counter);
         tokio::time::sleep(std::time::Duration::from_millis(10)).await;
-        if counter >= 10 {
+        if counter >= 5 {
+            // 这里仅发送5条消息
             break;
         }
     }

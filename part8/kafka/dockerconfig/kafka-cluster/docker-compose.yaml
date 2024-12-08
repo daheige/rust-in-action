@@ -21,8 +21,8 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: kafka1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181/kafka
       KAFKA_LISTENERS: PLAINTEXT://:9093
-      # 请修改为自己本机IP地址
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.31.136:9093
+      # 这里需要修改为自己本机IP地址
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.10.100:9093
       KAFKA_BROKER_ID: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

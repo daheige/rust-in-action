@@ -20,8 +20,8 @@ fn main() {
     println!("publish message begin");
     let mut i = 0;
     // 发送消息到kafka topic中
-    // 这里发送10个消息到my-topic中
-    while i < 10 {
+    // 这里发送5个消息到my-topic中
+    while i < 5 {
         info!("current index:{}", i);
         let msg = format!("hello world: {}", i);
         info!("current msg:{}", msg);

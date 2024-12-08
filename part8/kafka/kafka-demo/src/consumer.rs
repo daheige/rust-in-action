@@ -4,6 +4,7 @@ use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
 use kafka::error::Error as KafkaError;
 
 use log::{error, info};
+// use std::env;
 use std::thread;
 use std::time::Duration;
 // 命令终端运行方式：RUST_LOG=debug cargo run --bin kafka-demo-consumer

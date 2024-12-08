@@ -35,7 +35,7 @@ async fn main() -> Result<(), PulsarError> {
 
     info!("consumer has run...");
     let mut counter: usize = 0;
-    // 接收消息并消费
+    // 实时监听并消费topic中的消息
     while let Some(msg) = consumer.try_next().await? {
         // println!("metadata:{:?}", msg.message_id());
         // println!("id:{:?}", msg.message_id());

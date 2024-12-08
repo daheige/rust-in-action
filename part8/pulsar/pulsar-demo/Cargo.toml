@@ -9,12 +9,14 @@ path = "src/consumer.rs"
 
 [dependencies]
 # pulsar操作依赖的库
-tokio = { version = "1.37.0", features = ["full"] }
-futures = "0.3.30"
-pulsar = "6.1.0"
+tokio = { version = "1.42.0", features = ["full"] }
+futures = "0.3.31"
+pulsar = "6.3.0"
+
 # 用于消息序列化和反序列化处理
-serde = { version = "1.0.197", features = ["derive"] }
-serde_json = "1.0.115"
+serde = { version = "1.0.215", features = ["derive"] }
+serde_json = "1.0.133"
+
 # 操作日志库
-log = "0.4.21"
-env_logger = "0.11.3"
+log = "0.4.22"
+env_logger = "0.11.5"
