@@ -7,10 +7,10 @@ edition = "2021"
 
 [dependencies]
 # redis操作库
-redis = { version ="0.25.2",features = ["r2d2","tokio-comp","cluster","cluster-async","json"]}
+redis = { version = "0.27.6", features = ["r2d2", "tokio-comp", "cluster", "cluster-async", "json"] }
 # r2d2用于redis连接池管理
 r2d2 = "0.8.10"
 # tokio异步运行时
-tokio = { version = "1.36.0", features = ["full"] }
+tokio = { version = "1.42.0", features = ["full"] }
 # anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
-anyhow = "1.0.81"
+anyhow = "1.0.94"

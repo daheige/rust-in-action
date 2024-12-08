@@ -12,7 +12,7 @@ use xredis::RedisService;
 async fn main() -> anyhow::Result<()> {
     // 单机版redis或者vip ip形式的redis，创建redis连接连接池
     // dsn格式：redis://:[password]@[host]:[port]/[database]
-    // 比如说：redis://:@127.0.0.1:6379/0
+    // 例如：redis://:@127.0.0.1:6379/0
     let dsn = "redis://:@127.0.0.1:6379/0";
     let pool = RedisService::builder()
         .with_dsn(dsn)

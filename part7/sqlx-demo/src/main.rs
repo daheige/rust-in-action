@@ -46,7 +46,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("zhangsan") // 通过bind方法实现参数绑定
         .bind(33)
         .bind("abc")
-        .bind(NaiveDate::from_ymd_opt(2022, 04, 13))
+        .bind(NaiveDate::from_ymd_opt(2024, 12, 08))
         .execute(&pool) // 异步执行sql
         .await?;
     let id = affect_rows.last_insert_id(); // 获取插入的自增id
@@ -57,7 +57,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("xiaoming")
         .bind(23)
         .bind("efg")
-        .bind(NaiveDate::from_ymd_opt(2024, 02, 13))
+        .bind(NaiveDate::from_ymd_opt(2024, 12, 08))
         .execute(&pool)
         .await?;
     let id = affect_rows.last_insert_id();
@@ -151,7 +151,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("lisi")
         .bind(32)
         .bind("abc")
-        .bind(NaiveDate::from_ymd_opt(2022, 04, 13))
+        .bind(NaiveDate::from_ymd_opt(2024, 12, 08))
         // In 0.7, `Transaction` can no longer implement `Executor` directly,
         // so it must be dereferenced to the internal connection type.
         // 这里需要对tx进行解引用并获取内部DB的可变引用connection
