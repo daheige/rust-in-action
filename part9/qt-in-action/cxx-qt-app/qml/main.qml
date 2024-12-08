@@ -15,7 +15,7 @@ Window {
     visible: true
     height: 480
     width: 640
-    color: "#e4af79"
+    color: "#ffffff"
 
     Hello {
         // id表示每个对象元素的唯一标识
@@ -59,7 +59,7 @@ Window {
             onClicked: {
                 // qt qml文件支持js语法，也就是说支持js es5/es6语法
                 let rnd = rand_obj.genNumber(1, 101);
-                console.log("gen js random number: ", rnd);
+                console.log("gen random number: ", rnd);
                 rand_obj.number = rnd;
             }
         }

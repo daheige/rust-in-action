@@ -8,9 +8,9 @@ edition = "2021"
 [dependencies]
 # 引入qmetaobject相关的包
 qmetaobject = { version = "0.2.10", features = ["log"] }
-qttypes = { version = "0.2.11", features = ["qtquick"] }
+qttypes = { version = "0.2.12", features = ["qtquick"] }
 cstr = "0.2.12"
-cpp = "0.5.9"
+cpp = "0.5.10"
 # 引入md5加密的包
 md5 = "0.7.0"
 

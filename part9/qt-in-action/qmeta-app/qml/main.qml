@@ -12,7 +12,7 @@ Window {
     title: "Hello App"
     height: 480
     width: 640
-    color: "#e4af79"
+    color: "#ffffff"
 
     // 自定义的Hello类型
     Hello {
