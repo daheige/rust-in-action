@@ -8,10 +8,10 @@ edition = "2021"
 exclude = ["index.node"]
 
 [lib]
+# 这里设置为cdylib表示编译成一个和C语言二进制接口ABI兼容的动态链接库。
 crate-type = ["cdylib"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# 使用napi-6版本的特性
 neon = { version = "1.0.0", features = ["napi-6"] }
