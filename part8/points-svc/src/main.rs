@@ -35,9 +35,10 @@ async fn main() -> anyhow::Result<()> {
 
     // 通过Arc原子引用计数的方式传递state
     let app_state = Arc::new(config::AppState {
-        // 这里等价于mysql_pool: mysql_pool,当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
+        // 这里等价于 mysql_pool: mysql_pool,
+        // 当变量名和字段同名时，可以直接用变量名字简写模式，这是rust的语法糖
         mysql_pool,
-        // 这里等价于pulsar_client: pulsar_client
+        // 这里等价于 pulsar_client: pulsar_client
         pulsar_client,
     });
 

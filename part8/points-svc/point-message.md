@@ -1,5 +1,7 @@
 # 积分消息体message序列化和反序列化
+
 积分消息体的序列化和反序列化操作放在points_message模块中，其核心代码如下所示：
+
 ```rust
 // part8/points-svc/src/entity/points_message.rs文件
 // ...省略其他代码...
@@ -36,7 +38,7 @@ impl DeserializeMessage for PointsMessage {
 }
 ```
 
-在这个points_message.rs模块中，首先定义了pulsar积分操作的PointsMessage结构体。
-然后，为PointsMessage 结构体实现了SerializeMessage 和DeserializeMessage trait，
-这两个trait需要分别实现serialize_message和deserialize_message方法。
-也就是说，通过这两个方法可以实现Pulsar消息队列的Message encode/decode操作。
+- 在这个points_message.rs模块中，首先定义了pulsar积分操作的PointsMessage结构体。
+- 然后，为PointsMessage 结构体实现了SerializeMessage 和DeserializeMessage trait。
+- 这两个trait需要分别实现serialize_message和deserialize_message方法。
+- 也就是说，通过这两个方法可以实现Pulsar消息队列的Message encode/decode操作。
