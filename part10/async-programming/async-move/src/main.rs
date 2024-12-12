@@ -28,8 +28,7 @@ fn move_block() -> impl Future<Output = ()> {
 }
 
 fn main() {
-    // 运行async fn函数
-    block_on(blocks());
+    block_on(blocks()); // 通过block_on执行器运行async异步函数
 
     // move_block函数会返回一个Future，然后使用block_on执行future直到完成
     let future = move_block();
