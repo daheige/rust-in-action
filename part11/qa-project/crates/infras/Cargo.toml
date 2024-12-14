@@ -13,13 +13,13 @@ serde = { workspace = true, features = ["derive"] }
 serde_yaml = { workspace = true }
 
 # sqlx用于数据库操作
-sqlx = { workspace = true, features = ["runtime-tokio-rustls", "mysql", "chrono", "time"] }
+sqlx = { workspace = true, features = ["runtime-tokio", "tls-native-tls", "mysql", "chrono", "time"] }
 
 # pulsar消息队列相关crate
 pulsar = { workspace = true }
 
 # redis操作库
-redis = { workspace = true, features = ["r2d2","tokio-comp","cluster","cluster-async","json"] }
+redis = { workspace = true, features = ["r2d2", "tokio-comp", "cluster", "cluster-async", "json"] }
 # r2d2用于redis连接池管理
 r2d2 = { workspace = true }
 

@@ -62,7 +62,7 @@ sudo mkdir /usr/local/protobuf
 # are automatically generated.
 ```
 
-此时生成了 .configure 文件，可以开始编译了
+此时生成了 .configure 文件，接下来就可以开始编译了
 
 ```shell
 sudo ./configure --prefix=/usr/local/protobuf
