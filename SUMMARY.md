@@ -167,9 +167,8 @@
         - 11.4.2 prometheus部署与接入
         - 11.4.3 grafana部署与接入
     - 11.5 QA问答系统的部署方式选择
-        - 11.5.1 常见的部署方式简介
-        - 11.5.2 使用supervisor工具部署二进制文件
-        - 11.5.3 使用Rust docker镜像构建与发布
+        - 11.5.1 使用supervisor工具部署二进制文件
+        - 11.5.2 使用Rust docker镜像构建与发布
 
 - 附录
     - A Rust edition版本演化
