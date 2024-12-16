@@ -189,6 +189,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 退出登录操作，清除user session
+    #[autometrics(objective = API_SLO)]
     async fn user_logout(
         &self,
         request: Request<UserLogoutRequest>,
@@ -274,6 +275,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 验证登录的token是否有效
+    #[autometrics(objective = API_SLO)]
     async fn verify_token(
         &self,
         request: Request<VerifyTokenRequest>,
@@ -360,6 +362,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 删除问题
+    #[autometrics(objective = API_SLO)]
     async fn delete_question(
         &self,
         request: Request<DeleteQuestionRequest>,
@@ -379,6 +382,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 更新问题
+    #[autometrics(objective = API_SLO)]
     async fn update_question(
         &self,
         request: Request<UpdateQuestionRequest>,
@@ -408,6 +412,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 查看问题详情
+    #[autometrics(objective = API_SLO)]
     async fn question_detail(
         &self,
         request: Request<QuestionDetailRequest>,
@@ -473,6 +478,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 最新问题列表
+    #[autometrics(objective = API_SLO)]
     async fn latest_questions(
         &self,
         request: Request<LatestQuestionsRequest>,
@@ -526,6 +532,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 答案列表
+    #[autometrics(objective = API_SLO)]
     async fn answer_list(
         &self,
         request: Request<AnswerListRequest>,
@@ -595,6 +602,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 添加答案
+    #[autometrics(objective = API_SLO)]
     async fn add_answer(
         &self,
         request: Request<AddAnswerRequest>,
@@ -634,6 +642,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 删除答案
+    #[autometrics(objective = API_SLO)]
     async fn delete_answer(
         &self,
         request: Request<DeleteAnswerRequest>,
@@ -653,6 +662,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 更新答案
+    #[autometrics(objective = API_SLO)]
     async fn update_answer(
         &self,
         request: Request<UpdateAnswerRequest>,
@@ -675,6 +685,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 回答详情
+    #[autometrics(objective = API_SLO)]
     async fn answer_detail(
         &self,
         request: Request<AnswerDetailRequest>,
@@ -723,6 +734,7 @@ impl QaService for QAServiceImpl {
     }
 
     // 回答点赞
+    #[autometrics(objective = API_SLO)]
     async fn answer_agree(
         &self,
         request: Request<AnswerAgreeRequest>,

@@ -299,6 +299,11 @@ service QAService {
 ```
 
 4. 查看请求qa.UserLoginRequest请求参数定义
+   先通过如下grpcurl命令创建一个用户：
+
+```shell
+grpcurl -d '{"username":"daheige","password":"123456"}' -plaintext 127.0.0.1:50051 qa.QAService.UserRegister
+```
 
 ```shell
 grpcurl -plaintext 127.0.0.1:50051 describe qa.UserLoginRequest

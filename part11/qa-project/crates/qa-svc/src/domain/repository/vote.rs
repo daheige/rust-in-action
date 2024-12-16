@@ -28,6 +28,6 @@ pub trait UserVoteRepo: Send + Sync + 'static {
     // 发送用户点赞消息
     async fn publish(&self, msg: VoteMessage) -> anyhow::Result<bool>;
 
-    // 根据实体类型，消费用户点赞的消息，实现用户点赞和取消点赞数据持久化存储
+    // 根据实体类型异步消费用户点赞消息，实现点赞数增量更新和记录点赞明细
     async fn consumer(&self, target_type: &str, exit: Arc<RwLock<bool>>) -> anyhow::Result<()>;
 }
