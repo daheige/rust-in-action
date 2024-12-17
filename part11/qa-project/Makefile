@@ -2,8 +2,8 @@
 DEV_IMAGE_NAME := qa-project-dev
 VERSION := v1.0
 
-# qa-project grpc配置
-RPC_IMAGE_NAME := qa-project-rpc
+# qa-project grpc镜像名字配置
+RPC_IMAGE_NAME := qa-project-qa-rpc
 RPC_SERVICE := qa-svc
 
 # qa-project gateway配置
