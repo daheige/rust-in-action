@@ -169,7 +169,7 @@
     - 11.5 QA问答系统的部署方式选择
         - 11.5.1 使用supervisor工具部署二进制文件
         - 11.5.2 使用Rust docker镜像构建与发布
-
+- 参考文献
 - 附录
     - A Rust edition版本演化
     - B Rust tokio运行时调度机制
@@ -177,4 +177,3 @@
     - D MacOS系统安装Qt工具
     - E QA问答系统相关内容
     - F Rust和Go语言对比
-    - G Rust参考文献
