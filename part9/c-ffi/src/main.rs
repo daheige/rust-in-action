@@ -13,6 +13,7 @@ extern "C" {
     // 当然也可以使用下面的方式因为c_int对应的数字是32位的
     // fn abs(num: i32) -> i32;
 
+    // 求一个数字的平方根
     fn sqrt(num: c_double) -> c_double;
 }
 

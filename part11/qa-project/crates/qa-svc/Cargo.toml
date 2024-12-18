@@ -21,7 +21,7 @@ name = "qa-multiplex-svc"
 path = "src/multiplex_service.rs"
 
 [dependencies]
-# grpc相关依赖包
+# gRPC微服务所需要的相关组件，直接继承workspace中指定的版本
 tonic = { workspace = true }
 prost = { workspace = true }
 tokio = { workspace = true }

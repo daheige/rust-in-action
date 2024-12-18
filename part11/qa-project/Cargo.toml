@@ -17,7 +17,7 @@ authors = ["daheige"]
 description = "a highly concurrent question answering system"
 
 [workspace.dependencies]
-# grpc微服务相关组件
+# gRPC微服务所需要的相关组件
 tonic = "0.12.3"
 prost = "0.13.4"
 tokio = { version = "1.42.0", features = ["full"] }
