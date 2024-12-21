@@ -19,9 +19,8 @@ fn main() {
 
     handler.join().unwrap(); // 等待子线程执行完毕
 
-    // 在主线程中接收消息，这里由于receiver实现了Iterator，
-    // 因此这里可以使用迭代器的方式
-    // 接收所有可用的消息，直到channel被关闭。
+    // 在主线程中接收消息，由于receiver实现了Iterator trait，
+    // 因此可以使用迭代器的方式接收所有可用的消息，直到channel被关闭。
     // 这种方式简化了接收端的代码，特别是当需要处理所有消息，
     // 而不必关心接收的具体时机时。
     for received in receiver {

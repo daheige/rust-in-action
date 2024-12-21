@@ -40,7 +40,7 @@ async fn main() {
 
     // 通过rcron库执行
     let mut sched = JobScheduler::new();
-    sched.add(Job::new("1/10 * * * * *".parse().unwrap(), || {
+    sched.add(Job::new("*/10 * * * * *".parse().unwrap(), || {
         println!("exec task every 10 seconds!");
         // 通过tokio异步执行
         tokio::spawn(async { handler_read_count().await });

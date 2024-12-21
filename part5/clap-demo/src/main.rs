@@ -16,8 +16,11 @@ struct ParamsOpt {
 }
 
 fn main() {
+    // 在ParamsOpt上面调用parse函数实现CLI命令行参数获取和参数解析
     let opt = ParamsOpt::parse();
     println!("{:#?}", opt);
+
+    // 输出opt结构体字段
     println!(
         "name:{} first_num:{} second_num:{}",
         opt.name, opt.first_num, opt.second_num

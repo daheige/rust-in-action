@@ -64,7 +64,7 @@ async fn main() -> Result<(), sqlx::Error> {
     println!("current insert user id = {}", id);
 
     // ====查询操作====
-    // 2、使用fetch执行查询并将生成的结果作为流BoxStream返回
+    // 2、使用fetch执行查询并将生成的结果作为BoxStream流返回
     let sql = "select * from users where id >= ?";
     let mut stream = sqlx::query(sql).bind(1).fetch(&pool);
     // 通过while let模式匹配和try_next从流中迭代数据方法遍历数据

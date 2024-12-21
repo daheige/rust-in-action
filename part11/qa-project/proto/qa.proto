@@ -9,7 +9,7 @@ package qa; // 默认的package为qa
 option php_namespace = "App\\Grpc\\Qa";
 option php_metadata_namespace = "App\\Grpc\\GPBMetadata";
 
-// qa服务接口定义
+// QA微服务接口定义
 service QAService {
   // 用户登录
   rpc UserLogin(UserLoginRequest) returns (UserLoginReply);
@@ -104,9 +104,9 @@ message VerifyTokenReply {
 
 // 发表问题
 message AddQuestionRequest {
-   string title = 1;
-   string content = 2;
-   string created_by = 3; // 创建者
+  string title = 1;
+  string content = 2;
+  string created_by = 3; // 创建者
 }
 
 // 发表问题返回结果
@@ -143,14 +143,14 @@ message AnswerEntity {
   uint64 id = 1; // 回答id
   uint64 question_id = 2; // 问题id
   string content = 3; // 回答内容
-  string created_by= 4; // 回答者
+  string created_by = 4; // 回答者
   uint64 agree_count = 5; // 点赞数，添加时默认为0
   bool has_agreed = 6; // 当前用户是否点赞
 }
 
 // 添加答案
 message AddAnswerRequest {
-    AnswerEntity answer = 1;
+  AnswerEntity answer = 1;
 }
 
 // 添加回答返回结果
@@ -207,7 +207,7 @@ message QuestionDetailRequest {
 
 // 问题详情，返回结果
 message QuestionDetailReply {
-    QuestionEntity question = 1;
+  QuestionEntity question = 1;
 }
 
 // 问题实体

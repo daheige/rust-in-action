@@ -13,8 +13,9 @@ async fn blocks() {
         println!("{greet}");
     };
 
-    // 运行这2个futures并等待它们执行完成，程序将输出两次"hello,world"字符串
-    let ((), ()) = futures::join!(future_one, future_two);
+    // 运行这2个Future并等待它们执行完成，
+    // 程序将输出两次"hello,world"字符串
+    futures::join!(future_one, future_two);
 }
 
 // async move块
