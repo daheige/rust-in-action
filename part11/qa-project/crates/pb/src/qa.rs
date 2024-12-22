@@ -375,7 +375,7 @@ pub mod qa_service_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// qa服务接口定义
+    /// QA微服务接口定义
     #[derive(Debug, Clone)]
     pub struct QaServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -924,7 +924,7 @@ pub mod qa_service_server {
             tonic::Status,
         >;
     }
-    /// qa服务接口定义
+    /// QA微服务接口定义
     #[derive(Debug)]
     pub struct QaServiceServer<T> {
         inner: Arc<T>,
