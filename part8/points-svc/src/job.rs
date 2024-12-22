@@ -100,7 +100,7 @@ async fn consumer_message(exit: Arc<RwLock<bool>>) -> anyhow::Result<()> {
             }
         };
 
-        // 消费消息逻辑,这里需要处理用户积分明细落地到数据库DB中，并更新用户的积分总数
+        // 消费消息，这里需要将用户积分明细落地到数据库DB中，并更新用户的积分总数。
         println!("got message data:{:?}", data);
         let openid = data.openid.clone();
         let reply = points_handler(data, &app_state.mysql_pool).await;
