@@ -6,7 +6,7 @@
 - rust edition：基于rust edition = "2021"
 - rust版本要求：需要安装rust v1.82.0 以上版本
 - 操作系统：建议使用linux系统（例如：ubuntu24.04或centos7.9+版本）或macOS系统。
-- 如果使用的是windows系统，建议使用WSL方式安装ubuntu系统。
+- 如果使用的是windows系统，建议使用WSL方式安装Linux ubuntu 系统或者centos stream系统。
 
 # rust安装
 - 参考官方网站：https://www.rust-lang.org/zh-CN/tools/install
