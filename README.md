@@ -9,8 +9,8 @@
 - 如果使用的是windows系统，建议使用WSL方式安装ubuntu系统。
 
 # rust安装
-参考官方网站：https://www.rust-lang.org/zh-CN/tools/install
-当然，你也可以参考：https://github.com/daheige/rust-bible/blob/main/README.md#rust-install
+- 参考官方网站：https://www.rust-lang.org/zh-CN/tools/install
+- 当然，你也可以参考：https://github.com/daheige/rust-bible/blob/main/README.md#rust-install
 
 # Author
 
