@@ -8,7 +8,7 @@
 - 操作系统：建议使用linux系统（例如：ubuntu24.04或centos7.9+版本）或macOS系统。
 - 如果使用的是windows系统，建议使用WSL方式安装Linux ubuntu 系统或者centos stream系统。
 
-# rust安装
+# rust install
 - 参考官方网站：https://www.rust-lang.org/zh-CN/tools/install
 - 当然，你也可以参考：https://github.com/daheige/rust-bible/blob/main/README.md#rust-install
 
