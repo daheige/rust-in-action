@@ -2,6 +2,16 @@
 
 书名：《Rust实战项目开发》
 
+运行本书中的实战约束：
+- rust edition：基于rust edition = "2021"
+- rust版本要求：需要安装rust v1.82.0 以上版本
+- 操作系统：建议使用linux系统（例如：ubuntu24.04或centos7.9+版本）或macOS系统。
+- 如果使用的是windows系统，建议使用WSL方式安装ubuntu系统。
+
+# rust安装
+参考官方网站：https://www.rust-lang.org/zh-CN/tools/install
+当然，你也可以参考：https://github.com/daheige/rust-bible/blob/main/README.md#rust-install
+
 # Author
 
 - 大黑哥，资深GO架构师（布道者）、资深PHP架构师、资深JS/Nodejs开发者、Lua爱好者、Rust语言布道者。
