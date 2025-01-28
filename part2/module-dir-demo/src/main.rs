@@ -9,6 +9,6 @@ fn main() {
     feed::edit("hello".to_string());
     feed::summary();
 
-    // // 调用post模块中的函数
+    // 调用post模块中的函数
     post::show("rust lang".to_string());
 }

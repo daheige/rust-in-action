@@ -66,29 +66,12 @@ sudo make install
 ```
 # php grpc_php_plugin 插件安装
 ```shell
+export PHP_RELEASE_TAG_HERE=v1.69.0
 sudo mkdir -p /usr/local/grpc
 sudo chown -R $USER /usr/local/grpc
-export PHP_RELEASE_TAG_HERE=v1.64.2
-cd /usr/local/grpc
+cd /usr/local
 git clone -b $PHP_RELEASE_TAG_HERE https://github.com/grpc/grpc
 cd /usr/local/grpc
-git submodule update --init
-sudo make && sudo make install
-sudo make grpc_php_plugin
-
-#建立php grpc工具软链接
-sudo ln -s /usr/local/bin/grpc_php_plugin /usr/bin/grpc_php_plugin
-sudo chmod +x /usr/bin/grpc_php_plugin
-```
-
-或者使用这种方式安装
-```shell
-sudo mkdir -p /usr/local/grpc
-sudo chown -R $USER /usr/local/grpc
-export PHP_RELEASE_TAG_HERE=v1.64.2
-cd /usr/local/grpc
-git clone -b $PHP_RELEASE_TAG_HERE https://github.com/grpc/grpc
-cd grpc
 git submodule update --init
 mkdir -p cmake/build
 cd cmake/build
@@ -103,8 +86,10 @@ sudo make protoc grpc_php_plugin
 [100%] Built target grpc_plugin_support
 [100%] Built target grpc_php_plugin
 ```
-查看安装好的`grpc_php_plugin`路径:
+将安装好的`grpc_php_plugin`路径复制到/usr/local/bin目录中
 ```shell
+sudo cp /usr/local/grpc/cmake/build/grpc_php_plugin /usr/local/bin
+sudo chmod +x /usr/local/bin/grpc_php_plugin
 which grpc_php_plugin
 ```
 输出结果：/usr/local/bin/grpc_php_plugin
