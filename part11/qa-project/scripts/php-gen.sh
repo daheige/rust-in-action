@@ -11,7 +11,7 @@ fi
 grpc_php_plugin=$(which "grpc_php_plugin")
 if [ -z $grpc_php_plugin ]; then
     echo 'Please install grpc_php_plugin!'
-    echo "Please look https://github.com/daheige/gmicro/blob/main/docs/centos-php-grpc.md to install grpc_php_plugin tool"
+    echo "Please look clients/php/centos-php-grpc.md or mac-php-grpc.md to install grpc_php_plugin tool"
     exit 0
 fi
 

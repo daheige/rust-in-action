@@ -4,7 +4,7 @@
 namespace App\Grpc\Qa;
 
 /**
- * qa服务接口定义
+ * QA微服务接口定义
  */
 class QAServiceClient extends \Grpc\BaseStub {
 

@@ -1,6 +1,6 @@
 # php grpc run
 1. install php grpc tools
-- for linux centos7: [centos7-php-grc](centos7-php-grpc.md)
+- for linux centos7: [centos-php-grc](centos7-php-grpc.md)
 - for macOS: [mac-php-grpc](mac-php-grpc.md)
 
 2. install php composer dependencies

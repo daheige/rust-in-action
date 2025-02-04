@@ -12,7 +12,7 @@ if [ -z $jsProtoExec ]; then
     grpc_node_plugin=$(which "grpc_node_plugin")
     if [ -z $grpc_node_plugin ]; then
         echo 'Please install grpc_node_plugin or grpc_tools_node_protoc'
-        echo "npm install -g grpc-tools"
+        echo "Please run command: npm install -g grpc-tools"
         exit 0
     fi
 fi

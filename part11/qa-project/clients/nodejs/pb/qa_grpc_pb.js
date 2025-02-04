@@ -335,7 +335,7 @@ function deserialize_qa_VerifyTokenRequest(buffer_arg) {
 }
 
 
-// qa服务接口定义
+// QA微服务接口定义
 var QAServiceService = exports.QAServiceService = {
   // 用户登录
 userLogin: {

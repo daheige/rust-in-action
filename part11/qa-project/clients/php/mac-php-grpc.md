@@ -152,7 +152,7 @@ php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');
 php composer-setup.php
 php -r "unlink('composer-setup.php');"
 ```
-将安装好的composer.phar移动到/usr/local/bin/下面即可
+将安装好的`composer.phar`移动到`/usr/local/bin/`下面即可
 ```shell
 sudo mv composer.phar /usr/local/bin/composer
 ```
