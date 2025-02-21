@@ -3,7 +3,7 @@ use std::env;
 fn main() {
     // 将输入的参数放入一个String vec中
     // let args: Vec<String> = env::args().collect();
-    // 跳过第一个参数，它是程序的名字
+    // 跳过第一个参数，它是应用程序的名字
     let args: Vec<String> = env::args().skip(1).collect();
     // 打印args每个参数
     for (index, arg) in args.iter().enumerate() {
