@@ -258,7 +258,7 @@ mod config;
 mod domain;
 mod infrastructure;
 
-// 日志level 优先级  error > warn > info > debug > trace
+// 日志level 优先级 error > warn > info > debug > trace
 // 启动方式：RUST_LOG=debug cargo run --bin qa-read_count-job
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

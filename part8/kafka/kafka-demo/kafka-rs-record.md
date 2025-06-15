@@ -13,7 +13,7 @@ pub struct Record<'a, K, V> {
 
     /// The partition id of the topic to deliver this message to.
     /// This partition may be `< 0` in which case it is considered
-    /// "unspecified".  A `Producer` will then typically try to derive
+    /// "unspecified". A `Producer` will then typically try to derive
     /// a partition on its own.
     pub partition: i32,
 }
