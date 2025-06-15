@@ -6,7 +6,7 @@ use log::{error, info};
 use std::time::Duration;
 // use std::env;
 
-// 命令终端运行方式：RUST_LOG=debug cargo run kafka-demo
+// 命令终端运行方式：RUST_LOG=debug cargo run --bin kafka-demo
 // 这种运行方式，就会把对应的操作日志输出到终端
 fn main() {
     // 初始化logger配置
