@@ -1,5 +1,4 @@
 # kafka in docker
-version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
@@ -21,7 +20,7 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       # KAFKA_CREATE_TOPICS: "my-topic"
       # 这里需要修改为自己本机IP地址
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.10.108:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.26:9092
       # broker id
       KAFKA_BROKER_ID: 1
     volumes:
