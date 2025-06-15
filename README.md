@@ -13,6 +13,7 @@
 - 当然，你也可以参考：https://github.com/daheige/rust-bible/blob/main/README.md#rust-install
 - 如果我们想安装指定版本的 `Rust`，只需要在 `curl` 命令后面添加`-s -- --default-toolchain`参数即可。
 此时，完整的 `Rust` 安装命令如下所示：
+```shell
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=1.83.0
 ```
 
