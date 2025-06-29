@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 # pyo3包需要开启auto-initialize feature
-pyo3 = { version = "0.21.1", features = ["auto-initialize"] }
+pyo3 = { version = "0.25.1", features = ["auto-initialize"] }

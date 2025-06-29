@@ -16,7 +16,8 @@ extern "C" {
 // 获取用户输入的字符串
 fn prompt(s: &str) -> Result<String, Box<dyn Error>> {
     print!("{}", s); // 输出提示语
-                     // 刷新输出流，确保所有中间缓冲的内容都已经完全输出了。
+
+    // 刷新输出流，确保所有中间缓冲的内容都已经完全输出了。
     stdout().flush()?;
 
     // 获取标准输入的字符串，将其放入input中

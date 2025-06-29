@@ -12,7 +12,7 @@ qttypes = { version = "0.2.12", features = ["qtquick"] }
 cstr = "0.2.12"
 cpp = "0.5.10"
 # 引入md5加密的包
-md5 = "0.7.0"
+md5 = "0.8.0"
 
 #引入日志相关的包
 log = "0.4.22"

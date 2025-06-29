@@ -21,7 +21,7 @@ fn implode(v: Vec<String>, sep: &str) -> String {
     s
 }
 
-// #[pymodule]用于声明python包名字为string_utils
+// #[pymodule] 用于声明python包名字为string_utils
 #[pymodule]
 fn string_utils(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // 通过add_function将这些函数注册到模块string_utils中
