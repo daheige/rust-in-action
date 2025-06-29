@@ -1,11 +1,18 @@
 # MacOS下安装prometheus
+参考文档：https://prometheus.io/docs/prometheus/latest/installation/
 
+具体安装步骤如下：
 1）通过brew命令安装
+```shell
 brew install prometheus
+```
 2）启动prometheus服务
+```shell
 brew services start prometheus
-默认安装好的prometheus配置文件放在/etc/local/etc/prometheus.yml，常用的命令如下：
+```
+默认安装好的prometheus配置文件放在 `/usr/local/etc/prometheus.yml`
 
+prometheus 常用的命令如下：
 ```shell
 # 重启prometheus服务
 brew services restart prometheus
