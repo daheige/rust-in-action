@@ -25,7 +25,7 @@ sudo apt-get install prometheus
 sudo systemctl status prometheus
 ```
 
-prometheus 服务默认配置放在/etc/prometheus/prometheus.yml 中，Web UI 界面默认将运行在 9090 端口，常用的命令如下：
+prometheus 服务默认配置放在`/etc/prometheus/prometheus.yml`中，Web UI 界面默认将运行在 9090 端口，常用的命令如下：
 ```shell
 # 重启 prometheus 服务
 sudo systemctl restart prometheus
@@ -36,25 +36,27 @@ sudo systemctl start prometheus
 ```
 
 # qa项目使用和接入
-在 prometheus 服务的配置文件 prometheus.yml 的 scrape_configs 区块下添
-加如下配置：
+在 prometheus 服务的配置文件 prometheus.yml 中添加如下配置：
 ```yaml
+# 完整的prometheus配置
+global:
+  scrape_interval: 15s
+
 scrape_configs:
- - job_name: "prometheus"
-   static_configs: 
-    - targets: ["localhost:9090"]
- # qa gateway 服务的 metrics 数据采集
- - job_name: "qa_gateway"
-   static_configs: 
-   - targets: ["localhost:1338"]
-# qa-svc 服务的 metrics 数据采集
- - job_name: "qa_svc"
-   static_configs: 
-   - targets: ["localhost:2338"]
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+  # qa gateway 服务的 metrics 数据采集
+  - job_name: "qa_gateway"
+    static_configs:
+      - targets: ["localhost:1338"]
+  # qa-svc 服务的 metrics 数据采集
+  - job_name: "qa_svc"
+    static_configs:
+      - targets: ["localhost:2338"]
 ```
 
-接着，依次执行如下命令启动 qa-svc 和 gateway 服务。
-执行如下 curl 命令请求问题详情接口
+接着，依次执行如下命令启动 qa-svc 和 gateway 服务后，再执行如下 curl 命令请求问题详情接口
 ```shell
 curl --location 'localhost:8090/api/question/detail' --header 'Content-Type: application/json' --data '{"id":1,"username":"daheige"}'
 ```
