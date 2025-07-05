@@ -56,7 +56,13 @@ qa-svc                           RUNNING   pid 56070, uptime 0:19:06
 结果如下：
 ![](supervisor-status.jpg)
 
-除了使用 supervisorctl 命令管理应用程序，你还可以在浏览器中访问 `http://127.0.0.1:9001/` 来管理应用程序
+除了使用 supervisorctl 命令管理应用程序，你还可以配置vim /usr/local/etc/supervisord.conf 打开web ui查看
+```ini
+[inet_http_server]         ; inet (TCP) server disabled by default
+port=127.0.0.1:9001        ; ip_address:port specifier, *:port for all iface
+```
+
+然后，在浏览器中访问 `http://127.0.0.1:9001/` 来管理应用程序
 ![](supervisor-web.jpg)
 
 整个qa-svc运行效果如下图所示：
