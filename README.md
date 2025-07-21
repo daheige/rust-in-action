@@ -18,7 +18,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-t
 
 # About author
 - 大黑哥，前腾讯高级工程师，现就职于创业公司某业务线技术负责人。
-- 资深GO架构师（布道者）、资深PHP架构师、资深JS/Nodejs开发者、Lua爱好者、Rust语言布道者。
+- 资深GO架构师（布道者）、资深PHP架构师、资深Javascript/Nodejs开发者、Lua爱好者、Rust语言布道者。
 - 具有10多年一线开发经验，先后从事千万级电商平台、海量邮件群发、游戏、金融、Sass等不同行业的开发和架构设计。
 - 在微服务、敏捷开发、项目管理、代码管理、架构设计、GO项目开发、MySQL性能优化、Redis分布式缓存、Kafka和Pulsar消息队列、DDD领域驱动设计、Rust系统编程等不同领域，具有深入的研究和丰富的实战经验。
 
