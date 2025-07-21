@@ -35,15 +35,24 @@ zhuwei313@hotmail.com
 - 第2章 Rust模块化编程实战
 - 第3章 Rust JSON实战
 - 第4章 Rust Web编程实战
-- 第5章 Rust 命令行CLI实战
-- 第6章 Rust cron实战
-- 第7章 Rust中数据库和缓存实战
-- 第8章 Rust中消息队列MQ实战
+- 第5章 Rust 命令行界面实战
+- 第6章 Rust crontab实战
+- 第7章 Rust中的数据库和缓存实战
+- 第8章 Rust中的消息队列实战
 - 第9章 Rust FFI调用实战
 - 第10章 Rust并发编程与异步编程实战
 - 第11章 构建一个高并发的QA问答系统实战
 
-本书具体内容查看：[目录](SUMMARY.md)
+本书完整的目录查看：[目录](SUMMARY.md)
+
+# resources
+- 本书视频教程素材：[courses](courses)
+- 本书附录部分：[appendix](Rust实战项目开发-附录.pdf)
+- Rust cookbook: https://github.com/daheige/rs-cookbook
+- Rust rpc(tonic): https://github.com/daheige/rs-rpc
+- Rust api(axum): https://github.com/daheige/rs-api
+- Rust Foundation: https://github.com/daheige/myrust
+- Rust ffi: https://github.com/daheige/rust-bible/tree/main/part8
 
 # Why write this book
 
@@ -57,4 +66,4 @@ zhuwei313@hotmail.com
 
 # Current progress
 
-截止到2024-12-21日，本书进入印刷流程中，预计2025年9月出版发行，各位Rust爱好者，尽请期待～
+目前本书已进入印刷流程中，预计2025年9月出版发行，各位Rust爱好者，尽请期待～
