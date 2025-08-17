@@ -435,6 +435,8 @@ RUST_LOG=debug cargo run --bin gateway
 
 # prometheus metrics
 
+- prometheus 安装参考：https://prometheus.io/docs/prometheus/latest/installation/
+- [ubuntu-install-prometheus](ubuntu-install-prometheus.md)
 - rust prometheus服务可观测性，使用`autometrics`库完成，crate地址：https://crates.io/crates/autometrics
 - `autometrics`使用方式参考：https://docs.autometrics.dev/rust/quickstart
 
