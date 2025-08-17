@@ -1,31 +1,38 @@
 # Rust practical project development
+
 书名：《Rust实战项目开发》
 
 运行本书中的实战约束：
+
 - Rust edition：基于Rust Edition = "2021"
 - Rust版本要求：需要安装Rust v1.82.0 以上版本
 - 操作系统：建议使用linux系统（例如：ubuntu24.04或centos7.9+版本）或macOS系统。
 - 如果使用的是windows系统，建议使用WSL方式安装Linux ubuntu 系统或者centos stream系统。
 
 # Rust install
+
 - 参考官方网站：https://www.rust-lang.org/zh-CN/tools/install
 - 当然，你也可以参考：https://github.com/daheige/rust-bible/blob/main/README.md#rust-install
 - 如果我们想安装指定版本的 `Rust`，只需要在 `curl` 命令后面添加`-s -- --default-toolchain`参数即可。
-此时，完整的 `Rust` 安装命令如下所示：
+  此时，完整的 `Rust` 安装命令如下所示：
+
 ```shell
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=1.83.0
 ```
 
 # About author
-- 大黑哥，前腾讯高级工程师，现就职于创业公司某业务线技术负责人。
+
+- 大黑哥，前腾讯高级工程师(2018.4-2025.3)，现就职于某创业公司业务线技术负责人。
 - 资深GO架构师（布道者）、资深PHP架构师、资深Javascript/Nodejs开发者、Lua爱好者、Rust语言布道者。
 - 具有10多年一线开发经验，先后从事千万级电商平台、海量邮件群发、游戏、金融、Sass等不同行业的开发和架构设计。
 - 在微服务、敏捷开发、项目管理、代码管理、架构设计、GO项目开发、MySQL性能优化、Redis分布式缓存、Kafka和Pulsar消息队列、DDD领域驱动设计、Rust系统编程等不同领域，具有深入的研究和丰富的实战经验。
 
 # Email
+
 zhuwei313@hotmail.com
 
 # Summary
+
 主要包含如下内容：
 
 - 第1章 Rust语言简介
@@ -43,6 +50,8 @@ zhuwei313@hotmail.com
 本书完整的目录查看：[SUMMARY](SUMMARY.md)
 
 # Resources
+
+- 本书附录部分：[appendix](appendix) [Rust实战项目开发-附录.pdf](appendix/Rust实战项目开发-附录.pdf)
 - 本书视频教程素材：[courses](courses)
 - Rust cookbook: https://github.com/daheige/rs-cookbook
 - Rust rpc(tonic): https://github.com/daheige/rs-rpc
@@ -51,8 +60,10 @@ zhuwei313@hotmail.com
 - Rust ffi: https://github.com/daheige/rust-bible/tree/main/part8
 - Rust 2024 edition 1.85: https://www.bilibili.com/video/BV1XnPNeBELM
 - Rust videos Foundation (bilibili): https://www.bilibili.com/video/BV12Z421b75M
+  课程素材：[rust-courses](bilibili/rust-courses)
 
 # Why write this book
+
 <p>我从事软件开发已经有10几个年头，最早接触软件开发这个行业是在2010年的暑假。那时候，我刚好是高中毕业，在家报完计算机科学与技术专业之后，我一个朋友送我一本《精通CSS与HTML设计模式》，他说：你可以先看看这本书，看你是否对计算机这个行业感兴趣，如果有兴趣就把这本书简单学习一下，以后对你学习计算机有帮助的。也这正是这本书，让我对计算机这个行业产生了浓厚的兴趣。那一年，我照着这本书的html和css示例代码，在文本编辑器中能够快速编写一些简单的网页，所见即所得的网页效果让我快速找到了一种成就感。</p>
 <p>大学的几年时光里，我陆续学习了ASP、Javascript语言、PHP语言、Linux基础、MySQL基础、Redis基础、shell脚本、Python语言、Ruby语言、Nodejs等。在学这些技术的时，我是本着空杯的心态去学些每一个知识点，按照基础、实战、进阶的三部曲进行，边学习边写代码。有时候遇到实际问题，一些技术博客或网上搜到的答案不一定是对的。那时候，我多么想有一些前辈或大佬能够给予一些实战序列的书或者高质量的文章让我可以快速上手，并实践，而不至于在痛苦、挣扎中苦思：该怎么做才能让程序正常跑起来呢。从那时，我便认识到学习任何一门技术，都需要经历基础到实战的过程，最后才是进阶，融会贯通，精益求精。2014年大学毕业后，由于自身学习的技术还算可以，我便很快找到了一份PHP语言的工作，让我感觉到学习技术原来是有前途的。</p>
 <p>从2014年到2017年，我一直使用是PHP和Nodejs语言，先后从事了海量邮件群发、Saas、电商平台、金融、游戏等不同行业的开发，也见证了整个移动互联网的高速发展。那时候，国内外软件开发的技术变化层出不穷，大部分的公司对软件开发的性能和效率的要求并不是很高，能运行就可以了。2017年，PHP技术在国内的发展受限，走下坡路，就业的机会也没有2014年那样容易，很多公司也不再热衷使用PHP语言来开发软件应用和项目。2017年中，我思考了很久，要不要转型到Go语言（国内外Go语言刚开始起步，很多公司都保持着观望态度），转过去了有没有风险呢，自己会不会找到一份工作呢？这些问题一直困惑我很久，经过一段时间的思考，我还是决定转型到Go语言。因为，我认为技术一直是在更新的，作为一个开发人员，需要不停地拥抱变化，在变化中学习和提升自己各方面的能力。时至今日，回想起来，那时候的选择是对的。在2018年加入腾讯后，国内外Go语言发展迅猛，特别是Docker容器和Kubernetes云原生技术的流行，让很多开发者从别的语言转型到Go语言，一些中小企业和大公司也陆续在2019年后逐步使用Go语言。</p>
@@ -62,4 +73,5 @@ zhuwei313@hotmail.com
 <p align="right">大黑哥 深圳 2024年12月</p>
 
 # Current progress
+
 目前本书已进入印刷流程中，预计2025年9月出版发行，各位Rust爱好者，尽请期待～

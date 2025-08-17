@@ -299,10 +299,13 @@ service QAService {
 ```
 
 4. 查看qa.UserLoginRequest定义
+
 ```shell
 grpcurl -plaintext 127.0.0.1:50051 describe qa.UserLoginRequest
 ```
+
 输出结果如下：
+
 ```
 qa.UserLoginRequest is a message:
 // 登录请求
@@ -319,6 +322,7 @@ grpcurl -plaintext 127.0.0.1:50051 describe qa.UserLoginReply
 ```
 
 完整的HelloReply定义如下：
+
 ```
 qa.UserLoginReply is a message:
 // 登录返回结果
@@ -328,15 +332,20 @@ message UserLoginReply {
 ```
 
 6. 通过grpcurl调用rpc service method
-先通过如下grpcurl命令创建一个用户：
+   先通过如下grpcurl命令创建一个用户：
+
 ```shell
 grpcurl -d '{"username":"daheige","password":"123456"}' -plaintext 127.0.0.1:50051 qa.QAService.UserRegister
 ```
+
 接着请求登录方法
+
 ```shell
 grpcurl -d '{"username":"daheige","password":"123456"}' -plaintext 127.0.0.1:50051 qa.QAService.UserLogin
 ```
+
 响应结果如下：
+
 ```json
 {
   "token": "jOffYGY9EvjIxLInJJp2QB1oAeVxbODasBq4i1Dh/7hAfb3JtsDEfbEfcQxR4gLZ"
@@ -346,10 +355,13 @@ grpcurl -d '{"username":"daheige","password":"123456"}' -plaintext 127.0.0.1:500
 运行效果如下图所示：
 ![](grpc-tools.jpg)
 验证登录token
+
 ```shell
 grpcurl -d '{"token":"jOffYGY9EvjIxLInJJp2QB1oAeVxbODasBq4i1Dh/7hAfb3JtsDEfbEfcQxR4gLZ","request_id":"JNf39MGchMNk7azPTTGR54bswkCAAkts"}' -plaintext 127.0.0.1:50051 qa.QAService.VerifyToken
 ```
+
 返回结果：
+
 ```json
 {
   "state": "1",
@@ -358,6 +370,7 @@ grpcurl -d '{"token":"jOffYGY9EvjIxLInJJp2QB1oAeVxbODasBq4i1Dh/7hAfb3JtsDEfbEfcQ
 ```
 
 # run grpc http gateway
+
 please crates/gateway/main.rs
 
 ```shell
@@ -559,7 +572,7 @@ brew services start grafana
 有两种方式部署：
 
 - 方式1: 采用supervisor工具部署二进制文件
-  supervisor安装步骤参考：[supervisor-install](mac-supervisor-install)
+  supervisor安装步骤参考：[supervisor-install](mac-supervisor-install.md)
 - 方式2: 采用rust docker镜像构建与发布
 
 1) 首先构建rust 开发环境
