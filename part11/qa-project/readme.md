@@ -20,7 +20,7 @@
 - gateway是grpc http gateway，它是一个二进制应用程序，接收外部http请求并将json数据格式转换为pb
   Message请求下游qa-svc中对应的grpc服务。
 
-layout分层，如下图所示：
+layout分层，如下图所示：<br/>
 ![](qa-layout.jpg)
 
 # grpc client support
