@@ -1,12 +1,14 @@
 [package]
 name = "hello-axum"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = "0.7.9"
-serde = { version = "1.0.215", features = ["derive"] }
-serde_json = "1.0.133"
-tokio = { version = "1.42.0", features = ["full"] }
+axum = "0.8.4"
+#用于serde序列化功能
+serde = { version = "1.0.219", features = ["derive"] }
+#用于json序列化处理
+serde_json = "1.0.143"
+tokio = { version = "1.47.1", features = ["full"] }

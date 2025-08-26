@@ -1,17 +1,17 @@
 [package]
 name = "short-url"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 # murmurhash和base62用于生成短链字符串
 murmurhash32 = "0.3.1"
-base62 = "2.0.3"
+base62 = "2.2.1"
 
 # web框架的相关依赖
-axum = "0.7.9"
-serde = { version = "1.0.215", features = ["derive"] }
-serde_json = "1.0.133"
-tokio = { version = "1.42.0", features = ["full"] }
+axum = "0.8.4"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.143"
+tokio = { version = "1.47.1", features = ["full"] }
