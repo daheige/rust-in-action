@@ -2,12 +2,12 @@ use std::error::Error;
 use std::ffi::CString; // 导入ffi的CString
 
 // 引入标准输入和输出模块
-use std::io::{stdin, stdout, Write};
+use std::io::{Write, stdin, stdout};
 use std::os::raw::c_char;
 
 // #[link标记属性用于关联静态库libfoo.a文件
 #[link(name = "foo")]
-extern "C" {
+unsafe extern "C" {
     // 在Rust中调用C语言外部函数接口，需要通过extern "C"块定义外部函数签名。
     fn print_app_info();
     fn greet(name: *const c_char);
