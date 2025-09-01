@@ -11,7 +11,10 @@ use xpulsar::{Message, PulsarConf}; // 引入xpulsar模块中的Message和Pulsar
 #[tokio::main]
 async fn main() -> Result<(), PulsarError> {
     println!("consumer pulsar message...");
-    // env::set_var("RUST_LOG", "debug");
+    // unsafe {
+    //     env::set_var("RUST_LOG", "debug");
+    // }
+
     env_logger::init(); // 初始化操作日志配置
 
     // pulsar连接地址
