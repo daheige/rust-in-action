@@ -1,4 +1,4 @@
-use crate::config::{mysql, xredis, APP_CONFIG};
+use crate::config::{APP_CONFIG, mysql, xredis};
 use chrono::Local;
 use rcron::{Job, JobScheduler};
 use redis::Commands;
@@ -48,7 +48,7 @@ async fn main() {
 
     // 启动job scheduler
     loop {
-        // tick方法为JobScheduler增加时间中断并执行待处理的任务
+        // 调用 tick 方法执行待处理的任务
         sched.tick();
         // 建议至少停顿500毫秒
         thread::sleep(Duration::from_millis(500));
