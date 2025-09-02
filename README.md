@@ -11,7 +11,8 @@
 
 # Rust edition 2024
 
-如果你使用的rust edition 2024 (Rust版本大于1.85)，请使用分支`feat/daheige/rust-2024-edition`的代码运行本书中所有的实战
+- 如果你使用的rust edition 2024 (Rust版本大于1.85)，请使用分支`feat/daheige/rust-2024-edition`的代码运行本书中所有的实战
+- edition = "2024"对应的分支：https://github.com/daheige/rust-in-action/tree/feat/daheige/rust-2024-edition
 
 # Rust install
 
