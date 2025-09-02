@@ -9,6 +9,10 @@
 - 操作系统：建议使用linux系统（例如：ubuntu24.04或centos7.9+版本）或macOS系统。
 - 如果使用的是windows系统，建议使用WSL方式安装Linux ubuntu 系统或者centos stream系统。
 
+# Rust edition 2024
+
+如果你使用的rust edition 2024 (Rust版本大于1.85)，请使用分支`feat/daheige/rust-2024-edition`的代码运行本书中所有的实战
+
 # Rust install
 
 - 参考官方网站：https://www.rust-lang.org/zh-CN/tools/install
