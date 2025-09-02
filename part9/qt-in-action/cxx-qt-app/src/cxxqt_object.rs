@@ -1,5 +1,5 @@
 use cxx_qt_lib::QString;
-use rand::Rng;
+use rand::{rng, Rng};
 
 // 定义CXX-Qt bridge module部分，用来为qml文件生成指定的数据类型
 // #[cxx_qt::bridge]与#[cxx::bridge]相同，你可以在其中使用cxx的所有功能。
@@ -73,7 +73,8 @@ impl qobject::RandObj {
     fn gen_number(&self, m: i32, n: i32) -> i32 {
         println!("call gen_number from rust");
         // 这个gen_range方法生成的数字是一个半开区间，也就说[1,101)不包含101，它是1-100之间的数字
-        let rnd: i32 = rand::thread_rng().gen_range(m..n); // 随机生成一个数字
+        let mut rng = rng();
+        let rnd: i32 = rng.random_range(m..n); // 随机生成一个数字
         rnd
     }
 }
