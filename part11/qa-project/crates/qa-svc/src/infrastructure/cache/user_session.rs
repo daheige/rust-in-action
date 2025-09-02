@@ -49,13 +49,15 @@ impl UserSessionRepo for UserCacheRepoImpl {
         let mut conn = self.redis_pool.get()?;
         let value = serde_json::to_string(user)?;
         // println!("value:{:?}",value);
-        conn.set_ex(key, value, seconds)?;
+        let _: () = conn.set_ex(key, value, seconds)?;
         Ok(())
     }
 
     async fn del(&self, key: &str) -> anyhow::Result<()> {
         let mut conn = self.redis_pool.get()?;
-        conn.del(key)?;
+
+        let _: () = conn.del(key)?;
+
         Ok(())
     }
 }
