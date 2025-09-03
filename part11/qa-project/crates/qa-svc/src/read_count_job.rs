@@ -22,7 +22,7 @@ mod infrastructure;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     println!("hello,qa-read-count-job");
-    // std::env::set_var("RUST_LOG", "debug");
+    // unsafe { std::env::set_var("RUST_LOG", "debug"); }
     Logger::new().init(); // 使用默认方式初始化日志配置
     println!("current process pid:{}", process::id());
 
