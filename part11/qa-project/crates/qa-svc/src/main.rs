@@ -59,7 +59,7 @@ async fn main() -> anyhow::Result<()> {
     // grpc reflection service
     let reflection_service = tonic_reflection::server::Builder::configure()
         .register_encoded_file_descriptor_set(PROTO_FILE_DESCRIPTOR_SET)
-        .build()
+        .build_v1()
         .unwrap();
 
     // create grpc service
