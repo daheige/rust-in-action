@@ -1,7 +1,8 @@
 # Rust practical project development
 
 书名：《Rust实战项目开发》
-运行本书中的实战约束：
+
+运行本书中的实战约束
 
 - Rust edition：基于Rust edition = "2021" or edition = "2024"。
 - Rust版本要求：Rust版本 >= v1.82.0 即可，这里优先推荐使用 v1.89.0 以上版本（社区稳定版本）。
