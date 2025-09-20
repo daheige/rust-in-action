@@ -6,7 +6,8 @@ mod infras; // 项目中基础设施层封装
 mod routers; // axum http框架路由模块
 
 // 引入模块
-use crate::config::{mysql, xpulsar, APP_CONFIG};
+use crate::config::{APP_CONFIG, mysql, xpulsar};
+// use std::env;
 use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
@@ -16,7 +17,10 @@ use tokio::signal;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    // env::set_var("RUST_LOG", "debug");
+    // unsafe {
+    //     env::set_var("RUST_LOG", "debug");
+    // }
+
     env_logger::init(); // 初始化操作日志配置
 
     println!("app_debug:{:?}", APP_CONFIG.app_debug);
@@ -46,7 +50,7 @@ async fn main() -> anyhow::Result<()> {
     let router = routers::api_router(app_state);
 
     // 通过tokio模块提供的TcpListener::bind函数创建listener对象
-    let listener = TcpListener::bind(address).await?.into();
+    let listener = TcpListener::bind(address).await?;
 
     // 启动HTTP服务
     axum::serve(listener, router)

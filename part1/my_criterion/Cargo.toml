@@ -1,14 +1,12 @@
 [package]
 name = "my_criterion"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-[dev-dependencies]
-criterion = "0.5.1"
+criterion = "0.7.0"
 
 # 新增bench属性用于第三方基准测试包criterion bench基准测试
 [[bench]]

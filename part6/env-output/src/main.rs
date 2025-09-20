@@ -12,7 +12,7 @@ fn main() {
     let dist_server = env::var("RUSTUP_DIST_SERVER").unwrap_or("".to_string());
     println!("RUSTUP_DIST_SERVER:{}", dist_server);
 
-    // 获取环境变量和RUSTUP_UPDATE_ROOT
+    // 获取环境变量RUSTUP_UPDATE_ROOT
     let update_root = env::var("RUSTUP_UPDATE_ROOT").unwrap_or("".to_string());
     println!("RUSTUP_UPDATE_ROOT:{}", update_root);
 }

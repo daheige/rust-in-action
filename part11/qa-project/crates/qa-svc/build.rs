@@ -25,10 +25,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 2.生成rust grpc代码
     // 指定rust grpc 代码生成的目录
-    tonic_build::configure()
+    tonic_prost_build::configure()
         .file_descriptor_set_path(&descriptor_path)
         .out_dir(out_dir)
-        .compile(&file_list, &[proto_dir])?;
+        .compile_protos(&file_list, &[proto_dir])?;
 
     // 3.生成mod.rs文件
     // 用下面的rust方式生成mod.rs

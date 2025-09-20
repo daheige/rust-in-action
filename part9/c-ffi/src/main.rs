@@ -6,7 +6,7 @@ use std::ffi::c_double; // 64位的浮点数
 // 在有些系统下将其定义为i16。
 use std::ffi::c_int;
 
-extern "C" {
+unsafe extern "C" {
     // 求一个int数字的绝对值
     fn abs(num: c_int) -> c_int;
 

@@ -3,14 +3,17 @@ mod xpulsar;
 
 // 引入相关包
 use log::info;
-use pulsar::{producer, proto, Error as PulsarError};
+use pulsar::{Error as PulsarError, producer, proto};
 use std::env;
 use xpulsar::{Message, PulsarConf}; // 引入xpulsar模块中的Message和PulsarConf
 
 #[tokio::main]
 async fn main() -> Result<(), PulsarError> {
     println!("publish pulsar message");
-    // env::set_var("RUST_LOG", "debug");
+    // unsafe {
+    //     env::set_var("RUST_LOG", "debug");
+    // }
+
     env_logger::init(); // 初始化操作日志配置
 
     // pulsar连接地址

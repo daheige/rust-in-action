@@ -1,5 +1,4 @@
 use axum::{
-    async_trait,
     extract::{rejection::FormRejection, rejection::JsonRejection, FromRequest, Request},
     http::{header::CONTENT_TYPE, StatusCode},
     response::{IntoResponse, Response},
@@ -9,9 +8,9 @@ use serde::de::DeserializeOwned;
 use validator::Validate;
 
 // json or form handler
+#[derive(Debug, Clone, Copy, Default)]
 pub struct JsonOrForm<T>(pub T);
 
-#[async_trait]
 impl<S, T> FromRequest<S> for JsonOrForm<T>
 where
     S: Send + Sync,

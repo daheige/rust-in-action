@@ -1,7 +1,7 @@
 // 引入axum包
 use axum::{
-    routing::{get, post},
     Router,
+    routing::{get, post},
 };
 use std::net::SocketAddr;
 use std::process;
@@ -21,7 +21,7 @@ async fn main() {
     let shared_state = Arc::new(handlers::AppState::default());
     // 创建axum router
     let router = Router::new()
-        .route("/:key", get(handlers::short_url))
+        .route("/{key}", get(handlers::short_url))
         .route("/create-short-url", post(handlers::create_short_url))
         .with_state(shared_state) // 通过with_state方式传递共享数据shared_state
         .fallback(handlers::not_found_handler);

@@ -41,8 +41,9 @@ Window {
             onClicked: {
                 // 支持js es5/es6语法
                 console.log("call say_hello from rust cxx-qt-app");
-                // 调用Hello上面的say_hello方法，这里的say_hello需要采用驼峰格式
-                let s = hello.sayHello();
+                // 调用Hello上面的say_hello方法，对于cxx-qt 0.7版本以下的话，这里的say_hello需要采用驼峰格式
+                // 如果cxx-qt大于0.7版本，直接调用say_hello方法即可
+                let s = hello.say_hello();
                 // 将结果赋值给hello.plain字段
                 hello.plain = s;
             }
@@ -58,7 +59,7 @@ Window {
             text: "gen a rand number by rust"
             onClicked: {
                 // qt qml文件支持js语法，也就是说支持js es5/es6语法
-                let rnd = rand_obj.genNumber(1, 101);
+                let rnd = rand_obj.gen_number(1, 101);
                 console.log("gen random number: ", rnd);
                 rand_obj.number = rnd;
             }

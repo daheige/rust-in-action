@@ -15,15 +15,9 @@ path = "src/vote_job.rs"
 name = "qa-read_count-job"
 path = "src/read_count_job.rs"
 
-# 将 grpc和http 服务运行在一个端口上面
-[[bin]]
-name = "qa-multiplex-svc"
-path = "src/multiplex_service.rs"
-
 [dependencies]
 # gRPC微服务所需要的相关组件，直接继承workspace中指定的版本
 tonic = { workspace = true }
-prost = { workspace = true }
 tokio = { workspace = true }
 # note: Must be the same as the tonic version
 tonic-reflection = { workspace = true }
@@ -67,12 +61,7 @@ pb = { path = "../pb" }
 
 # prometheus metrics
 autometrics = { workspace = true }
-# metrics run on axum http framework
-axum = { workspace = true }
-
-# run multiplex server
-tower = { workspace = true, features = ["steer"] }
 
 [build-dependencies]
 # note: Must be the same as the tonic version
-tonic-build = { workspace = true }
+tonic-prost-build = { workspace = true }

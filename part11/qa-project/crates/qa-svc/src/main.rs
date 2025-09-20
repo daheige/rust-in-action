@@ -25,7 +25,7 @@ pub(crate) const PROTO_FILE_DESCRIPTOR_SET: &[u8] = include_bytes!("../rpc_descr
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     println!("Hello, qa-svc");
-    // std::env::set_var("RUST_LOG", "debug");
+    // unsafe { std::env::set_var("RUST_LOG", "debug"); }
     Logger::new().init(); // 使用默认方式初始化日志配置
 
     // 自定义方式初始化日志配置
@@ -59,7 +59,7 @@ async fn main() -> anyhow::Result<()> {
     // grpc reflection service
     let reflection_service = tonic_reflection::server::Builder::configure()
         .register_encoded_file_descriptor_set(PROTO_FILE_DESCRIPTOR_SET)
-        .build()
+        .build_v1()
         .unwrap();
 
     // create grpc service

@@ -12,7 +12,9 @@ fn main() {
     // 初始化logger配置
     // 日志level 优先级  error > warn > info > debug > trace
     // 设置日志级别环境变量，这里注释掉了，启动的时可手动指定RUST_LOG=debug
-    // env::set_var("RUST_LOG", "debug");
+    // unsafe {
+    //     env::set_var("RUST_LOG", "debug");
+    // }
     env_logger::init();
 
     let broker = "localhost:9092"; // kafka broker

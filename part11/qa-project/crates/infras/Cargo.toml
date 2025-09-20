@@ -6,9 +6,6 @@ authors.workspace = true
 description.workspace = true
 
 [dependencies]
-# 序列化处理
-serde = { workspace = true, features = ["derive"] }
-
 # 配置文件读取以及用于消息序列化和反序列化处理
 serde_yaml = { workspace = true }
 
@@ -24,7 +21,6 @@ redis = { workspace = true, features = ["r2d2", "tokio-comp", "cluster", "cluste
 r2d2 = { workspace = true }
 
 # 操作日志
-log = { workspace = true }
 env_logger = { workspace = true, features = ["color"] }
 
 # chrono用于时间处理
@@ -40,5 +36,4 @@ axum = { workspace = true }
 
 # crypto
 rust-crypto = { workspace = true }
-rand = { workspace = true }
 base64 = { workspace = true }
