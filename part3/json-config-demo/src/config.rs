@@ -9,7 +9,7 @@ fn read_file<P: AsRef<Path>>(path: P) -> Result<String, io::Error> {
     Ok(s)
 }
 
-// 将内容写入文件中，返回值是标注库的Result
+// 将内容写入文件中，返回值是标准库中的Result
 pub fn write_config<P: AsRef<Path>>(path: P, content: String) -> Result<String, io::Error> {
     fs::write(path, content)?;
     Ok("write success".to_string())

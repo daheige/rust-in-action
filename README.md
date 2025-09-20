@@ -4,8 +4,8 @@
 
 运行本书中的实战约束：
 
-- Rust edition：基于Rust edition = "2021" or edition = "2024"
-- Rust版本要求：需要安装Rust v1.82.0 以上版本
+- Rust edition：基于Rust edition = "2021" or edition = "2024"。
+- Rust版本要求：需要安装Rust版本 >= v1.82.0 即可。
 - 操作系统：建议使用linux系统（例如：ubuntu24.04或centos7.9+版本）或macOS系统。
 - 如果使用的是windows系统，建议使用WSL方式安装Linux ubuntu 系统或者centos stream系统。
 - 如果您在`edition = "2024"`无法正常运行程序，请切换到`feat/daheige/rust-2024-edition`分支，再运行应用程序。
