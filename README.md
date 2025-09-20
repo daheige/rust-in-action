@@ -4,11 +4,11 @@
 运行本书中的实战约束：
 
 - Rust edition：基于Rust edition = "2021" or edition = "2024"。
-- Rust版本要求：需要安装Rust版本 >= v1.82.0 即可，优先推荐使用 v1.89.0 版本。
+- Rust版本要求：Rust版本 >= v1.82.0 即可，这里优先推荐使用 v1.89.0 以上版本（社区稳定版本）。
 - 操作系统：建议使用linux系统（例如：ubuntu24.04或centos7.9+版本）或macOS系统。
 - 如果使用的是windows系统，建议使用WSL方式安装Linux ubuntu 系统或者centos stream系统。
 - 当前main分支上的所有代码，均在 edition = "2024" 版本测试通过。
-- 如果您使用的rust版本对应的edition是 2021 请切换到：https://github.com/daheige/rust-in-action/tree/rust-2021-edition 分支。
+- 如果您使用的Rust edition = "2021" (Rust版本低于v1.85）时，请切换到：https://github.com/daheige/rust-in-action/tree/rust-2021-edition 分支。
 
 # Rust install
 
