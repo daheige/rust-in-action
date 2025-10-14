@@ -1,16 +1,17 @@
 [package]
 name = "web-server"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # 多线程的web-server服务器
 [[bin]]
 name = "web-server-thread"
 path = "src/server.rs"
 
+# 通过线程池的方式处理请求
 [[bin]]
 name = "web-server-multiple"
 path = "src/multi_server.rs"
 
 [dependencies]
-ctrlc = "3.4.1"
+ctrlc = "3.4.7"

@@ -1,4 +1,4 @@
-use crate::config::{mysql, xredis, APP_CONFIG};
+use crate::config::{APP_CONFIG, mysql, xredis};
 use chrono::Local;
 use rcron::{Job, JobScheduler};
 use redis::Commands;
@@ -40,7 +40,7 @@ async fn main() {
 
     // 通过rcron库执行
     let mut sched = JobScheduler::new();
-    sched.add(Job::new("1/10 * * * * *".parse().unwrap(), || {
+    sched.add(Job::new("*/10 * * * * *".parse().unwrap(), || {
         println!("exec task every 10 seconds!");
         // 通过tokio异步执行
         tokio::spawn(async { handler_read_count().await });
@@ -48,7 +48,7 @@ async fn main() {
 
     // 启动job scheduler
     loop {
-        // tick方法为JobScheduler增加时间中断并执行待处理的任务
+        // 调用 tick 方法执行待处理的任务
         sched.tick();
         // 建议至少停顿500毫秒
         thread::sleep(Duration::from_millis(500));
@@ -88,6 +88,9 @@ async fn handler_read_count() {
     while i < len {
         let id: i64 = records.get(i).unwrap().parse().unwrap(); // 当前文章id
         let increment: i64 = records.get(i + 1).unwrap().parse().unwrap(); // 当前文章增量计数器
+
+        // 当我们使用Redis hscan游标匹配数据时，
+        // 第一个元素是field，第二个元素是field对应的value值。
         i += 2; // 这里i的值第一次迭代时 i = 0，第二次迭代 i = 2,依次类推
         if increment == 0 || id <= 0 {
             continue;

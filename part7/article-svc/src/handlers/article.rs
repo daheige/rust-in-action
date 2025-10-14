@@ -12,6 +12,7 @@ pub async fn root() -> &'static str {
     "Hello, World!"
 }
 
+// 文章阅读数展示接口
 pub async fn show(Path(id): Path<i64>, State(state): State<Arc<config::AppState>>) -> Response {
     if id <= 0 {
         return (

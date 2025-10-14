@@ -1,5 +1,5 @@
 app_debug: true # 是否开启调试模式
-app_port: 3000 # http service运行端口
+app_port: 1336 # http service运行端口
 graceful_wait_time: 3 # http service平滑退出等待时间，单位s
 mysql_conf:
   dsn: "mysql://root:root123456@localhost/points_sys" # dsn连接句柄信息

@@ -4,7 +4,7 @@ use std::io::prelude::*;
 use std::net::TcpListener;
 use std::net::TcpStream;
 use std::process;
-use std::sync::mpsc::channel;
+use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
@@ -12,6 +12,7 @@ fn main() {
     let address = "localhost:8080";
     println!("server run on: {}", address);
 
+    // 平滑退出在独立的线程中执行
     let shutdown_handler = thread::spawn(|| {
         graceful_shutdown();
     });
@@ -35,18 +36,17 @@ fn main() {
     });
 
     handler.join().unwrap();
+
+    // 等平滑退出函数执行完毕
     shutdown_handler.join().unwrap();
 }
 
 // 处理客户端请求
 fn handler_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
-
     // 通过读取stream流到buffer变量中
     stream.read(&mut buffer).unwrap();
-
     let long_page = b"GET /long HTTP/1.1\r\n";
-
     // 响应的body内容
     let mut content = r##"
         <!DOCTYPE html>
@@ -82,22 +82,26 @@ fn handler_connection(mut stream: TcpStream) {
         "##
     }
 
-    // 设置http请求行，响应状态码200
-    // 将content加入到将要写入流的成功返回的body中
+    // 设置http请求行，响应状态码200，
+    // 将content加入到响应体中，该响应体以写入流的方式返回
     let response = format!(
         "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
         content.len(),
         content,
     );
 
-    println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
+    // 如果请求地址非/favicon.ico开头，就输出对应的请求日志
+    if !buffer.starts_with(b"GET /favicon.ico HTTP/1.1\r\n") {
+        println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
+    }
 
     stream.write(response.as_bytes()).unwrap();
     stream.flush().unwrap();
 }
 
+// 使用ctrlc包实现服务平滑退出
 fn graceful_shutdown() {
-    let (tx, rx) = channel();
+    let (tx, rx) = mpsc::channel();
     ctrlc::set_handler(move || tx.send(()).expect("Could not send signal on channel."))
         .expect("Error setting Ctrl-C handler");
 

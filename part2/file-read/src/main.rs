@@ -1,4 +1,4 @@
-// 通过use关键字引入模块名称
+// 通过use关键字引入模块
 use std::error;
 use std::fs;
 

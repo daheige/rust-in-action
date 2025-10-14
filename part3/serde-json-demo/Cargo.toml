@@ -1,0 +1,10 @@
+[package]
+name = "serde-json-demo"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+#用于serde序列化功能
+serde = { version = "1.0.219", features = ["derive"] }
+#用于json序列化处理
+serde_json = "1.0.143"

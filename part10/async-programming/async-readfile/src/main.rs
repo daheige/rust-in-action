@@ -16,5 +16,5 @@ async fn read(path: &str) {
 fn main() {
     let path = "test.md";
     let f = read(path);
-    block_on(f);
+    block_on(f); // 驱动异步函数执行
 }

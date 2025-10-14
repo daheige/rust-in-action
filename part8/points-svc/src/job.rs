@@ -14,6 +14,7 @@ use std::sync::{mpsc, Arc}; // 用于线程发送者/接收者以及消息通信
 use std::time::Duration;
 use tokio::signal; // 用于平滑退出信号量处理
 use tokio::sync::RwLock; // 用于消费者退出标识读写锁处理
+// use std::env;
 
 // 定义项目相关的模块
 mod config; // 用于配置文件读取以及mysql和pulsar初始化
@@ -22,7 +23,10 @@ mod infras; // 项目中基础设施层封装
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    // env::set_var("RUST_LOG", "debug");
+    // unsafe {
+    //     env::set_var("RUST_LOG", "debug");
+    // }
+
     env_logger::init(); // 初始化操作日志配置
     println!("points-svc job");
     println!("app_debug:{:?}", APP_CONFIG.app_debug);
@@ -100,7 +104,7 @@ async fn consumer_message(exit: Arc<RwLock<bool>>) -> anyhow::Result<()> {
             }
         };
 
-        // 消费消息逻辑,这里需要处理用户积分明细落地到数据库DB中，并更新用户的积分总数
+        // 消费消息，这里需要将用户积分明细落地到数据库DB中，并更新用户的积分总数。
         println!("got message data:{:?}", data);
         let openid = data.openid.clone();
         let reply = points_handler(data, &app_state.mysql_pool).await;

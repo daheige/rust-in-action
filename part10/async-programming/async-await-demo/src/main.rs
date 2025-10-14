@@ -5,10 +5,11 @@ async fn hello_cat() {
 }
 
 // 在async fn中调用Future不使用.await表达式
-async fn hello() {
-    println!("call hello_cat without .await keywords");
-    hello_cat();
-}
+// hello_cat函数不会执行
+// async fn hello() {
+//     println!("call hello_cat without .await keywords");
+//     hello_cat();
+// }
 
 // 在async fn中调用Future使用.await表达式
 async fn say() {
@@ -19,7 +20,7 @@ async fn say() {
 }
 
 fn main() {
-    // // 在hello函数中不使用.await表达式
+    // 在hello函数中不使用.await表达式
     // hello();
 
     // 使用block_on阻塞的方式运行Future

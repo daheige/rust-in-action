@@ -25,8 +25,9 @@ fn main() {
     let mut builder = env_logger::Builder::from_env(env_config);
     builder
         .format(|buf, record| {
-            // 通过default_styled_level方法设置不同level日志颜色标识
-            let level = { buf.default_styled_level(record.level()) };
+            // 通过default_level_style方法设置不同level日志颜色标识
+            // let level = record.level();
+            let level = buf.default_level_style(record.level());
             writeln!(
                 buf,
                 "{} {} [{}:{}] {}",

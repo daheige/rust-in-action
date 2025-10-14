@@ -1,0 +1,67 @@
+[package]
+name = "qa-svc"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+
+# 点赞Job定时任务脚本
+[[bin]]
+name = "qa-vote-job"
+path = "src/vote_job.rs"
+
+# 阅读数Job
+[[bin]]
+name = "qa-read_count-job"
+path = "src/read_count_job.rs"
+
+[dependencies]
+# gRPC微服务所需要的相关组件，直接继承workspace中指定的版本
+tonic = { workspace = true }
+tokio = { workspace = true }
+# note: Must be the same as the tonic version
+tonic-reflection = { workspace = true }
+async-trait = { workspace = true }
+
+# json序列化处理
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# 配置文件读取以及用于消息序列化和反序列化处理
+serde_yaml = { workspace = true }
+once_cell = { workspace = true }
+
+# 操作日志
+log = { workspace = true }
+env_logger = { workspace = true, features = ["color"] }
+
+# chrono用于时间处理
+chrono = { workspace = true }
+
+# sqlx用于数据库操作
+sqlx = { workspace = true, features = ["runtime-tokio", "tls-native-tls", "mysql", "chrono", "time"] }
+
+# pulsar消息队列相关crate
+futures = { workspace = true }
+pulsar = { workspace = true }
+
+# redis操作库
+redis = { workspace = true, features = ["r2d2", "tokio-comp", "cluster", "cluster-async", "json"] }
+# r2d2用于redis连接池管理
+r2d2 = { workspace = true }
+
+# anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
+anyhow = { workspace = true }
+md5 = { workspace = true }
+uuid = { workspace = true, features = ["serde", "v4"] }
+
+# 项目自定义的crates
+infras = { path = "../infras" }
+pb = { path = "../pb" }
+
+# prometheus metrics
+autometrics = { workspace = true }
+
+[build-dependencies]
+# note: Must be the same as the tonic version
+tonic-prost-build = { workspace = true }

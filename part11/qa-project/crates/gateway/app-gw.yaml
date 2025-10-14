@@ -1,0 +1,5 @@
+app_debug: false # 是否开启调试模式
+app_port: 8090 # http gateway port
+metrics_port: 1338 # prometheus metrics port
+grpc_address: http://127.0.0.1:50051 # grpc service运行端口
+graceful_wait_time: 3 # http service平滑退出等待时间，单位s

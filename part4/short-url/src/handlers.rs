@@ -13,11 +13,11 @@ use tokio::signal; // 用于signal平滑退出
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 
-// empty object,like {}
+// 定义空对象{}数据类型
 #[derive(Deserialize, Serialize, Debug)]
 pub struct EmptyObject {}
 
-// 根据短链接url获取原始的长url
+// short_url函数，根据短链接url获取原始的长url
 // eg:your_domain/43KClC 格式的短链请求
 pub async fn short_url(Path(key): Path<String>, State(state): State<Arc<AppState>>) -> Response {
     println!("request short url:{}", key);
@@ -86,7 +86,8 @@ pub async fn create_short_url(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<ShortUrlRequest>,
 ) -> impl IntoResponse {
-    format!("request origin url:{}", payload.url);
+    println!("request origin url:{}", payload.url);
+
     // murmurhash算法生成出来的数字是u32类型的，重复的概率非常小
     // 如果有重复在实际业务中,可以在url后面追加随机字符串方式处理或者采用mysql唯一索引的方式处理
     let num = murmurhash32::murmurhash3(payload.url.as_bytes());

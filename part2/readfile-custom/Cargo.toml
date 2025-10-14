@@ -1,10 +1,10 @@
 [package]
 name = "readfile-custom"
-version = "0.1.0"
-edition = "2021"
+version = "0.1.2"
+edition = "2024"
 authors = ["daheige"]
 description = "read file content by cli"
-keywords = ["read-file", "custom-error",]
+keywords = ["read-file", "custom-error"]
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/daheige/rust-in-action"

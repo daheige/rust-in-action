@@ -1,7 +1,7 @@
 [package]
 name = "string_utils"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -9,9 +9,11 @@ edition = "2021"
 # 这个名称在Python中用于导入
 name = "string_utils"
 
-# cdylib是生成供Python模块导入的共享库所必需的。
+# cdylib是C Dynamic Library的简写，名为C规范动态库，可以生成被其它语言调用的库，也就是跨语言FFI使用。
+# 几乎所有语言都遵循C规范的FFI实现，它会按照平台生成.so(linux或类unix)，.dylib(OSX系统)，.dll(windows)等库。
+# 这里设置为cdylib表示编译成一个和C语言二进制接口ABI兼容的动态链接库。
 crate-type = ["cdylib"]
 
 [dependencies]
 # pyo3包需要指定extension-module features
-pyo3 = { version = "0.21.2", features = ["extension-module"] }
+pyo3 = { version = "0.26.0", features = ["extension-module"] }

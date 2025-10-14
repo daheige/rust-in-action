@@ -1,0 +1,14 @@
+[package]
+name = "pb"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+
+[dependencies]
+# grpc相关依赖包
+tonic = { workspace = true }
+prost = { workspace = true }
+tonic-prost = { workspace = true }
+# 序列化处理
+serde = { workspace = true }

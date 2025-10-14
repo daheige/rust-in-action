@@ -1,11 +1,15 @@
 [package]
 name = "logrote-service"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "systime-output"
+path = "src/systime-output.rs"
+
 [dependencies]
-rcron = "1.2.2"
-chrono = "0.4.34"
+rcron = "1.2.3"
+chrono = "0.4.41"
 filesize = "0.2.0"

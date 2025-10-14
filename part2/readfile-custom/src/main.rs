@@ -5,7 +5,18 @@ use std::fs;
 mod custom_error;
 use custom_error::CustomError;
 
-fn main() -> Result<(), CustomError> {
+fn main() {
+    let res = read_file();
+
+    // 模式匹配
+    match res {
+        Err(err) => println!("{:?}", err.0),
+        Ok(content) => println!("{}", content),
+    }
+}
+
+// 从终端中获取文件名，并读取文件内容
+fn read_file() -> Result<String, CustomError> {
     println!("read file");
 
     // 获取终端输入的第二个参数，也就是指定读取的文件
@@ -13,10 +24,9 @@ fn main() -> Result<(), CustomError> {
     println!("file_path:{}", file_path);
 
     // 读取内容到字符串中
-    // 将错误放入CustomError类型中
+    // 如果发生错误，就将错误放入CustomError类型中
     let content = fs::read_to_string(file_path)
         .map_err(|err| CustomError(format!("read file err:{}", err)))?;
-    println!("read file content:{}", content);
 
-    Ok(())
+    Ok(content)
 }

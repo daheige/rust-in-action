@@ -1,5 +1,5 @@
 // foo.c 源码定义
-// Created by daheige on 2024/5/16.
+// Created by daheige on 2024/9/17.
 
 // 引入c语言的stdio和string库对应的头文件
 #include <stdio.h>
@@ -17,15 +17,9 @@ void print_app_info() {
         printf("welcome to ");
     }
 #endif
-
     // APP_NAME和VERSION两个宏变量是来自build.rs文件定义的宏变量
     // 也就是说当执行cargo build时，先执行build.rs文件中的main函数，然后就会生成C静态库libfoo.a文件
     printf("%s - current version:%s\n", APP_NAME, VERSION);
-}
-
-// 实现hello函数
-void hello() {
-    printf("hello,world\n");
 }
 
 // 实现greet函数，该函数的参数是一个char*类型

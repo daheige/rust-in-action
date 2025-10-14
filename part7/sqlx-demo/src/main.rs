@@ -46,7 +46,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("zhangsan") // 通过bind方法实现参数绑定
         .bind(33)
         .bind("abc")
-        .bind(NaiveDate::from_ymd_opt(2022, 04, 13))
+        .bind(NaiveDate::from_ymd_opt(2024, 12, 08))
         .execute(&pool) // 异步执行sql
         .await?;
     let id = affect_rows.last_insert_id(); // 获取插入的自增id
@@ -57,14 +57,15 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("xiaoming")
         .bind(23)
         .bind("efg")
-        .bind(NaiveDate::from_ymd_opt(2024, 02, 13))
+        .bind(NaiveDate::from_ymd_opt(2024, 12, 08))
         .execute(&pool)
         .await?;
     let id = affect_rows.last_insert_id();
     println!("current insert user id = {}", id);
 
     // ====查询操作====
-    // 2、使用fetch执行查询并将生成的结果作为流BoxStream返回
+    // 2、使用fetch执行查询并将生成的结果作为BoxStream流返回，
+    // 接着使用while let模式匹配处理结果。
     let sql = "select * from users where id >= ?";
     let mut stream = sqlx::query(sql).bind(1).fetch(&pool);
     // 通过while let模式匹配和try_next从流中迭代数据方法遍历数据
@@ -85,7 +86,8 @@ async fn main() -> Result<(), sqlx::Error> {
     }
 
     // ====数据查询操作====
-    // 3、使用fetch执行查询并将生成的结果作为流BoxStream返回
+    // 3、使用fetch执行查询并将生成的结果作为流BoxStream返回，
+    // 接着使用map闭包处理结果。
     let sql = "select * from users where id >= ?";
     let records = sqlx::query(sql)
         .bind(1)
@@ -116,7 +118,8 @@ async fn main() -> Result<(), sqlx::Error> {
         .await?;
     println!("{:?}", affect_rows);
 
-    // =====query_as方法使用，将查询结果自动映射到rust表达式的左值中，比如下面将结果集映射到结构体中
+    // 5、使用query_as方法将查询结果自动映射到Rust的结构体中，
+    // 例如，下面将结果集映射到UserEntity结构体中
     let sql = "select * from users where id >= ?";
     // fetch方法执行查询并将生成的结果作为流BoxStream返回
     // query_as方法将每一行结果集映射到结构体UserEntity中
@@ -151,7 +154,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .bind("lisi")
         .bind(32)
         .bind("abc")
-        .bind(NaiveDate::from_ymd_opt(2022, 04, 13))
+        .bind(NaiveDate::from_ymd_opt(2024, 12, 08))
         // In 0.7, `Transaction` can no longer implement `Executor` directly,
         // so it must be dereferenced to the internal connection type.
         // 这里需要对tx进行解引用并获取内部DB的可变引用connection

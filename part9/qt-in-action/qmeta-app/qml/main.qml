@@ -12,7 +12,7 @@ Window {
     title: "Hello App"
     height: 480
     width: 640
-    color: "#e4af79"
+    color: "#ffffff"
 
     // 自定义的Hello类型
     Hello {
@@ -60,8 +60,8 @@ Window {
                 implicitWidth: 400
                 implicitHeight: 50
                 radius: 3
-                color: "#e2e8f0"
-                border.color: "#21be2b"
+                color: "#ffffff"
+                border.color: "#111111"
             }
         }
 
@@ -85,8 +85,8 @@ Window {
                 implicitWidth: 400
                 implicitHeight: 50
                 radius: 3
-                color: "#e2e8f0"
-                border.color: "#21be2b"
+                color: "#ffffff"
+                border.color: "#111111"
             }
         }
     }

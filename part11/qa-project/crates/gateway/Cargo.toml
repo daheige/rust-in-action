@@ -1,0 +1,42 @@
+[package]
+name = "gateway"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# grpc相关组件
+tonic = { workspace = true }
+tokio = { workspace = true }
+
+# 网关使用axum http框架接入
+axum = { workspace = true }
+
+# json序列化处理
+serde = { workspace = true }
+
+# 配置文件读取以及用于消息序列化和反序列化处理
+serde_yaml = { workspace = true }
+once_cell = { workspace = true }
+
+# 操作日志
+log = {workspace = true}
+
+# 项目自定义的crates
+infras = { path = "../infras" }
+pb = { path = "../pb" }
+
+#uuid
+uuid = { workspace = true, features = ["serde", "v4"] }
+
+#validator
+validator = { workspace = true, features = ["derive"] }
+
+# body util
+http-body-util = { workspace = true }
+
+# prometheus metrics
+autometrics = { workspace = true }

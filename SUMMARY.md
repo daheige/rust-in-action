@@ -1,31 +1,33 @@
-# rust实战项目开发
+# Rust实战项目开发
+
 - 封面
 - 序
-- 内容摘要
+- 内容简介
+- 读者对象
 - 作者简介
+- 推荐语
 - 前言
-- 第1章 rust语言简介
-    - 1.1 rust基本介绍
-        - 1.1.1 rust是什么
-        - 1.1.2 为什么需要rust
-        - 1.1.3 rust应用领域
-        - 1.1.4 rust未来发展
-    - 1.2 rust初步体验
-        - 1.2.1 rust安装
-        - 1.2.2 rust镜像源配置
-        - 1.2.3 快速创建一个rust应用
-        - 1.2.4 编写单元测试、集成测试和基准测试
-    - 1.3 rust工具链选择
-        - 1.3.1 rust编辑器选择
+- 第1章 Rust语言简介
+    - 1.1 Rust基本介绍
+        - 1.1.1 Rust是什么
+        - 1.1.2 为什么需要Rust
+        - 1.1.3 Rust应用领域
+        - 1.1.4 Rust未来发展
+    - 1.2 Rust初步体验
+        - 1.2.1 Rust安装
+        - 1.2.2 Rust镜像源配置
+        - 1.2.3 Rust单元测试、集成测试和基准测试
+    - 1.3 Rust工具链
+        - 1.3.1 Rust编辑器选择
         - 1.3.2 cargo工具使用
         - 1.3.3 rustup版本更新
-    - 1.4 rust程序交叉编译
-        - 1.4.1 通过cargo-xwin实现windows静态编译
-        - 1.4.2 通过musl工具实现linux交叉编译
-        - 1.4.3 通过cross工具实现交叉编译
+    - 1.4 Rust交叉编译
+        - 1.4.1 在MacOS平台上实现交叉编译
+        - 1.4.2 在Windows平台上实现交叉编译
+        - 1.4.3 通过cross实现跨平台交叉编译
 
-- 第2章 rust模块化编程实战
-    - 2.1 rust中的模块化编程简介
+- 第2章 Rust模块化编程实战
+    - 2.1 Rust中的模块化编程简介
     - 2.2 package包
         - 2.2.1 二进制类型的包
         - 2.2.2 library类型的包
@@ -35,7 +37,7 @@
         - 2.3.3 使用use绑定模块成员
         - 2.3.4 使用super与self简化模块路径
         - 2.3.5 使用pub use重新导出
-    - 2.4 项目目录层次结构
+    - 2.4 模块层次结构划分
         - 2.4.1 将模块映射到文件
         - 2.4.2 将模块映射到目录
     - 2.5 crate包管理
@@ -44,134 +46,134 @@
         - 2.5.3 编写一个终端输出变色的例子
         - 2.5.4 编写一个自定义crate包与发布
 
-- 第3章 rust json实战
-    - 3.1 json基础简介
-        - 3.1.1 json基本数据类型
-        - 3.1.2 json序列化与反序列化
-    - 3.2 serde和serde_json简介
-    - 3.3 serde_json Value类型
-    - 3.4 serde_json序列化与反序列化
-        - 3.4.1 将json字符串解析到数据结构
-        - 3.4.2 将数据结构序列化成json字符串
-        - 3.4.3 serde_json自定义转换与字段忽略
-        - 3.4.4 编写一个json配置文件读写案例
+- 第3章 Rust JSON实战
+    - 3.1 JSON基础
+        - 3.1.1 JSON基本数据类型
+        - 3.1.2 JSON序列化与反序列化
+    - 3.2 serde基本简介
+    - 3.3 serde_json基本操作
+        - 3.3.1 serde_json序列化与反序列化
+        - 3.3.2 serde_json自定义序列化和反序列化
+        - 3.3.3 serde_json中的json宏
+        - 3.3.4 serde_json其他高级特性
+        - 3.3.5 编写一个JSON配置文件读写案例
 
-- 第4章 rust web编程实战
-    - 4.1 web编程简介
-        - 4.1.1 tcp协议
-        - 4.1.2 http协议
-    - 4.2 rust中的web应用
-    - 4.3 web server服务
-        - 4.3.1 创建一个简单的单线程web server
-        - 4.3.2 将单线程server重构为多线程server
-        - 4.3.3 web服务平滑退出
-    - 4.4 web编程第三方库操作
-        - 4.4.1 tide库使用
-        - 4.4.2 axum库使用
-        - 4.4.3 编写一个简单的短链服务
+- 第4章 Rust Web编程实战
+    - 4.1 Web编程简介
+        - 4.1.1 TCP
+        - 4.1.2 HTTP
+    - 4.2 使用Rust构建Web Server
+        - 4.2.1 创建一个简单的单线程Web Server
+        - 4.2.2 将单线程Server重构为多线程Server
+        - 4.2.3 Web服务平滑退出
+    - 4.3 Rust Web编程第三方库操作
+        - 4.3.1 tide库使用
+        - 4.3.2 axum库使用
+        - 4.3.3 编写一个简单的短链服务
 
-- 第5章 rust 命令行cli实战
-    - 5.1 命令行cli简介
-        - 5.1.1 什么是命令行cli
-        - 5.1.2 命令行cli使用场景
-    - 5.2 rust命令行参数解析
-        - 5.2.1 从终端获取cli参数
-        - 5.2.2 cli参数类型转换
-    - 5.3 第三方cli命令行库操作
-        - 5.3.1 使用structOpt库处理cli参数解析
-        - 5.3.2 使用clap库处理cli参数解析
-        - 5.3.3 编写一个mysql表结构转换为rust结构体的工具
+- 第5章 Rust命令行界面实战
+    - 5.1 命令行CLI简介
+        - 5.1.1 什么是命令行CLI
+        - 5.1.2 命令行CLI使用场景
+    - 5.2 Rust命令行参数解析
+        - 5.2.1 从终端获取CLI参数
+        - 5.2.2 CLI参数类型转换
+    - 5.3 第三方CLI命令行库操作
+        - 5.3.1 使用structopt库处理CLI参数解析
+        - 5.3.2 使用clap库处理CLI参数解析
+        - 5.3.3 编写一个图片压缩、裁剪和旋转的工具
+        - 5.3.4 编写一个MySQL表结构转换为Rust结构体的工具
 
-- 第6章 rust cron实战
+- 第6章 Rust crontab实战
     - 6.1 crontab简介
         - 6.1.1 crontab是什么
-        - 6.1.2 crontab使用场景
-        - 6.1.3 crontab基本语法
-    - 6.2 crontab需要注意的事项
-        - 6.2.1 shell命令路径问题
-        - 6.2.2 环境变量设置问题
-    - 6.3 rust中cron操作
-        - 6.3.1 第三方rcron库基本使用
-        - 6.3.2 rcron与crontab区别
-        - 6.3.3 编写一个自动切割日志的cron案例
+        - 6.1.2 crontab基本语法
+    - 6.2 crontab注意事项
+        - 6.2.1 crontab执行路径问题
+        - 6.2.2 crontab读取环境变量问题
+    - 6.3 Rust中cron操作
+        - 6.3.1 第三方库rcron使用
+        - 6.3.2 编写一个日志文件自动切割的工具
+        - 6.3.3 编写一个MySQL数据库定时备份的工具
 
-- 第7章 rust中数据库和缓存实战
+- 第7章 Rust中的数据库和缓存实战
     - 7.1 数据库和缓存简介
-    - 7.2 mysql
-        - 7.2.1 mysql下载和安装
-        - 7.2.2 mysql基础使用
-    - 7.3 redis
-        - 7.3.1 redis下载和安装
-        - 7.3.2 redis基本数据结构
-        - 7.3.3 redis基本命令操作
-    - 7.4 rust中mysql和redis操作
-        - 7.4.1 使用sqlx库操作mysql
-        - 7.4.2 使用redis-rs库操作redis
+    - 7.2 MySQL
+        - 7.2.1 MySQL下载和安装
+        - 7.2.2 MySQL基本使用
+    - 7.3 Redis
+        - 7.3.1 Redis下载和安装
+        - 7.3.2 Redis基本数据类型
+    - 7.4 Rust中MySQL和Redis操作
+        - 7.4.1 使用sqlx库操作MySQL
+        - 7.4.2 使用redis-rs库操作Redis
         - 7.4.3 编写一个增量同步的阅读数服务
 
-- 第8章 rust中消息队列MQ实战
+- 第8章 Rust中的消息队列实战
     - 8.1 消息队列MQ简介
-    - 8.2 kafka基础
-        - 8.2.1 kafka安装
-        - 8.2.2 kafka基本概念
-    - 8.3 pulsar基础
-        - 8.3.1 pulsar安装
-        - 8.3.2 pulsar基本概念
-    - 8.4 rust中kafka和pulsar操作
-        - 8.4.1 使用kafka client库操作kafka
-        - 8.4.2 使用pulsar client库操作pulsar
+    - 8.2 Kafka基础
+        - 8.2.1 Kafka安装
+        - 8.2.2 Kafka基本概念
+    - 8.3 Pulsar基础
+        - 8.3.1 Pulsar安装
+        - 8.3.2 Pulsar基本概念
+    - 8.4 Rust中Kafka和Pulsar操作
+        - 8.4.1 使用kafka client库操作Kafka
+        - 8.4.2 使用pulsar client库操作Pulsar
         - 8.4.3 编写一个简单的积分系统
 
-- 第9章 rust ffi调用实战
-    - 9.1 rust安全性和不安全性
-    - 9.2 rust ffi调用简介
-        - 9.2.1 ffi调用的安全性与不安全性
-        - 9.2.2 ffi调用的注意事项
-    - 9.3 rust qt绑定
-        - 9.3.1 qt简介
-        - 9.3.2 rust qt相关绑定库简介
+- 第9章 Rust FFI调用实战
+    - 9.1 Rust安全性和不安全性
+    - 9.2 Rust FFI调用简介
+        - 9.2.1 FFI调用的安全性与不安全性
+        - 9.2.2 FFI调用的注意事项
+    - 9.3 Rust Qt绑定
+        - 9.3.1 Qt简介
+        - 9.3.2 Rust Qt相关绑定库简介
         - 9.3.3 使用cxx-qt编写一个桌面应用程序
         - 9.3.4 使用qmetaobject编写一个桌面应用程序
-    - 9.4 rust和其他语言交互
-        - 9.4.1 使用cc库在rust中调用c语言代码
-        - 9.4.2 使用neon库为nodejs编写原生拓展
-        - 9.4.3 使用PyO3库为python编写拓展
+    - 9.4 Rust和其他语言交互
+        - 9.4.1 使用cc库在Rust中调用C语言代码
+        - 9.4.2 使用neon库为Nodejs编写原生拓展
+        - 9.4.3 使用PyO3库为Python编写拓展
 
-- 第10章 综合应用：构建一个高并发QA问答系统实战
+- 第10章 Rust并发编程与异步编程实战
     - 10.1 并发与并行
-    - 10.2 rust并发编程
+    - 10.2 Rust并发编程
         - 10.2.1 使用spawn创建线程
         - 10.2.2 move关键字和自定义线程
-        - 10.2.3 Mutex互斥锁和Arc
+        - 10.2.3 Mutex和Arc
         - 10.2.4 channel消息传递
-    - 10.3 rust异步编程
+    - 10.3 Rust异步编程
         - 10.3.1 为什么需要异步编程
         - 10.3.2 async/await基础
-        - 10.3.3 async中move关键字
+        - 10.3.3 async中move关键字使用
         - 10.3.4 tokio运行时
-    - 10.4 QA问答系统架构设计
-        - 10.4.1 功能分析
-        - 10.4.2 架构设计
-        - 10.4.3 pb协议定义
-    - 10.5 QA问答系统layout分层
-    - 10.6 QA问答系统技术实现
-        - 10.6.1 使用tonic库编写grpc微服务接口
-        - 10.6.2 使用serde_yaml读取配置文件
-        - 10.6.3 使用redis计数器实现问题阅读数功能
-        - 10.6.4 使用pulsar实现回答点赞功能
-        - 10.6.5 使用log和env_logger记录日志
-        - 10.6.6 grpc http网关层
-    - 10.7 QA问答系统的服务可观测性
-        - 10.7.1 pprof metrics接入
-        - 10.7.2 prometheus部署与接入
-        - 10.7.3 grafana部署与接入
-    - 10.8 QA问答系统的部署方式选择
-        - 10.8.1 常用的部署方式简介
-        - 10.8.2 采用supervisor工具部署二进制文件
-        - 10.8.3 采用rust docker镜像构建与发布
-
+- 第11章 构建一个高并发的QA问答系统实战
+    - 11.1 问答系统架构设计
+        - 11.4.1 功能分析
+        - 11.4.2 架构设计
+        - 11.4.3 pb协议定义
+    - 11.2 问答系统layout分层
+    - 11.3 问答系统技术实现
+        - 11.3.1 使用tonic库编写gRPC微服务接口
+        - 11.3.2 使用serde_yaml读取配置文件
+        - 11.3.3 使用Redis计数器实现问题阅读数功能
+        - 11.3.4 使用Pulsar实现回答点赞功能
+        - 11.3.5 使用log和env_logger记录日志
+        - 11.3.6 gRPC HTTP网关层
+    - 11.4 问答系统的服务可观测性
+        - 11.4.1 metrics接入
+        - 11.4.2 prometheus部署与接入
+        - 11.4.3 grafana部署与接入
+    - 11.5 问答系统的部署方式选择
+        - 11.5.1 使用supervisor工具部署二进制文件
+        - 11.5.2 使用Rust docker镜像构建与发布
+- 参考文献
 - 附录
-    - A rust edition版本演化
-    - B rust tokio运行时调度机制
-    - C rust vs go生态对比
-    - D rust 参考文献
+    - A Rust edition版本演化
+    - B Rust tokio运行时调度机制
+    - C Docker中Kafka和Pulsar基本操作
+    - D MacOS系统安装Qt工具
+    - E QA问答系统相关内容
+    - F Rust和Go语言对比

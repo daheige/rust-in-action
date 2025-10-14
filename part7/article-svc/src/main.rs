@@ -6,7 +6,7 @@ mod infras; // 项目中基础设施层封装
 mod routers; // axum http框架路由模块
 
 // 引入模块
-use crate::config::{mysql, xredis, APP_CONFIG};
+use crate::config::{APP_CONFIG, mysql, xredis};
 use std::net::SocketAddr;
 use std::process;
 use std::sync::Arc;
@@ -37,7 +37,7 @@ async fn main() -> anyhow::Result<()> {
     let router = routers::api_router(app_state);
 
     // Create a `TcpListener` using tokio.
-    let listener = TcpListener::bind(address).await?.into();
+    let listener = TcpListener::bind(address).await?;
 
     // Run the server with graceful shutdown
     axum::serve(listener, router)

@@ -1,0 +1,8 @@
+[package]
+name = "imgtool"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+image = "0.25.6"
+structopt = "0.3.26"

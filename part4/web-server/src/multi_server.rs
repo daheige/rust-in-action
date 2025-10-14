@@ -75,7 +75,7 @@ fn handler_connection(mut stream: TcpStream) {
     }
 
     // 设置http请求行，响应状态码200
-    // 将content加入到将要写入流的成功返回的body中
+    // 将content加入到响应体中，该响应体以写入流的方式返回
     let response = format!(
         "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
         content.len(),

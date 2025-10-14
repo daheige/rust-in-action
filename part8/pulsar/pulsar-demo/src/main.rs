@@ -3,14 +3,17 @@ mod xpulsar;
 
 // 引入相关包
 use log::info;
-use pulsar::{producer, proto, Error as PulsarError};
+use pulsar::{Error as PulsarError, producer, proto};
 use std::env;
 use xpulsar::{Message, PulsarConf}; // 引入xpulsar模块中的Message和PulsarConf
 
 #[tokio::main]
 async fn main() -> Result<(), PulsarError> {
     println!("publish pulsar message");
-    // env::set_var("RUST_LOG", "debug");
+    // unsafe {
+    //     env::set_var("RUST_LOG", "debug");
+    // }
+
     env_logger::init(); // 初始化操作日志配置
 
     // pulsar连接地址
@@ -48,12 +51,13 @@ async fn main() -> Result<(), PulsarError> {
         };
         info!("sent msg:{:?}", msg);
         // 发送消息
-        producer.send(msg).await?;
+        producer.send_non_blocking(msg).await?;
 
         counter += 1;
         info!("publish message count:{}", counter);
         tokio::time::sleep(std::time::Duration::from_millis(10)).await;
-        if counter >= 10 {
+        if counter >= 5 {
+            // 这里仅发送5条消息
             break;
         }
     }

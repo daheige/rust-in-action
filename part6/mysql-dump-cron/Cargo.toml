@@ -1,0 +1,14 @@
+[package]
+name = "mysql-dump-cron"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# dotenv 用于读取.env配置文件
+dotenv = "0.15.0"
+# rcron 用于定时任务处理
+rcron = "1.2.3"
+# chrono 用于时间相关的操作
+chrono = "0.4.41"
+# anyhow 用于错误处理，它是Rust中的一个库，旨在提供灵活的、具体的错误处理能力
+anyhow = "1.0.99"

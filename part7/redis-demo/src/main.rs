@@ -12,7 +12,7 @@ use xredis::RedisService;
 async fn main() -> anyhow::Result<()> {
     // 单机版redis或者vip ip形式的redis，创建redis连接连接池
     // dsn格式：redis://:[password]@[host]:[port]/[database]
-    // 比如说：redis://:@127.0.0.1:6379/0
+    // 例如：redis://:@127.0.0.1:6379/0
     let dsn = "redis://:@127.0.0.1:6379/0";
     let pool = RedisService::builder()
         .with_dsn(dsn)
@@ -51,7 +51,7 @@ async fn main() -> anyhow::Result<()> {
 
     // 为单个conn session会话设置timeout为2s
     let mut conn2 = pool.get_timeout(Duration::from_secs(2)).unwrap();
-    conn2.set("user2", "xiaoming")?;
+    let _: () = conn2.set("user2", "xiaoming")?;
 
     // redis mget操作
     // let res: RedisResult<Vec<String>> = conn.mget(&["username", "user2"]);
@@ -64,7 +64,7 @@ async fn main() -> anyhow::Result<()> {
     println!("post num:{}", num);
 
     // 通过redis cmd形式操作redis
-    redis::cmd("set").arg(&["user3", "abc"]).query(&mut conn)?;
+    let _: () = redis::cmd("set").arg(&["user3", "abc"]).query(&mut conn)?;
     let name: String = conn.get("user3")?;
     println!("user3:{}", name);
 

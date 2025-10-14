@@ -11,7 +11,10 @@ use xpulsar::{Message, PulsarConf}; // 引入xpulsar模块中的Message和Pulsar
 #[tokio::main]
 async fn main() -> Result<(), PulsarError> {
     println!("consumer pulsar message...");
-    // env::set_var("RUST_LOG", "debug");
+    // unsafe {
+    //     env::set_var("RUST_LOG", "debug");
+    // }
+
     env_logger::init(); // 初始化操作日志配置
 
     // pulsar连接地址
@@ -35,7 +38,7 @@ async fn main() -> Result<(), PulsarError> {
 
     info!("consumer has run...");
     let mut counter: usize = 0;
-    // 接收消息并消费
+    // 实时监听并消费topic中的消息
     while let Some(msg) = consumer.try_next().await? {
         // println!("metadata:{:?}", msg.message_id());
         // println!("id:{:?}", msg.message_id());

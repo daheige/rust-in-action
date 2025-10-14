@@ -136,7 +136,7 @@ impl Engine {
             .expect("write header failed");
         // gen code for table info
         for table in &tables {
-            println!("gen code for table:{}", table);
+            println!("gen code for table:{} begin", table);
             self.gen_table_code(&pool, &out_dir, &mut mod_file, table)
                 .await;
             println!("gen code for table:{} finish", table);
@@ -200,21 +200,22 @@ impl Engine {
             fields
         );
 
+        // println!("sql:{}", sql);
         let mut rows = sqlx::query(&sql).bind(table).fetch(pool);
         let mut records = Vec::new();
         while let Some(row) = rows.try_next().await? {
             let record = ColumnEntry {
                 table_name: row.get("table_name"),
                 field: row.get("field"),
-                data_type: row.get("data_type"),
-                field_desc: row.get("field_desc"),
-                field_key: row.get("field_key"),
+                data_type: row.get_unchecked("data_type"),
+                field_desc: row.get_unchecked("field_desc"),
+                field_key: row.get_unchecked("field_key"),
                 order_by: row.get("order_by"),
                 is_nullable: row.get("is_nullable"),
                 numeric_prec: row.get("numeric_prec"),
                 numeric_scale: row.get("numeric_scale"),
                 extra: row.get("extra"),
-                field_comment: row.get("field_comment"),
+                field_comment: row.get_unchecked("field_comment"),
             };
             records.push(record);
         }
@@ -237,8 +238,14 @@ impl Engine {
 
     fn get_no_null_fields(&self) -> Vec<String> {
         let v = vec![
+            "i8".to_string(),
+            "u8".to_string(),
+            "i16".to_string(),
+            "u16".to_string(),
             "i32".to_string(),
+            "u32".to_string(),
             "i64".to_string(),
+            "u64".to_string(),
             "f64".to_string(),
             "f32".to_string(),
             "String".to_string(),

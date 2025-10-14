@@ -1,5 +1,5 @@
-use futures::Future;
 use futures::executor::block_on;
+use futures::Future;
 
 // async fn 中使用async块
 async fn blocks() {
@@ -13,8 +13,9 @@ async fn blocks() {
         println!("{greet}");
     };
 
-    // 运行这2个futures等待它们执行完成，会连续输出两次"hello,world"
-    let ((), ()) = futures::join!(future_one, future_two);
+    // 运行这2个Future并等待它们执行完成，
+    // 程序将输出两次"hello,world"字符串
+    futures::join!(future_one, future_two);
 }
 
 // async move块
@@ -28,8 +29,7 @@ fn move_block() -> impl Future<Output = ()> {
 }
 
 fn main() {
-    // 运行async fn函数
-    block_on(blocks());
+    block_on(blocks()); // 通过block_on执行器运行async异步函数
 
     // move_block函数会返回一个Future，然后使用block_on执行future直到完成
     let future = move_block();

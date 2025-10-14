@@ -1,7 +1,8 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use my_criterion::factorial;
+use std::hint::black_box;
 
-// 基准测试函数
+// 基准测试函数封装
 pub fn criterion_benchmark(c: &mut Criterion) {
     println!("bench factorial start...");
     c.bench_function("factorial(10)", |b| b.iter(|| factorial(black_box(10))));

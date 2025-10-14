@@ -7,7 +7,7 @@ use std::sync::Arc;
 pub fn api_router(state: Arc<config::AppState>) -> Router {
     let router = Router::new()
         .route("/", get(handlers::index::root))
-        .route("/api/points/:openid", get(handlers::index::points))
+        .route("/api/points/{openid}", get(handlers::index::points))
         .route("/api/points/publish", post(handlers::index::publish))
         .with_state(state);
     router

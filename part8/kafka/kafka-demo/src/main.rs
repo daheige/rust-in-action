@@ -4,15 +4,17 @@ use kafka::error::Error as KafkaError;
 use kafka::producer::{Producer, Record, RequiredAcks};
 use log::{error, info};
 use std::time::Duration;
-// use std::{env, thread};
+// use std::env;
 
-// 命令终端运行方式：RUST_LOG=debug cargo run kafka-demo
+// 命令终端运行方式：RUST_LOG=debug cargo run --bin kafka-demo
 // 这种运行方式，就会把对应的操作日志输出到终端
 fn main() {
     // 初始化logger配置
     // 日志level 优先级  error > warn > info > debug > trace
     // 设置日志级别环境变量，这里注释掉了，启动的时可手动指定RUST_LOG=debug
-    // env::set_var("RUST_LOG", "debug");
+    // unsafe {
+    //     env::set_var("RUST_LOG", "debug");
+    // }
     env_logger::init();
 
     let broker = "localhost:9092"; // kafka broker
@@ -20,8 +22,8 @@ fn main() {
     println!("publish message begin");
     let mut i = 0;
     // 发送消息到kafka topic中
-    // 这里发送10个消息到my-topic中
-    while i < 10 {
+    // 这里发送5个消息到my-topic中
+    while i < 5 {
         info!("current index:{}", i);
         let msg = format!("hello world: {}", i);
         info!("current msg:{}", msg);

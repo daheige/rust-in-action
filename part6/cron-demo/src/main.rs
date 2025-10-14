@@ -1,4 +1,4 @@
-// 导入chrono时间相关的包
+// 引入chrono时间相关的包
 use chrono::{DateTime, Local};
 use rcron::{Job, JobScheduler};
 use std::thread;
@@ -6,13 +6,14 @@ use std::time::Duration;
 
 fn main() {
     let mut sched = JobScheduler::new();
-    sched.add(Job::new("0 */1 * * * *".parse().unwrap(), || {
+    // 每3秒运行一次
+    sched.add(Job::new("*/3 * * * * *".parse().unwrap(), || {
         print_current_time();
     }));
 
     // 启动job scheduler
     loop {
-        // tick方法为JobScheduler增加时间中断并执行待处理的任务
+        // 调用 tick 方法执行待处理的任务
         // 建议至少停顿500毫秒
         sched.tick();
         thread::sleep(Duration::from_millis(500));

@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 
 fn main() {
-    // 创建一个互斥锁来保护共享数据
+    // 创建一个互斥锁来保护数据读写
     let mutex = Mutex::new(0);
     // 在一个闭包中获取互斥器的锁
     let f = || {
@@ -17,7 +17,7 @@ fn main() {
     };
     f2();
 
-    // 在主线程中获取互斥锁，并打印共享数据
+    // 在主线程中获取互斥锁，并打印数据
     let count = mutex.lock().unwrap();
     println!("Shared data count: {}", *count);
 }
