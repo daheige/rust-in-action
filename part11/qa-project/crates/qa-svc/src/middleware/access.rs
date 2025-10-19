@@ -41,10 +41,10 @@ where
     fn call(&mut self, req: http::Request<ReqBody>) -> Self::Future {
         // record basic request information
         let start = Instant::now();
-        let uri = req.uri().to_string();
+        let method = req.uri().path().to_string();
         let ua = get_ua(&req);
 
-        info!("gRPC request uri:{} ua:{}", uri, ua);
+        info!("gRPC request method:{} ua:{}", method, ua);
         let future = self.inner.call(req);
 
         // return future
@@ -52,7 +52,7 @@ where
             // waiting for the future to complete
             let res = future.await?;
             let elapsed = start.elapsed().as_millis();
-            info!("gRPC request uri:{} elapsed:{:?}", uri, elapsed);
+            info!("gRPC request method:{} elapsed:{:?}", method, elapsed);
             Ok(res)
         })
     }
