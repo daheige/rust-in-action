@@ -62,6 +62,10 @@ pb = { path = "../pb" }
 # prometheus metrics
 autometrics = { workspace = true }
 
+# 通过tower设置tonic中间件
+tower = "0.4.13"
+http = "1.1.0"
+
 [build-dependencies]
 # note: Must be the same as the tonic version
 tonic-prost-build = { workspace = true }

@@ -15,18 +15,16 @@ impl Interceptor for LoggingInterceptor {
     }
 }
 
-fn get_client_ip(request: &Request<()>) -> String {
+fn get_client_ip(req: &Request<()>) -> String {
     // 转换为IP字符串
-    request
-        .remote_addr() // 获取SocketAddr
+    req.remote_addr() // 获取SocketAddr
         .map(|addr: SocketAddr| addr.ip().to_string())
         .unwrap_or(String::from("unknown"))
 }
 
-fn get_ua(request: &Request<()>) -> String {
+fn get_ua(req: &Request<()>) -> String {
     // 转换为ua字符串
-    request
-        .metadata()
+    req.metadata()
         .get("user-agent")
         .map(|ua| ua.to_str().unwrap_or("unknown"))
         .unwrap_or("no agent")

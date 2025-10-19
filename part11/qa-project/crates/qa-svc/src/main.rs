@@ -7,7 +7,7 @@ mod middleware;
 
 // 引入模块
 use crate::config::{APP_CONFIG, mysql, xpulsar, xredis};
-use crate::middleware::LoggingInterceptor;
+use crate::middleware::{LoggingInterceptor, MyMiddlewareLayer};
 use infras::{Logger, graceful_shutdown, prometheus_init};
 use log::info;
 use pb::qa::qa_service_server::QaServiceServer;
@@ -66,16 +66,36 @@ async fn main() -> anyhow::Result<()> {
 
     // create grpc service
     let qa_service = application::new_qa_service(app_state);
-    let svc = QaServiceServer::with_interceptor(qa_service, LoggingInterceptor);
-    // 如果不需日志拦截器，使用下面方式定义
-    // let svc = QaServiceServer::new(qa_service);
+    let svc = QaServiceServer::new(qa_service);
+    // 通过layer方法设置自定义中间件 MyMiddlewareLayer，这种方式可以通过链式调用绑定多个中间件
     let grpc_server = Server::builder()
+        .layer(MyMiddlewareLayer)
         .add_service(reflection_service)
         .add_service(svc)
         .serve_with_shutdown(
             address,
             graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)),
         );
+
+    // 也可以直接通过 with_interceptor 方法设置中间件
+    // let svc = QaServiceServer::with_interceptor(qa_service, LoggingInterceptor);
+    // let grpc_server = Server::builder()
+    //     .add_service(reflection_service)
+    //     .add_service(svc)
+    //     .serve_with_shutdown(
+    //         address,
+    //         graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)),
+    //     );
+
+    // 如果不需拦截器，使用下面方式定义
+    // let svc = QaServiceServer::new(qa_service);
+    // let grpc_server = Server::builder()
+    //     .add_service(reflection_service)
+    //     .add_service(svc)
+    //     .serve_with_shutdown(
+    //         address,
+    //         graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)),
+    //     );
 
     // build http /metrics endpoint
     let metrics_server = prometheus_init(APP_CONFIG.metrics_port);
