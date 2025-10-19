@@ -3,10 +3,12 @@ mod application;
 mod config;
 mod domain;
 mod infrastructure;
+mod middleware;
 
 // 引入模块
-use crate::config::{mysql, xpulsar, xredis, APP_CONFIG};
-use infras::{graceful_shutdown, prometheus_init, Logger};
+use crate::config::{APP_CONFIG, mysql, xpulsar, xredis};
+use crate::middleware::LoggingInterceptor;
+use infras::{Logger, graceful_shutdown, prometheus_init};
 use log::info;
 use pb::qa::qa_service_server::QaServiceServer;
 use std::net::SocketAddr;
@@ -64,9 +66,12 @@ async fn main() -> anyhow::Result<()> {
 
     // create grpc service
     let qa_service = application::new_qa_service(app_state);
+    let svc = QaServiceServer::with_interceptor(qa_service, LoggingInterceptor);
+    // 如果不需日志拦截器，使用下面方式定义
+    // let svc = QaServiceServer::new(qa_service);
     let grpc_server = Server::builder()
         .add_service(reflection_service)
-        .add_service(QaServiceServer::new(qa_service))
+        .add_service(svc)
         .serve_with_shutdown(
             address,
             graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)),
