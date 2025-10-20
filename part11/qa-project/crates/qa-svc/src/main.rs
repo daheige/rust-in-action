@@ -7,13 +7,15 @@ mod middleware;
 
 // 引入模块
 use crate::config::{APP_CONFIG, mysql, xpulsar, xredis};
-use crate::middleware::{LoggingInterceptor, MyMiddlewareLayer};
+use crate::middleware::{LoggerMiddlewareLayer, LoggingInterceptor};
 use infras::{Logger, graceful_shutdown, prometheus_init};
 use log::info;
 use pb::qa::qa_service_server::QaServiceServer;
 use std::net::SocketAddr;
 use std::process;
 use std::time::Duration;
+use tonic::codegen::InterceptedService;
+use tonic::service::InterceptorLayer;
 use tonic::transport::Server;
 
 // 使用include_bytes!读取proto文件的descriptor bin二进制文件，
@@ -69,13 +71,25 @@ async fn main() -> anyhow::Result<()> {
     let svc = QaServiceServer::new(qa_service);
     // 通过layer方法设置自定义中间件 MyMiddlewareLayer，这种方式可以通过链式调用绑定多个中间件
     let grpc_server = Server::builder()
-        .layer(MyMiddlewareLayer)
+        .layer(LoggerMiddlewareLayer)
         .add_service(reflection_service)
         .add_service(svc)
         .serve_with_shutdown(
             address,
             graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)),
         );
+
+    // let svc = QaServiceServer::new(qa_service);
+    // // 通过layer方法和InterceptorLayer::new设置自定义中间件 LoggingInterceptor，
+    // // 这种方式可以通过链式调用绑定多个中间件
+    // let grpc_server = Server::builder()
+    //     .layer(InterceptorLayer::new(LoggingInterceptor))
+    //     .add_service(reflection_service)
+    //     .add_service(svc)
+    //     .serve_with_shutdown(
+    //         address,
+    //         graceful_shutdown(Duration::from_secs(APP_CONFIG.graceful_wait_time)),
+    //     );
 
     // 也可以直接通过 with_interceptor 方法设置中间件
     // let svc = QaServiceServer::with_interceptor(qa_service, LoggingInterceptor);

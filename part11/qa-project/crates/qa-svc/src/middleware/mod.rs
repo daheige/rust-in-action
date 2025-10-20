@@ -1,5 +1,5 @@
 mod access;
 mod log;
 
-pub use access::MyMiddlewareLayer;
+pub use access::LoggerMiddlewareLayer;
 pub use log::LoggingInterceptor;

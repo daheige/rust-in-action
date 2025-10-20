@@ -1,3 +1,4 @@
+use http::{HeaderMap, HeaderValue};
 use log::info;
 use std::net::SocketAddr;
 use std::pin::Pin;
@@ -7,9 +8,9 @@ use tonic::Request;
 use tower::{Layer, Service};
 
 #[derive(Debug, Clone, Default)]
-pub struct MyMiddlewareLayer;
+pub struct LoggerMiddlewareLayer;
 
-impl<S> Layer<S> for MyMiddlewareLayer {
+impl<S> Layer<S> for LoggerMiddlewareLayer {
     type Service = MyMiddleware<S>;
 
     fn layer(&self, service: S) -> Self::Service {
@@ -42,9 +43,14 @@ where
         // record basic request information
         let start = Instant::now();
         let method = req.uri().path().to_string();
-        let ua = get_ua(&req);
+        // let headers = req.headers();
+        // let ua = get_header(&headers, "user-agent");
+        // let ip = get_header(&headers, "x-forwarded-ip"); // 客户端原始IP地址
 
-        info!("gRPC request method:{} ua:{}", method, ua);
+        // info!("gRPC request method:{} ua:{} ip:{}", method, ua, ip);
+        // info!("gRPC request method:{} ua:{}", method, ua);
+
+        info!("gRPC request method:{} begin", method);
         let future = self.inner.call(req);
 
         // return future
@@ -52,18 +58,17 @@ where
             // waiting for the future to complete
             let res = future.await?;
             let elapsed = start.elapsed().as_millis();
-            info!("gRPC request method:{} elapsed:{:?}", method, elapsed);
+            info!("gRPC request method:{} elapsed:{:?}ms", method, elapsed);
             Ok(res)
         })
     }
 }
 
-fn get_ua<ReqBody: Send + 'static>(request: &http::Request<ReqBody>) -> String {
-    // 转换为ua字符串
-    request
-        .headers()
-        .get("user-agent")
-        .map(|ua| ua.to_str().unwrap_or("unknown"))
-        .unwrap_or("no agent")
+fn get_header(headers: &HeaderMap<HeaderValue>, key: &str) -> String {
+    // 转换为字符串
+    headers
+        .get(key)
+        .map(|val| val.to_str().unwrap_or("unknown"))
+        .unwrap_or("")
         .to_string()
 }

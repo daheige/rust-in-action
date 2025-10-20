@@ -9,6 +9,7 @@ impl Interceptor for LoggingInterceptor {
         println!("Request received: {:?}", request);
         let ip = get_client_ip(&request);
         let ua = get_ua(&request);
+
         println!("gRPC request ip: {} ua:{}", ip, ua);
 
         Ok(request)
