@@ -46,4 +46,4 @@ gateway-stop:
 	docker rm ${GATEWAY_SERVICE}
 
 # 重启gateway
-gateway-restart: gateway-stop rpc-start
+gateway-restart: gateway-stop gateway-start
