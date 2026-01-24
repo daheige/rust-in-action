@@ -3,4 +3,4 @@ pub mod mysql;
 pub mod xredis;
 
 // use重新导出
-pub use app::{AppState, APP_CONFIG};
+pub use app::{APP_CONFIG, AppState};

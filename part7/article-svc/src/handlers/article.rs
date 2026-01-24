@@ -3,7 +3,7 @@ use crate::config;
 use crate::entity::ArticleEntity;
 use axum::extract::State;
 use axum::response::Response;
-use axum::{extract::Path, http::StatusCode, response::IntoResponse, Json};
+use axum::{Json, extract::Path, http::StatusCode, response::IntoResponse};
 use r2d2::Pool;
 use redis::Commands;
 use std::sync::Arc;
