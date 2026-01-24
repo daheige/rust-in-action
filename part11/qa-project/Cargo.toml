@@ -32,7 +32,7 @@ tonic-prost-build = "0.14.2"
 tonic-prost = "0.14.2"
 
 # 网关使用axum http框架接入
-axum = { version = "0.8.8" }
+axum = "0.8.8"
 
 # json序列化处理
 serde = { version = "1.0.228", features = ["derive"] }

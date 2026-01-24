@@ -58,9 +58,11 @@ async fn main() -> Result<(), PulsarError> {
         tokio::time::sleep(std::time::Duration::from_millis(10)).await;
         if counter >= 5 {
             // 这里仅发送5条消息
+            producer.close().await?;
             break;
         }
     }
 
+    tokio::time::sleep(std::time::Duration::from_secs(10)).await;
     Ok(())
 }
