@@ -49,10 +49,11 @@ pub static APP_CONFIG: Lazy<AppConfig> = Lazy::new(|| {
 
     // read config to struct
     let conf: AppConfig = serde_yaml::from_str(c.content()).unwrap();
+
     // 开发过程中，可以取消下面的注释
-    if conf.app_debug {
-        println!("conf:{:?}", conf);
-    }
+    // if conf.app_debug {
+    //     println!("conf:{:?}", conf);
+    // }
 
     conf
 });

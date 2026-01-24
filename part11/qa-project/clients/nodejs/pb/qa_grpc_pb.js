@@ -519,4 +519,4 @@ answerAgree: {
   },
 };
 
-exports.QAServiceClient = grpc.makeGenericClientConstructor(QAServiceService);
+exports.QAServiceClient = grpc.makeGenericClientConstructor(QAServiceService, 'QAService');

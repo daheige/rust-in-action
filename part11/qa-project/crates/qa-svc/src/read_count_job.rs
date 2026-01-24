@@ -1,6 +1,6 @@
-use crate::config::{mysql, xpulsar, xredis, APP_CONFIG};
+use crate::config::{APP_CONFIG, mysql, xpulsar, xredis};
 use crate::domain::repository::{ReadCountRepo, UserVoteRepo};
-use infras::{graceful_shutdown, Logger}; // 日志模块
+use infras::{Logger, graceful_shutdown}; // 日志模块
 
 // 引入实体阅读数对应的模块new_read_count_repo
 use crate::infrastructure::read_count::new_read_count_repo;
@@ -49,8 +49,8 @@ async fn main() -> anyhow::Result<()> {
     println!("run read_count job...");
     // 处理问题阅读数
     tokio::spawn(async move {
-        // 每隔2s执行一次
-        let mut interval = tokio::time::interval(Duration::from_secs(2));
+        // 每隔10s执行一次
+        let mut interval = tokio::time::interval(Duration::from_secs(10));
         loop {
             let exit = stop1.read().await;
             if *exit {

@@ -1,4 +1,4 @@
-use axum::http::{header::AsHeaderName, HeaderMap};
+use axum::http::{HeaderMap, header::AsHeaderName};
 
 /// get header by key
 pub fn get_header<K: AsHeaderName>(headers: &HeaderMap, key: K) -> String {

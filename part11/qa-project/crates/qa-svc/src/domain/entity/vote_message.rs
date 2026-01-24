@@ -1,5 +1,5 @@
 // 引入pulsar包涉及到的基本模块
-use pulsar::{producer, DeserializeMessage, Error as PulsarError, Payload, SerializeMessage};
+use pulsar::{DeserializeMessage, Error as PulsarError, Payload, SerializeMessage, producer};
 use serde::{Deserialize, Serialize};
 
 // VoteMessage entity vote message

@@ -11,12 +11,13 @@ import (
 )
 
 var (
-	grpcAddress     = "127.0.0.1:50051"
-// 	grpcAddress     = "192.168.1.4:50051"
+	grpcAddress = "127.0.0.1:50051"
+	// 	grpcAddress     = "192.168.1.4:50051"
 	defaultUserName = "daheige"
 )
 
 /**
+运行命令：
 % go run client.go daheige 123456
 */
 
@@ -38,34 +39,35 @@ func main() {
 
 	// Contact the server and print out its response.
 	name := defaultUserName
-	password := "123456";
+	password := "123456"
 	if len(os.Args) > 1 {
 		name = os.Args[1]
 	}
-    if len(os.Args) > 2{
-       password = os.Args[2]
-    }
+	if len(os.Args) > 2 {
+		password = os.Args[2]
+	}
 
+	// register user
 	ctx := context.Background()
-    res, err := c.UserRegister(ctx, &pb.UserRegisterRequest{
-            Username: name,
-            Password: password,
-    })
+	res, err := c.UserRegister(ctx, &pb.UserRegisterRequest{
+		Username: name,
+		Password: password,
+	})
 	if err != nil {
 		log.Fatalf("could not greet: %v\n", err)
 	}
 
-    log.Println("res: ",res)
+	log.Println("res: ", res)
 
-    // mock login
-    // 	res, err := c.UserLogin(ctx, &pb.UserLoginRequest{
-    // 		Username: name,
-    // 		Password: "123456",
-    // 	})
-
-    // if err != nil {
-    // 		log.Fatalf("could not greet: %v", err)
-    // 	}
-    //
-    // 	log.Printf("reply token:%s", res.Token)
+	// mock login
+	// 	res, err := c.UserLogin(ctx, &pb.UserLoginRequest{
+	// 		Username: name,
+	// 		Password: password,
+	// 	})
+	//
+	// 	if err != nil {
+	// 		log.Fatalf("could not greet: %v", err)
+	// 	}
+	//
+	// 	log.Printf("reply token:%s", res.Token)
 }

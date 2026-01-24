@@ -4,7 +4,7 @@ use chrono::Local;
 use futures::TryStreamExt;
 use infras::sql_utils::gen_in_placeholder;
 use log::{error, info};
-use pulsar::{producer, proto, Consumer, Pulsar, SubType, TokioExecutor};
+use pulsar::{Consumer, Pulsar, SubType, TokioExecutor, producer, proto};
 use std::collections::HashMap;
 use std::ops::DerefMut;
 use std::sync::Arc;

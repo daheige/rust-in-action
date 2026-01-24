@@ -1,7 +1,7 @@
 use super::graceful_shutdown;
 use autometrics::prometheus_exporter;
-use axum::routing::get;
 use axum::Router;
+use axum::routing::get;
 use std::net::SocketAddr;
 use std::time::Duration;
 use tokio::net::TcpListener;

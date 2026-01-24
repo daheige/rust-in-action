@@ -1,7 +1,7 @@
-use crate::config::{mysql, xpulsar, APP_CONFIG};
+use crate::config::{APP_CONFIG, mysql, xpulsar};
 use crate::domain::repository::UserVoteRepo;
 use crate::infrastructure::vote::new_vote_repo;
-use infras::{graceful_shutdown, Logger}; // 日志模块
+use infras::{Logger, graceful_shutdown}; // 日志模块
 
 use std::io::Write;
 use std::process;

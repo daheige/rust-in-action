@@ -1,4 +1,4 @@
-use crate::config::{AppState, APP_CONFIG};
+use crate::config::{APP_CONFIG, AppState};
 use crate::domain::entity::{
     AnswersEntity, EntityReadCountData, QuestionsEntity, UserSessionEntity, VoteMessage,
 };
@@ -239,7 +239,7 @@ impl QaService for QAServiceImpl {
                 return Err(Status::new(
                     Code::AlreadyExists,
                     format!("当前用户{}已经存在", &req.username),
-                ))
+                ));
             }
             Err(err) => {
                 // 将错误转换为原始类型
@@ -302,9 +302,8 @@ impl QaService for QAServiceImpl {
         let key = format!("user_login:{}", openid);
         let res = self.user_session_repo.get(&key).await;
         if res.is_err() {
-            let err = res.err().unwrap();
-            let err_msg = err.to_string();
-            if err_msg.contains("session not found") || err_msg.contains("session is empty") {
+            let err_msg = res.err().unwrap().to_string();
+            if err_msg.contains("session not found") {
                 let reply = VerifyTokenReply {
                     state: 0,
                     reason: "login session not found".to_string(),
@@ -316,7 +315,7 @@ impl QaService for QAServiceImpl {
             // 其他未知错误
             let reply = VerifyTokenReply {
                 state: -1,
-                reason: format!("unknown error:{}", err),
+                reason: format!("unknown error:{}", err_msg),
                 username: "".to_string(),
             };
             return Ok(Response::new(reply));

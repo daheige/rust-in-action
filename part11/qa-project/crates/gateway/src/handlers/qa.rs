@@ -1,7 +1,7 @@
 use super::json_or_form::JsonOrForm;
 use crate::config::AppState;
 use axum::extract::State;
-use axum::{http::StatusCode, response::IntoResponse, Json};
+use axum::{Json, http::StatusCode, response::IntoResponse};
 use log::info;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;

@@ -5,9 +5,10 @@
 // qa-svc/src/infrastructure/read_count/entity_read_count.rs文件
 use crate::domain::entity::{EntityReadCountData, QuestionsEntity};
 use crate::domain::repository::ReadCountRepo;
-use log::info;
+use log::{error, info};
 use r2d2::Pool;
 use redis::Commands;
+use std::ops::DerefMut;
 
 // ReadCountRepoImpl实现ReadCountRepo trait的具体数据类型
 struct ReadCountRepoImpl {
@@ -40,7 +41,12 @@ impl ReadCountRepoImpl {
     }
 
     // 将redis hash中实体增量计数器对应的数量，更新到对应的实体数据表中，并对应减少对应的数量
-    async fn update_read_count(&self, target_id: i64, target_type: &str, increment: i64) {
+    async fn update_read_count(
+        &self,
+        target_id: i64,
+        target_type: &str,
+        increment: i64,
+    ) -> anyhow::Result<()> {
         info!(
             "update target_id:{} target_type:{} read_count increment:{} begin",
             target_id, target_type, increment
@@ -54,29 +60,31 @@ impl ReadCountRepoImpl {
             .bind(increment)
             .bind(target_id)
             .execute(&self.mysql_pool)
-            .await;
+            .await?;
         info!(
             "execute target_id:{} target_type:{} result:{:?}",
             target_id, target_type, res
         );
-        if res.is_ok() {
-            // 更新redis hash 实体阅读数对应的计数器
-            // redis hash 的field是实体id，value是阅读数
-            let hash_key = self.get_hash_key(target_type);
-            let mut conn = self.redis_pool.get().expect("get redis connection failed");
-            let remain: i64 = conn
-                .hincr(hash_key, target_id.to_string(), -increment)
-                .expect("redis hincr failed");
-            info!(
-                "current target_id:{} target_type:{} hincry result:{}",
-                target_id, target_type, remain
-            );
+        if res.rows_affected() == 0 {
+            return Err(anyhow::anyhow!(
+                "failed to update target_id:{} target_type:{} read_count",
+                target_id,
+                target_type
+            ));
         }
 
+        // 更新redis hash 实体阅读数对应的计数器
+        // redis hash 的field是实体id，value是阅读数
+        let hash_key = self.get_hash_key(target_type);
+        let mut conn = self.redis_pool.get().expect("get redis connection failed");
+        let remain: i64 = conn.hincr(hash_key, target_id.to_string(), -increment)?;
+
         info!(
-            "update target_id:{} target_type:{} read_count increment:{} end",
-            target_id, target_type, increment
+            "update current target_id:{} target_type:{} increment:{} hincry result:{} success",
+            target_id, target_type, increment, remain
         );
+
+        Ok(())
     }
 }
 
@@ -101,38 +109,60 @@ impl ReadCountRepo for ReadCountRepoImpl {
     async fn handler(&self, target_type: &str) -> anyhow::Result<()> {
         // 读取redis hash记录
         let hash_key = self.get_hash_key(target_type);
-        let mut conn = self.redis_pool.get().expect("get redis connection failed");
+        let mut conn = self
+            .redis_pool
+            .get()
+            .map_err(|err| anyhow::anyhow!("failed to get redis connection err:{}", err))?;
 
-        // 返回对应的key val key val...格式，对应的是id read_count增量计数器的字符串格式
-        let res: redis::Iter<String> = conn.hscan_match(hash_key, "*").unwrap();
-        let records: Vec<String> = res.collect();
-        let len = records.len();
-        if len == 0 {
-            return Ok(());
-        }
+        // 通过hscan游标方式遍历数据
+        let mut cursor: u64 = 0;
+        let pattern = "*";
+        let count = 500; // 每次扫描返回的数量
 
-        // 执行实体阅读数增量更新操作
-        let mut i: usize = 0;
-        while i < len {
-            // 当前实体id
-            let target_id: i64 = records.get(i).unwrap().parse().unwrap();
-            // 当前实体增量计数器
-            let increment: i64 = records.get(i + 1).unwrap().parse().unwrap();
-            i += 2; // 这里i的值第一次迭代时 i = 0，第二次迭代 i = 2,依次类推
-            if increment == 0 || target_id <= 0 {
-                continue;
+        loop {
+            // 执行HSCAN命令
+            // 当我们使用Redis hscan游标匹配数据时，
+            // 第一个元素是field，第二个元素是field对应的value值
+            let result: (u64, Vec<(String, String)>) = redis::cmd("HSCAN")
+                .arg(&hash_key)
+                .arg(cursor)
+                .arg("MATCH")
+                .arg(pattern)
+                .arg("COUNT")
+                .arg(count)
+                .query(conn.deref_mut())?;
+
+            let (new_cursor, records) = result;
+            for (field, value) in records.iter() {
+                let target_id: i64 = field.parse().unwrap_or(0); // 当前文章id
+                let increment: i64 = value.parse().unwrap_or(0); // 当前文章增量计数器
+                if increment == 0 || target_id <= 0 {
+                    continue;
+                }
+
+                println!(
+                    "exec target_id:{} target_type:{} read_count increment:{} begin",
+                    target_id, target_type, increment
+                );
+                let res = self
+                    .update_read_count(target_id, target_type, increment)
+                    .await;
+                if res.is_err() {
+                    error!("failed to update error:{}", res.err().unwrap());
+                } else {
+                    println!(
+                        "handler target_id:{} target_type:{} read_count increment:{} success",
+                        target_id, target_type, increment
+                    );
+                }
             }
 
-            info!(
-                "target_id:{} target_type:{}read_count increment:{}",
-                target_id, target_type, increment
-            );
-            self.update_read_count(target_id, target_type, increment)
-                .await;
-            println!(
-                "handler target_id:{} target_type:{}read_count increment:{} success",
-                target_id, target_type, increment
-            );
+            // 当游标回到0时表示遍历完成
+            if cursor == 0 {
+                break;
+            }
+
+            cursor = new_cursor;
         }
 
         Ok(())
@@ -143,8 +173,8 @@ impl ReadCountRepo for ReadCountRepoImpl {
 - 在上述代码中，首先在incr方法中声明了一个hash_key变量，它根据target_type类型生成对应的redis hash key。
 - 然后，调用self.redis_pool.get方法从redis连接池中获取了一个redis
   connection句柄，并调用hincr方法对field（实体target_id对应的字符串格式）增加data.count，返回值是一个i64类型，它表示当前实体阅读数计数器增量数。
-- 在handler方法中，首先调用conn.hscan_match方法通过*匹配方式以及redis游标形式获取hash_key中的每个元素（field:value格式）。
-- 接着，通过判断当前hash_key中的元素个数是否大于0，如果大于0就调用self.update_read_count方法执行实体阅读数的增量更新。
+- 在handler方法中，首先调用hscan方法通过*匹配方式以及redis游标形式获取hash_key中的每个元素（field:value格式）。
+- 接着，调用self.update_read_count方法执行实体阅读数的增量更新。
 - 在update_read_count方法中，首先通过sqlx::query绑定sql的方式更新当前实体的read_count字段，然后判断更新结果res是否操作成功。
 - 如果操作成功，就调用conn上的hincr方法减去redis hash_key对应的field（实体id)对应的阅读数，通过这种方式实现了实体阅读数增量更新到数据库表questions中。
 
@@ -258,7 +288,8 @@ mod config;
 mod domain;
 mod infrastructure;
 
-// 日志level 优先级 error > warn > info > debug > trace
+// 如果想在启动时改变日志级别，可以通过指定环境变量启动应用
+// 日志level 优先级  error > warn > info > debug > trace
 // 启动方式：RUST_LOG=debug cargo run --bin qa-read_count-job
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -273,8 +304,7 @@ async fn main() -> anyhow::Result<()> {
         .expect("mysql pool init failed");
 
     // create redis pool
-    let redis_pool = xredis::pool(&APP_CONFIG.redis_conf)
-        .expect("redis pool init failed");
+    let redis_pool = xredis::pool(&APP_CONFIG.redis_conf).expect("redis pool init failed");
     let app_state = config::ReadCountJobAppState {
         // 这里等价于mysql_pool: mysql_pool
         // 当变量名字一样时，是可以直接用变量名字简写模式，是rust的语法糖
@@ -284,15 +314,15 @@ async fn main() -> anyhow::Result<()> {
     };
 
     // 平滑退出stop标识，用于消费者退出标识，
-    // 它是一个引用计数bool类型的异步读写锁。
+    // 它是一个引用计数bool类型的异步读写锁
     let stop = Arc::new(RwLock::new(false));
     let stop1 = stop.clone();
     let read_count_repo = new_read_count_repo(app_state.redis_pool, app_state.mysql_pool);
     println!("run read_count job...");
     // 处理问题阅读数
     tokio::spawn(async move {
-        // 每隔2s执行一次
-        let mut interval = tokio::time::interval(Duration::from_secs(2));
+        // 每隔10s执行一次
+        let mut interval = tokio::time::interval(Duration::from_secs(10));
         loop {
             let exit = stop1.read().await;
             if *exit {
@@ -316,7 +346,8 @@ async fn main() -> anyhow::Result<()> {
 
     // 这里会阻塞，只有接收到退出信号量，才会执行退出操作
     handler.await.unwrap();
-    // 当接收到退出信号量时，将stop的值设置为true
+
+    // 当接收到退出信号量时，就将stop的值设置为true
     let mut exit = stop.write().await;
     *exit = true;
     println!("read_count job shutdown success");
@@ -354,7 +385,7 @@ pub async fn graceful_shutdown(wait_time: Duration) {
     };
 
     #[cfg(unix)]
-        let terminate = async {
+    let terminate = async {
         signal::unix::signal(signal::unix::SignalKind::terminate())
             .expect("failed to install signal handler")
             .recv()
@@ -362,7 +393,7 @@ pub async fn graceful_shutdown(wait_time: Duration) {
     };
 
     #[cfg(not(unix))]
-        let terminate = std::future::pending::<()>();
+    let terminate = std::future::pending::<()>();
 
     // 监听退出信号量
     tokio::select! {

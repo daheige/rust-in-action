@@ -265,36 +265,36 @@ grpcurl -plaintext 127.0.0.1:50051 describe qa.QAService
 // qa.QAService is a service:
 // qa服务接口定义
 service QAService {
-  // 添加问题回答
-  rpc AddAnswer (.qa.AddAnswerRequest) returns (.qa.AddAnswerReply);
-  // 发表问题
-  rpc AddQuestion (.qa.AddQuestionRequest) returns (.qa.AddQuestionReply);
-  // 用户点赞回答和取消点赞
-  rpc AnswerAgree (.qa.AnswerAgreeRequest) returns (.qa.AnswerAgreeReply);
-  // 查看答案详情
-  rpc AnswerDetail (.qa.AnswerDetailRequest) returns (.qa.AnswerDetailReply);
-  // 回答列表
-  rpc AnswerList (.qa.AnswerListRequest) returns (.qa.AnswerListReply);
-  // 删除问题对应的回答
-  rpc DeleteAnswer (.qa.DeleteAnswerRequest) returns (.qa.DeleteAnswerReply);
-  // 删除问题
-  rpc DeleteQuestion (.qa.DeleteQuestionRequest) returns (.qa.DeleteQuestionReply);
-  // 最新问题列表（采用下拉分页形式获取数据，按照id desc倒序）
-  rpc LatestQuestions (.qa.LatestQuestionsRequest) returns (.qa.LatestQuestionsReply);
-  // 查看问题详情
-  rpc QuestionDetail (.qa.QuestionDetailRequest) returns (.qa.QuestionDetailReply);
-  // 修改回答
-  rpc UpdateAnswer (.qa.UpdateAnswerRequest) returns (.qa.UpdateAnswerReply);
-  // 修改问题
-  rpc UpdateQuestion (.qa.UpdateQuestionRequest) returns (.qa.UpdateQuestionReply);
-  // 用户登录
-  rpc UserLogin (.qa.UserLoginRequest) returns (.qa.UserLoginReply);
-  // 用户退出
-  rpc UserLogout (.qa.UserLogoutRequest) returns (.qa.UserLogoutReply);
-  // 用户注册
-  rpc UserRegister (.qa.UserRegisterRequest) returns (.qa.UserRegisterReply);
-  // 验证登录的token是否有效
-  rpc VerifyToken (.qa.VerifyTokenRequest) returns (.qa.VerifyTokenReply);
+    // 添加问题回答
+    rpc AddAnswer (.qa.AddAnswerRequest) returns (.qa.AddAnswerReply);
+    // 发表问题
+    rpc AddQuestion (.qa.AddQuestionRequest) returns (.qa.AddQuestionReply);
+    // 用户点赞回答和取消点赞
+    rpc AnswerAgree (.qa.AnswerAgreeRequest) returns (.qa.AnswerAgreeReply);
+    // 查看答案详情
+    rpc AnswerDetail (.qa.AnswerDetailRequest) returns (.qa.AnswerDetailReply);
+    // 回答列表
+    rpc AnswerList (.qa.AnswerListRequest) returns (.qa.AnswerListReply);
+    // 删除问题对应的回答
+    rpc DeleteAnswer (.qa.DeleteAnswerRequest) returns (.qa.DeleteAnswerReply);
+    // 删除问题
+    rpc DeleteQuestion (.qa.DeleteQuestionRequest) returns (.qa.DeleteQuestionReply);
+    // 最新问题列表（采用下拉分页形式获取数据，按照id desc倒序）
+    rpc LatestQuestions (.qa.LatestQuestionsRequest) returns (.qa.LatestQuestionsReply);
+    // 查看问题详情
+    rpc QuestionDetail (.qa.QuestionDetailRequest) returns (.qa.QuestionDetailReply);
+    // 修改回答
+    rpc UpdateAnswer (.qa.UpdateAnswerRequest) returns (.qa.UpdateAnswerReply);
+    // 修改问题
+    rpc UpdateQuestion (.qa.UpdateQuestionRequest) returns (.qa.UpdateQuestionReply);
+    // 用户登录
+    rpc UserLogin (.qa.UserLoginRequest) returns (.qa.UserLoginReply);
+    // 用户退出
+    rpc UserLogout (.qa.UserLogoutRequest) returns (.qa.UserLogoutReply);
+    // 用户注册
+    rpc UserRegister (.qa.UserRegisterRequest) returns (.qa.UserRegisterReply);
+    // 验证登录的token是否有效
+    rpc VerifyToken (.qa.VerifyTokenRequest) returns (.qa.VerifyTokenReply);
 }
 ```
 
@@ -331,8 +331,7 @@ message UserLoginReply {
 }
 ```
 
-6. 通过grpcurl调用rpc service method
-   先通过如下grpcurl命令创建一个用户：
+6. 通过grpcurl调用rpc service method，这里先通过如下grpcurl命令创建一个用户：
 
 ```shell
 grpcurl -d '{"username":"daheige","password":"123456"}' -plaintext 127.0.0.1:50051 qa.QAService.UserRegister

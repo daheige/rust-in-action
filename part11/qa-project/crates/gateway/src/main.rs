@@ -6,8 +6,8 @@ mod routers;
 mod utils;
 
 // 引入Config
-use config::{AppState, APP_CONFIG};
-use infras::{graceful_shutdown, prometheus_init, Logger};
+use config::{APP_CONFIG, AppState};
+use infras::{Logger, graceful_shutdown, prometheus_init};
 
 use log::info;
 use pb::qa::qa_service_client::QaServiceClient;

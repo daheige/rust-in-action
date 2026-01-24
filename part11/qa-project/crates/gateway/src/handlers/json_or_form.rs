@@ -1,8 +1,8 @@
 use axum::{
-    extract::{rejection::FormRejection, rejection::JsonRejection, FromRequest, Request},
-    http::{header::CONTENT_TYPE, StatusCode},
-    response::{IntoResponse, Response},
     Form, Json, RequestExt,
+    extract::{FromRequest, Request, rejection::FormRejection, rejection::JsonRejection},
+    http::{StatusCode, header::CONTENT_TYPE},
+    response::{IntoResponse, Response},
 };
 use serde::de::DeserializeOwned;
 use validator::Validate;
