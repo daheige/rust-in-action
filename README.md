@@ -9,7 +9,8 @@
 - 操作系统：建议使用linux系统（例如：ubuntu24.04或centos7.9+版本）或macOS系统。
 - 如果使用的是windows系统，建议使用WSL方式安装Linux ubuntu 系统或者centos stream系统。
 - 当前main分支上的所有代码，均在 edition = "2024" 版本测试通过。
-- 如果您使用的Rust edition = "2021" (Rust版本低于v1.85）时，请切换到：https://github.com/daheige/rust-in-action/tree/rust-2021-edition 分支。
+- 如果您使用的Rust edition = "2021" (
+  Rust版本低于v1.85）时，请切换到：https://github.com/daheige/rust-in-action/tree/rust-2021-edition 分支。
 
 # Rust install
 
@@ -62,7 +63,7 @@ zhuwei313@hotmail.com
 - Rust ffi: https://github.com/daheige/rust-bible/tree/main/part8
 - Rust 2024 edition 1.85: https://www.bilibili.com/video/BV1XnPNeBELM
 - Rust videos Foundation (bilibili): https://www.bilibili.com/video/BV12Z421b75M
-  课程素材：[rust-courses](bilibili/rust-courses)
+  课程素材：[bilibili](bilibili)
 - Rust 实战项目开发常用的组件库封装: https://github.com/rs-god/hera
 
 # Why did I decide to write this book
@@ -77,4 +78,5 @@ zhuwei313@hotmail.com
 
 # Current progress
 
-目前本书已在2025年08月底出版发行，若您对Rust语言感兴趣，欢迎通过京东或当当搜索：Rust实战项目开发，或直接点击：https://item.jd.com/15129712.html 支持本书。期待与更多技术同好者碰撞思想，在代码的世界里并肩前行，一起成长，一起进步！
+目前本书已在2025年08月底出版发行，若您对Rust语言感兴趣，欢迎通过京东或当当搜索：Rust实战项目开发，或直接点击：https://item.jd.com/15129712.html
+支持本书。期待与更多技术同好者碰撞思想，在代码的世界里并肩前行，一起成长，一起进步！
