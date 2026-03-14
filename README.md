@@ -65,6 +65,8 @@ zhuwei313@hotmail.com
 - Rust videos Foundation (bilibili): https://www.bilibili.com/video/BV12Z421b75M
   课程素材：[bilibili](bilibili)
 - Rust 实战项目开发常用的组件库封装: https://github.com/rs-god/hera
+- 本书配套视频教程，可以扫码对应章节二维码查看
+  ![rust-videos.png](rust-videos.png)
 
 # Why did I decide to write this book
 
