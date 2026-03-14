@@ -8,7 +8,7 @@ fn main() {
 
     // 创建一个新线程
     let handler = thread::spawn(move || {
-        // 往通道中发送5条消息，消息内容是String类型，格式是: hello,index 1
+        // 往通道中发送4条消息，消息内容是String类型，格式是: hello,index 1
         for i in 1..5 {
             let msg = format!("hello,index:{}", i);
             println!("Sent message: {}", msg);
