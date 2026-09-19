@@ -1,9 +1,13 @@
 use std::{thread::sleep, time::Duration};
 
-// 运行方式 RUSTFLAGS="--cfg tokio_unstable" cargo run --bin console-sub
+// 运行方式 RUSTFLAGS="--cfg tokio_unstable" cargo run --bin console-sub --features tokio-console
+// feature 控制代码，RUSTFLAGS 控制 tokio，release 构建天然关闭观测
 #[tokio::main]
 async fn main() {
-    console_subscriber::init(); // 启动时开启
+    // 只有在开启了 tokio-console 特性才生效
+    #[cfg(feature = "tokio-console")]
+    console_subscriber::init();
+
     println!("hello,world");
     print_number().await;
 

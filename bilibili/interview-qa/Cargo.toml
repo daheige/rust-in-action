@@ -28,5 +28,8 @@ codegen-units = 1
 [dependencies]
 tokio = { version = "1.53.1", features = ["full"] }
 
-# 用于抓取异步任务运行状态
-console-subscriber = "0.5"
+# 用于抓取异步任务运行状态（仅本地调试，线上勿开）
+console-subscriber = { version = "0.5", optional = true }
+
+[features]
+tokio-console = ["dep:console-subscriber"]
