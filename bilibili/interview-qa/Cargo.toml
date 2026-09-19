@@ -7,5 +7,26 @@ edition = "2024"
 name = "advance-qa"
 path = "src/advance.rs"
 
+[[bin]]
+name = "hello-debug"
+path = "src/hello-debug.rs"
+
+[[bin]]
+name = "console-sub"
+path = "src/console-sub.rs"
+
+# Cargo.toml —— 保留 debug 符号，同时优化体积
+# 事前准备（编译时就要做对）
+# release 构建保留符号 symbols 并归档
+[profile.release]
+debug = true          # 生成符号表，core dump / perf 用得上
+strip = "debuginfo"   # 或者不 strip，二选一看磁盘/包大小策略
+lto = true            # 优化别关
+codegen-units = 1
+#panic = "abort"
+
 [dependencies]
 tokio = { version = "1.53.1", features = ["full"] }
+
+# 用于抓取异步任务运行状态
+console-subscriber = "0.5"

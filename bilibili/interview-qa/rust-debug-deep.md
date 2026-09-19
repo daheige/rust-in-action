@@ -325,7 +325,7 @@ tokio 下 `bt` 常只看到 `epoll_wait` / `park`，看不到业务逻辑，因�
 
 ```toml
 [dependencies]
-console-subscriber = "0.4"
+console-subscriber = "0.5"
 tokio = { version = "1", features = ["full", "tracing"] }
 ```
 
@@ -340,6 +340,13 @@ fn main() {
 cargo install tokio-console
 tokio-console http://127.0.0.1:6669   # 默认端口
 ```
+运行方式：
+```shell
+RUSTFLAGS="--cfg tokio_unstable" cargo run --bin console-sub
+```
+
+运行 console-sub 端（它会启动一个 gRPC server，默认端口 6669），这样每个异步任务task运行状态都可以监控。
+![tokio-console](tokio-console.png)
 
 可以看到：**每个任务的当前 poll 状态、耗时、waker、await 点**，能直接定位「哪个任务卡住了」。
 
