@@ -68,6 +68,9 @@ zhuwei313@hotmail.com
 - 本书配套视频教程，可以扫码对应章节二维码查看
   ![rust-videos.png](rust-videos.png)
 
+# interview guide
+[Rust面试指南](https://github.com/daheige/rust-in-action/blob/main/bilibili/interview-qa/Rust-Interview-Guide.md)
+
 # Why did I decide to write this book
 
 <p>我从事软件开发已经有10多年，最早接触软件开发这个行业是在2010年的暑假。那时候，我刚好是高中毕业，在家报完计算机科学与技术专业之后，我一个朋友送我一本《精通CSS与HTML设计模式》，他说：你可以先看看这本书，看你是否对计算机这个行业感兴趣，如果有兴趣就把这本书简单学习一下，以后对你学习计算机有帮助的。也这正是这本书，让我对计算机这个行业产生了浓厚的兴趣。那一年，我照着这本书的html和css示例代码，在文本编辑器中能够快速编写一些简单的网页，所见即所得的网页效果让我快速找到了一种成就感。</p>
