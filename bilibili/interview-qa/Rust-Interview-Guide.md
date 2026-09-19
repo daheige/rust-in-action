@@ -2058,6 +2058,128 @@ info!(target: "payment", order_id = 12345; "order paid");
 
 工程实践（参考 hera 工具链的 logger 组件设计）：在 `env_logger` 的 `.format()` 上自定义格式化，提取 Record 的 ts/level/module/target/caller/msg 及 kv 拼 JSON；Logger 用**链式配置**（`with_json()` / `with_caller_line()` / `with_time_format()`）暴露配置；`init()`（失败 panic，用于 main）与 `try_init()`（返回 Result，用于测试）分离。组件 crate 用 `pub use log::{debug, error, info, warn}` 把宏重导出到根命名空间，业务侧 `use logger::{Logger, info}` 统一入口、零迁移成本（这正是第 3 节 `pub use` 重导出的实战范例）。
 
+**Q：怎么自己封装一个自定义 Logger？以 hera 的 logger 组件为例**
+
+上面的 JSON 输出不是 env_logger 原生能力，而是**自定义 `format` + 遍历 key/value** 实现的，核心三块：
+
+**① 链式配置的 Logger（Builder 模式）**
+
+```rust
+use chrono::Utc;
+use std::io::Write;
+
+pub struct Logger {
+    caller_line: bool,   // 是否输出行号
+    enable_json: bool,   // 是否 JSON 格式
+    time_format: String, // 时间格式
+}
+
+impl Logger {
+    pub fn new() -> Self {
+        Self { caller_line: false, enable_json: false,
+               time_format: "%Y-%m-%dT%H:%M:%SZ".to_string() }
+    }
+    pub fn with_caller_line(mut self) -> Self { self.caller_line = true; self }
+    pub fn with_json(mut self) -> Self { self.enable_json = true; self }
+    pub fn with_time_format(mut self, f: &str) -> Self { self.time_format = f.to_string(); self }
+
+    pub fn init(&self) {
+        self.try_init().expect("logger already initialized");
+    }
+    pub fn try_init(&self) -> Result<(), log::SetLoggerError> {
+        let mut builder = env_logger::Builder::from_default_env();
+        builder.target(env_logger::Target::Stdout);
+
+        let time_format = self.time_format.clone();
+        if self.enable_json {
+            // 关键：用 .format() 接管输出，把每条 Record 拼成 JSON
+            builder.format(move |buf, record| {
+                writeln!(buf, "{}", format_json(record, &time_format))
+            });
+        } else if self.caller_line {
+            // 普通文本 + 行号
+            builder.format(move |buf, record| {
+                writeln!(buf, "[{} {} {}:{}] {}",
+                    Utc::now().format(&time_format), record.level(),
+                    record.module_path().unwrap_or("unnamed"),
+                    record.line().unwrap_or(0), record.args())
+            });
+        }
+        builder.try_init()
+    }
+}
+```
+
+**② 提取 key/value → JSON（visitor 模式）**
+
+`log::Record` 的 key/value 通过 `log::kv::Source` 暴露，自定义 visitor 遍历并收集进 `serde_json::Map`：
+
+```rust
+// 遍历 key/value，收集到 serde_json::Map
+impl<'kvs> log::kv::VisitSource<'kvs> for JsonVisitor {
+    fn visit_pair(&mut self, key: log::kv::Key, value: log::kv::Value)
+        -> Result<(), log::kv::Error> {
+        let mut vv = JsonValueVisitor::new();
+        value.visit(&mut vv)?;
+        if let Some(v) = vv.value {
+            self.map.insert(key.to_string(), v);
+        }
+        Ok(())
+    }
+}
+
+// 单个 value 按类型转成 serde_json::Value
+impl<'v> log::kv::VisitValue<'v> for JsonValueVisitor {
+    fn visit_i64(&mut self, v: i64) -> Result<(), log::kv::Error> {
+        self.value = Some(serde_json::Value::Number(v.into())); Ok(())
+    }
+    fn visit_u64(&mut self, v: u64) -> Result<(), log::kv::Error> {
+        self.value = Some(serde_json::Value::Number(v.into())); Ok(())
+    }
+    fn visit_bool(&mut self, v: bool) -> Result<(), log::kv::Error> {
+        self.value = Some(serde_json::Value::Bool(v)); Ok(())
+    }
+    fn visit_str(&mut self, v: &str) -> Result<(), log::kv::Error> {
+        self.value = Some(serde_json::Value::String(v.to_string())); Ok(())
+    }
+    // visit_f64 / visit_char / visit_null / visit_any 同理
+}
+```
+
+`format_json` 再把 `ts / level / module / target / caller / msg` 固定字段与 visitor 收集的 kv 一起手工拼成 JSON 字符串。
+
+**③ `pub use` 重导出 + 依赖**
+
+```toml
+[dependencies]
+log = { version = "0.4", features = ["kv"] }
+env_logger = "0.11"
+chrono = "0.4"      # 时间格式化
+serde_json = "1"    # JSON 值类型
+```
+
+```rust
+// 把 log 宏重导出到 logger 根命名空间，业务侧一个 use 搞定
+pub use log::{debug, error, info, warn};
+```
+
+```rust
+// 业务侧统一入口，零迁移成本
+use logger::{Logger, info};
+
+fn main() {
+    Logger::new().with_caller_line().with_json().init();
+    info!(order_id = 12345, amount = 99.5; "order paid");
+}
+```
+
+> 📌 设计要点（面试可讲）：
+> - **门面 + 实现分离**：组件只依赖 `log` 门面编程，底层 `env_logger` 可随时替换，业务零改动；
+> - **Builder 链式配置**：必填无、可选 `with_*` 链式覆盖 + 默认值兜底（呼应第 3 节组件设计）；
+> - **`init` vs `try_init`**：`init` 失败 panic（main 用），`try_init` 返回 `Result`（测试用，避免二次初始化 panic）；
+> - **`.format()` 是唯一自定义点**：env_logger 把每条 `log::Record` 交给你格式化，JSON/文本/ltsv 都在这一个闭包里切换；
+> - **key/value 靠 visitor 收集**：`log::kv::Source` / `VisitValue` 是官方结构化日志入口，按类型转 `serde_json::Value`，天然保留数字/布尔/字符串类型。
+
 **Q：log + env_logger 与 tracing 怎么选？**
 
 | | log + env_logger | tracing |
