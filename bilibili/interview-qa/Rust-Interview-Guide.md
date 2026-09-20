@@ -1,8 +1,9 @@
 # Rust 面试指南
 
-- 基于本仓库 `interview-qa` 整理，覆盖 **语言基础、并发与异步、工程化、线上 Debug 实战** 四大板块。
+- 基于本仓库 `interview-qa` 和 Rust 官方文档整理，覆盖 **语言基础、并发与异步、工程化、线上 Debug 实战** 四大板块。
 - 适用场景：Rust 初中高级岗位技术面试准备 / 技术分享 / 直播讲解。
 - 文档制定者：大黑哥 《Rust实战项目开发》书籍作者
+- 版本：v1.0
 
 ---
 
@@ -195,7 +196,7 @@ let s = "hello".to_string();     // String 推断
 | 地址 | 无固定地址（内联展开） | 有（`&'static` 引用指向固定位置） |
 | 类型标注 | 必须显式 | 必须显式 |
 | 求值时机 | 编译期常量表达式 | 编译期初始化 |
-| 可变性 | 永远不可变 | 默认不可变；`static mut` 可变但 unsafe |
+| 可变性 | 永远不可变 | 默认不可变；`static mut` 可变，但是它是 unsafe 不安全的 |
 | 典型用途 | 魔法数字、常量配置 | 全局共享数据、全局单例 |
 
 ```rust
@@ -323,7 +324,7 @@ fn foo<'a>(x: &'a str, y: &'a str) -> &'a str { x }
 fn get_one(x: &u8) -> &u8 { x }
 ```
 
-这条法则也是编译器拒绝 `fn foo(x: &str, y: &str) -> &str` 的原因——"返回值的生命周期并不明显，需要我们的帮助"。
+这条法则也是编译器拒绝 `fn foo(x: &str, y: &str) -> &str` 的原因——"返回值的生命周期并不明显，需要我们的显式标注"。
 
 **Q：结构体持引用时为什么要标注生命周期？**
 
@@ -671,7 +672,7 @@ let content = std::fs::read_to_string("a.txt")?; // ? 自动传播错误
 **Q：Rust 支持哪两种宏？**
 
 - **声明宏（macro_rules!）**：匹配代码**模式**并替换生成新代码，基于文本/语法匹配；
-- **过程宏（proc-macro）**：编译时对**语法树（TokenStream）**操作的 Rust 函数，三种形式：
+- **过程宏（proc-macro）**：编译时对<strong>语法树(TokenStream)</strong>操作的 Rust 函数，三种形式：
   - `#[derive(...)]` 派生宏
   - 属性宏 `#[route("/")]`
   - 函数式宏 `sqlx::query!()`
@@ -2446,7 +2447,7 @@ infra       ← 配置解析、统一错误类型、AppState 定义
 
 关键技术决策（面试重点）：
 
-1. **gRPC 客户端懒加载**：`GrpcClientManager` 用 `tokio::sync::OnceCell<GreeterClient<Channel>>`——启动时不建连，首次调用自动初始化并缓存。收益：启动快、后端未就绪不阻塞 BFF 启动；代价：首次请求承担一次握手 RTT；
+1. **gRPC 客户端懒加载**：`GrpcClientManager` 用 `tokio::sync::OnceCell<GreeterClient<Channel>>`——启动时不建立连接，首次调用自动初始化并缓存。收益：启动快、后端未就绪不阻塞 BFF 启动；代价：首次请求承担一次握手 RTT；
 2. **Channel 而非直连**：`Endpoint::connect()` 返回的 `Channel` 内部由后台任务维护连接，支持 HTTP/2 多路复用；`Clone` 成本极低（内部 `Arc`），handler 每次取独立克隆实例，无锁竞争；可精确配置 TLS/超时/并发限制/拦截器/负载均衡；
 3. **连接保活与超时对齐**：30s HTTP/2 心跳 + 20s 超时 + `keep_alive_while_idle`，单次 RPC `timeout(30s)`、`connect_timeout(10s)`——**超时阈值须与后端 P99 对齐**，过短误杀、过长失去熔断意义；
 4. **错误分层映射**：统一 `AppError`（Grpc / GrpcTransport / Serialization / Internal）实现 `IntoResponse`，gRPC Code 自动转 HTTP 状态码（NotFound→404、Unavailable→503、DeadlineExceeded→504……），handler 无需关心状态码细节；
